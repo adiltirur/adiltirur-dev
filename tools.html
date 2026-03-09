@@ -349,6 +349,8 @@
         <span class="pane-label">Input</span>
         <div class="btn-row">
           <span id="md-stat" class="stat-bar" style="border:none;padding:0;background:none">0 lines · 0 words</span>
+          <span id="share-md-feedback" class="copy-feedback">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('md')">🔗 Copy Link</button>
           <button class="btn-small" onclick="clearInput('md-input','md')">Clear</button>
         </div>
       </div>
@@ -391,6 +393,8 @@
         <span class="pane-label">Input</span>
         <div class="btn-row">
           <span id="json-stat" class="stat-bar" style="border:none;padding:0;background:none"></span>
+          <span id="share-json-feedback" class="copy-feedback">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('json')">🔗 Copy Link</button>
           <button class="btn-small" onclick="clearInput('json-input','json')">Clear</button>
         </div>
       </div>
@@ -431,6 +435,8 @@
       <div class="pane-header">
         <span class="pane-label">Diagram Source</span>
         <div class="btn-row">
+          <span id="share-mermaid-feedback" class="copy-feedback">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('mermaid')">🔗 Copy Link</button>
           <button class="btn-small" onclick="loadMermaidExample()">Example</button>
           <button class="btn-small" onclick="clearInput('mermaid-input','mermaid')">Clear</button>
         </div>
@@ -736,14 +742,64 @@ function showFeedback(id) {
   setTimeout(() => el.classList.remove('show'), 2000);
 }
 
+// ══════════════════════════════════════════════
+//  Share links  —  https://adiltirur.dev/tools.html#md:base64content
+// ══════════════════════════════════════════════
+function encodeContent(text) {
+  try { return btoa(unescape(encodeURIComponent(text))); } catch(e) { return btoa(text); }
+}
+function decodeContent(b64) {
+  try { return decodeURIComponent(escape(atob(b64))); } catch(e) { return ''; }
+}
+function copyShareLink(tab) {
+  const ids = { md: 'md-input', json: 'json-input', mermaid: 'mermaid-input' };
+  const content = document.getElementById(ids[tab]).value;
+  if (!content.trim()) return;
+  const url = 'https://adiltirur.dev/tools.html#' + tab + ':' + encodeContent(content);
+  navigator.clipboard.writeText(url).then(() => showFeedback('share-' + tab + '-feedback'));
+}
+
 // ── URL hash state ──
 (function() {
-  const h = location.hash.replace('#','');
-  if (['md','json','mermaid'].includes(h)) {
-    const btn = document.querySelector(`.tab-btn[onclick*="'${h}'"]`);
-    if (btn) switchTab(h, btn);
+  const hash = location.hash.slice(1);
+  const colon = hash.indexOf(':');
+
+  if (colon !== -1) {
+    // Format: #tab:base64content  →  load content and render
+    const tab     = hash.slice(0, colon);
+    const encoded = hash.slice(colon + 1);
+    if (['md','json','mermaid'].includes(tab) && encoded) {
+      // Switch tab
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-' + tab).classList.add('active');
+      const btn = document.querySelector(`.tab-btn[onclick*="'${tab}'"]`);
+      if (btn) btn.classList.add('active');
+      currentTab = tab;
+
+      // Load and render content
+      const content  = decodeContent(encoded);
+      const inputIds = { md: 'md-input', json: 'json-input', mermaid: 'mermaid-input' };
+      const textarea = document.getElementById(inputIds[tab]);
+      if (textarea && content) {
+        textarea.value = content;
+        if (tab === 'md')      { renderMarkdown(); updateMdStat(); }
+        if (tab === 'json')    { renderJSON(); }
+        if (tab === 'mermaid') { renderMermaid(); }
+        // Auto-show preview so the reader sees the rendered result immediately
+        setView('output');
+      }
+      return;
+    }
+  }
+
+  // Format: #tab  →  just switch tab
+  if (['md','json','mermaid'].includes(hash)) {
+    const btn = document.querySelector(`.tab-btn[onclick*="'${hash}'"]`);
+    if (btn) switchTab(hash, btn);
   }
 })();
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const m = btn.getAttribute('onclick').match(/'(\w+)'/);
