@@ -390,6 +390,164 @@
     .empty-state-icon { font-size: 32px; margin-bottom: 12px; }
     .empty-state p { font-size: 13px; }
 
+    /* ── Preview overlay ── */
+    .preview-overlay {
+      position: fixed; inset: 0;
+      background: #fff;
+      z-index: 2000;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .preview-overlay.open { opacity: 1; pointer-events: all; }
+
+    .preview-topbar {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 32px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .preview-title {
+      font-size: 14px; font-weight: 600; flex: 1;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .preview-progress-label {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      flex-shrink: 0;
+    }
+    .preview-close {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      font-size: 20px; line-height: 1; padding: 4px 8px; border-radius: 6px;
+      flex-shrink: 0; transition: color 0.15s;
+    }
+    .preview-close:hover { color: var(--danger); background: var(--danger-light); }
+
+    .preview-progress-bar-wrap {
+      flex-shrink: 0; height: 3px; background: var(--border);
+    }
+    .preview-progress-bar {
+      height: 100%; background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .preview-body {
+      flex: 1; overflow-y: auto;
+      display: flex; justify-content: center;
+      padding: 40px 24px 120px;
+    }
+    .preview-content {
+      width: 100%; max-width: 640px;
+    }
+    .preview-page-tag {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .preview-page-tag::before {
+      content: ''; display: inline-block; width: 16px; height: 1px; background: var(--accent);
+    }
+    .preview-page-title {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 6px;
+    }
+    .preview-page-desc {
+      color: var(--muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6;
+    }
+
+    .preview-questions { display: flex; flex-direction: column; gap: 28px; }
+
+    .pq {
+      animation: pqIn 0.2s ease;
+    }
+    @keyframes pqIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .pq-title {
+      font-size: 15px; font-weight: 500; line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .pq-required { color: var(--danger); margin-left: 3px; }
+    .pq-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+
+    /* radio + checkbox */
+    .pq-choices { display: flex; flex-direction: column; gap: 8px; }
+    .pq-choice {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 14px; border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
+      transition: all 0.12s; user-select: none;
+    }
+    .pq-choice:hover { border-color: var(--accent); background: var(--accent-light); }
+    .pq-choice.selected { border-color: var(--accent); background: var(--accent-light); }
+    .pq-choice input[type="radio"],
+    .pq-choice input[type="checkbox"] {
+      width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px;
+      accent-color: var(--accent); cursor: pointer;
+    }
+    .pq-choice-label { font-size: 14px; line-height: 1.4; }
+
+    /* text input */
+    .pq input[type="text"],
+    .pq input[type="date"],
+    .pq input[type="datetime-local"],
+    .pq input[type="number"],
+    .pq input[type="email"],
+    .pq input[type="tel"] {
+      width: 100%; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: var(--sans); font-size: 14px; color: var(--fg);
+      background: var(--surface); outline: none;
+      transition: border-color 0.15s;
+    }
+    .pq input:focus { border-color: var(--accent); }
+
+    /* range */
+    .pq-range-wrap {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .pq-range-labels {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--muted);
+    }
+    .pq-range-value {
+      text-align: center; font-family: var(--mono);
+      font-size: 13px; color: var(--accent); font-weight: 500;
+    }
+    .pq input[type="range"] {
+      width: 100%; accent-color: var(--accent); cursor: pointer;
+    }
+
+    /* other text input */
+    .pq-other-input {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      width: 100%; font-family: var(--sans); font-size: 14px;
+      outline: none; transition: border-color 0.15s;
+    }
+    .pq-other-input:focus { border-color: var(--accent); }
+
+    /* footer nav */
+    .preview-footer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 2001;
+    }
+    .preview-footer-center {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+    }
+
+    /* complete screen */
+    .preview-complete {
+      text-align: center; padding: 60px 24px;
+    }
+    .preview-complete-icon { font-size: 48px; margin-bottom: 16px; }
+    .preview-complete h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .preview-complete p { color: var(--muted); font-size: 14px; }
+
     /* scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -411,7 +569,8 @@
   <div class="page-header-actions">
     <button class="btn" onclick="openImport()">⬆ Import JSON</button>
     <button class="btn" onclick="copyJSON()">⎘ Copy JSON</button>
-    <button class="btn btn-primary" onclick="downloadJSON()">⬇ Download JSON</button>
+    <button class="btn" onclick="downloadJSON()">⬇ Download JSON</button>
+    <button class="btn btn-primary" onclick="openPreview()">▶ Preview</button>
   </div>
 </div>
 
@@ -461,6 +620,26 @@
       <button class="btn" onclick="closeImport()">Cancel</button>
       <button class="btn btn-primary" onclick="doImport()">Import</button>
     </div>
+  </div>
+</div>
+
+<!-- ── Preview overlay ───────────────────────────────────────────────── -->
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-topbar">
+    <div class="preview-title" id="previewTitleBar"></div>
+    <div class="preview-progress-label" id="previewProgressLabel"></div>
+    <button class="preview-close" onclick="closePreview()" title="Close preview">✕</button>
+  </div>
+  <div class="preview-progress-bar-wrap">
+    <div class="preview-progress-bar" id="previewProgressBar" style="width:0%"></div>
+  </div>
+  <div class="preview-body">
+    <div class="preview-content" id="previewContent"></div>
+  </div>
+  <div class="preview-footer" id="previewFooter">
+    <button class="btn" id="previewBackBtn" onclick="previewBack()">← Back</button>
+    <div class="preview-footer-center" id="previewFooterCenter"></div>
+    <button class="btn btn-primary" id="previewNextBtn" onclick="previewNext()">Next →</button>
   </div>
 </div>
 
@@ -1125,9 +1304,396 @@ function downloadJSON() {
   toast('JSON downloaded!');
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ── Preview runner
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Strip ${...} metadata from text ──────────────────────────────────────────
+function stripMeta(str) {
+  if (str === null || str === undefined) return '';
+  let s = String(str);
+  // Iteratively remove ${...} blocks — handles nested brackets inside
+  let prev;
+  do {
+    prev = s;
+    s = s.replace(/\$\{[^${}]*(?:\{[^{}]*\}[^${}]*)?\}/g, '');
+  } while (s !== prev);
+  return s.trim();
+}
+
+// ── Condition evaluator (SurveyJS-style) ─────────────────────────────────────
+function evalCondition(expr, answers) {
+  if (!expr || !expr.trim()) return true;
+  try { return _evalOr(expr.trim(), answers); }
+  catch(e) { return true; }
+}
+
+function _evalOr(expr, answers) {
+  const parts = _split(expr, 'or');
+  return parts.length > 1
+    ? parts.some(p => _evalAnd(p.trim(), answers))
+    : _evalAnd(expr, answers);
+}
+
+function _evalAnd(expr, answers) {
+  const parts = _split(expr, 'and');
+  return parts.length > 1
+    ? parts.every(p => _evalAtom(p.trim(), answers))
+    : _evalAtom(expr, answers);
+}
+
+// Split by keyword but respect parentheses and quoted strings
+function _split(expr, kw) {
+  const parts = [];
+  let depth = 0, inQ = false, qCh = '', buf = '', i = 0;
+  const kwPad = ' ' + kw + ' ';
+  while (i < expr.length) {
+    const ch = expr[i];
+    if (inQ) { buf += ch; if (ch === qCh) inQ = false; i++; continue; }
+    if (ch === '"' || ch === "'") { inQ = true; qCh = ch; buf += ch; i++; continue; }
+    if (ch === '(') { depth++; buf += ch; i++; continue; }
+    if (ch === ')') { depth--; buf += ch; i++; continue; }
+    if (depth === 0) {
+      const rest = expr.slice(i).toLowerCase();
+      if (rest.startsWith(kwPad)) {
+        parts.push(buf.trim()); buf = ''; i += kwPad.length; continue;
+      }
+    }
+    buf += ch; i++;
+  }
+  if (buf.trim()) parts.push(buf.trim());
+  return parts.length > 1 ? parts : [expr];
+}
+
+function _evalAtom(expr, answers) {
+  expr = expr.trim();
+  // Strip outer parens
+  while (expr.startsWith('(') && expr.endsWith(')')) {
+    expr = expr.slice(1, -1).trim();
+  }
+
+  // {var} notempty
+  let m = expr.match(/^\{([^}]+)\}\s+notempty$/i);
+  if (m) { const v = answers[m[1]]; return v !== undefined && v !== '' && v !== null && !(Array.isArray(v) && v.length === 0); }
+
+  // {var} empty
+  m = expr.match(/^\{([^}]+)\}\s+empty$/i);
+  if (m) { const v = answers[m[1]]; return v === undefined || v === '' || v === null || (Array.isArray(v) && v.length === 0); }
+
+  // {var} contains 'val'
+  m = expr.match(/^\{([^}]+)\}\s+contains\s+['"]?([^'"]+)['"]?$/i);
+  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? v.includes(t) : String(v||'').includes(t); }
+
+  // {var} notcontains 'val'
+  m = expr.match(/^\{([^}]+)\}\s+notcontains\s+['"]?([^'"]+)['"]?$/i);
+  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? !v.includes(t) : !String(v||'').includes(t); }
+
+  // {var} = 'val'  or  {var} == 'val'
+  m = expr.match(/^\{([^}]+)\}\s*={1,2}\s*['"]?([^'"]+?)['"]?$/);
+  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? v.includes(t) : String(v||'') === t; }
+
+  // {var} != 'val'
+  m = expr.match(/^\{([^}]+)\}\s*!=\s*['"]?([^'"]+?)['"]?$/);
+  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? !v.includes(t) : String(v||'') !== t; }
+
+  // {var} >= <= > <  numeric
+  m = expr.match(/^\{([^}]+)\}\s*(>=|<=|>|<)\s*(.+)$/);
+  if (m) {
+    const v = parseFloat(answers[m[1]]) || 0, t = parseFloat(m[3]) || 0;
+    if (m[2] === '>=') return v >= t; if (m[2] === '<=') return v <= t;
+    if (m[2] === '>')  return v > t;  if (m[2] === '<')  return v < t;
+  }
+
+  return true; // unknown → show
+}
+
+// ── Preview state ─────────────────────────────────────────────────────────────
+let pvState = null; // { snap, answers, pageIdx, history }
+
+function openPreview() {
+  pvState = {
+    snap: buildJSON(),       // snapshot of the survey at this moment
+    answers: {},
+    pageIdx: -1,
+    history: []              // stack of visited page indices (for Back)
+  };
+  // Find first visible page
+  pvState.pageIdx = _pvNextPage(-1);
+  if (pvState.pageIdx === -1) {
+    toast('No pages to preview.'); return;
+  }
+  _pvRender();
+  document.getElementById('previewOverlay').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('previewOverlay').classList.remove('open');
+  pvState = null;
+}
+
+function _pvNextPage(from) {
+  const pages = pvState.snap.pages || [];
+  for (let i = from + 1; i < pages.length; i++) {
+    const pg = pages[i];
+    if (!pg.visibleIf || evalCondition(pg.visibleIf, pvState.answers)) return i;
+  }
+  return -1;
+}
+
+function _pvVisibleElements(page) {
+  return (page.elements || []).filter(el =>
+    !el.visibleIf || evalCondition(el.visibleIf, pvState.answers)
+  );
+}
+
+// ── Render current page ───────────────────────────────────────────────────────
+function _pvRender() {
+  const pages  = pvState.snap.pages || [];
+  const total  = pages.length;
+  const idx    = pvState.pageIdx;
+  const page   = pages[idx];
+  const isLast = _pvNextPage(idx) === -1;
+
+  // Progress
+  const pct = total > 1 ? Math.round(((idx) / (total - 1)) * 100) : 100;
+  document.getElementById('previewProgressBar').style.width = pct + '%';
+  document.getElementById('previewProgressLabel').textContent = `${idx + 1} / ${total}`;
+
+  // Title bar
+  const survTitle = pvState.snap.title;
+  const tStr = typeof survTitle === 'object'
+    ? (survTitle.de || survTitle.default || '')
+    : (survTitle || '');
+  document.getElementById('previewTitleBar').textContent = stripMeta(tStr) || 'Survey Preview';
+
+  // Footer
+  document.getElementById('previewBackBtn').disabled = pvState.history.length === 0;
+  document.getElementById('previewNextBtn').textContent = isLast ? 'Submit ✓' : 'Next →';
+  document.getElementById('previewFooterCenter').textContent =
+    `${_pvVisibleElements(page).length} question${_pvVisibleElements(page).length !== 1 ? 's' : ''} on this page`;
+
+  // Content
+  const els = _pvVisibleElements(page);
+  const html = `
+    <div class="preview-page-tag">page ${idx + 1}</div>
+    ${page.title ? `<h2 class="preview-page-title">${_pvEsc(stripMeta(page.title))}</h2>` : ''}
+    ${page.description ? `<p class="preview-page-desc">${_pvEsc(stripMeta(page.description))}</p>` : ''}
+    <div class="preview-questions">
+      ${els.map((el, i) => _pvRenderQuestion(el, i)).join('')}
+    </div>
+  `;
+  document.getElementById('previewContent').innerHTML = html;
+  document.getElementById('previewBody') && (document.getElementById('previewBody').scrollTop = 0);
+  document.querySelector('.preview-body').scrollTop = 0;
+
+  // Restore any existing answers into the inputs
+  _pvRestoreAnswers(els);
+}
+
+function _pvEsc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function _pvRenderQuestion(el, qi) {
+  const title = stripMeta(el.title || el.name || '');
+  const desc  = el.description ? stripMeta(el.description) : '';
+  const req   = el.isRequired ? '<span class="pq-required">*</span>' : '';
+
+  let inputHtml = '';
+
+  if (el.type === 'radiogroup' || el.type === 'checkbox') {
+    const inputType = el.type === 'radiogroup' ? 'radio' : 'checkbox';
+    const choices = (el.choices || []).map(c => {
+      if (typeof c === 'string') return { value: c, text: c };
+      return { value: String(c.value || ''), text: String(c.text || c.value || '') };
+    });
+
+    const choiceItems = choices.map(c => `
+      <label class="pq-choice" data-val="${_pvEsc(c.value)}" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
+        <input type="${inputType}" name="pv_${el.name}" value="${_pvEsc(stripMeta(c.value))}" style="pointer-events:none" />
+        <span class="pq-choice-label">${_pvEsc(stripMeta(c.text || c.value))}</span>
+      </label>
+    `).join('');
+
+    let extras = '';
+    if (el.showNoneItem) {
+      const noneText = stripMeta(el.noneText || 'None');
+      extras += `
+        <label class="pq-choice" data-val="__none__" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
+          <input type="${inputType}" name="pv_${el.name}" value="__none__" style="pointer-events:none" />
+          <span class="pq-choice-label">${_pvEsc(noneText)}</span>
+        </label>`;
+    }
+    if (el.showOtherItem) {
+      const otherText = stripMeta(el.otherText || 'Other');
+      extras += `
+        <label class="pq-choice" data-val="__other__" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
+          <input type="${inputType}" name="pv_${el.name}" value="__other__" style="pointer-events:none" />
+          <span class="pq-choice-label">${_pvEsc(otherText)}</span>
+        </label>
+        <input class="pq-other-input" id="pv_other_${el.name}" type="text"
+          placeholder="${_pvEsc(stripMeta(el.otherPlaceholder || ''))}"
+          style="display:none"
+          oninput="pvState.answers['${el.name}-Comment']=this.value" />`;
+    }
+
+    inputHtml = `<div class="pq-choices" id="pv_choices_${el.name}">${choiceItems}${extras}</div>`;
+
+  } else if (el.type === 'text') {
+    const iType = el.inputType || 'text';
+    const ph    = _pvEsc(stripMeta(el.placeholder || ''));
+    const ml    = el.maxLength ? `maxlength="${el.maxLength}"` : '';
+
+    if (iType === 'range') {
+      const mn = el.min !== '' && el.min !== undefined ? el.min : 0;
+      const mx = el.max !== '' && el.max !== undefined ? el.max : 100;
+      inputHtml = `
+        <div class="pq-range-wrap">
+          <div class="pq-range-labels"><span>${mn}</span><span>${mx}</span></div>
+          <input type="range" id="pv_${el.name}" name="pv_${el.name}"
+            min="${mn}" max="${mx}" value="${mn}"
+            oninput="document.getElementById('pv_rv_${el.name}').textContent=this.value;pvState.answers['${el.name}']=this.value" />
+          <div class="pq-range-value" id="pv_rv_${el.name}">${mn}</div>
+        </div>`;
+    } else {
+      const minA = (el.min !== '' && el.min !== undefined) ? `min="${_pvEsc(String(el.min))}"` : '';
+      const maxA = (el.max !== '' && el.max !== undefined) ? `max="${_pvEsc(String(el.max))}"` : '';
+      inputHtml = `<input type="${iType}" id="pv_${el.name}" name="pv_${el.name}"
+        placeholder="${ph}" ${ml} ${minA} ${maxA}
+        oninput="pvState.answers['${el.name}']=this.value" />`;
+    }
+  }
+
+  return `
+    <div class="pq" id="pv_q_${el.name}">
+      <div class="pq-title">${_pvEsc(title)}${req}</div>
+      ${desc ? `<div class="pq-desc">${_pvEsc(desc)}</div>` : ''}
+      ${inputHtml}
+    </div>`;
+}
+
+function _pvRestoreAnswers(els) {
+  els.forEach(el => {
+    const val = pvState.answers[el.name];
+    if (val === undefined) return;
+    if (el.type === 'radiogroup') {
+      document.querySelectorAll(`#pv_choices_${el.name} .pq-choice`).forEach(lbl => {
+        if (lbl.dataset.val === val) { lbl.classList.add('selected'); lbl.querySelector('input').checked = true; }
+      });
+    } else if (el.type === 'checkbox') {
+      const vals = Array.isArray(val) ? val : [val];
+      document.querySelectorAll(`#pv_choices_${el.name} .pq-choice`).forEach(lbl => {
+        if (vals.includes(lbl.dataset.val)) { lbl.classList.add('selected'); lbl.querySelector('input').checked = true; }
+      });
+    } else if (el.type === 'text') {
+      const inp = document.getElementById('pv_' + el.name);
+      if (inp) inp.value = val;
+      const rv  = document.getElementById('pv_rv_' + el.name);
+      if (rv)  rv.textContent = val;
+    }
+    // Restore other-text
+    const otherInp = document.getElementById('pv_other_' + el.name);
+    if (otherInp && pvState.answers[el.name + '-Comment']) {
+      otherInp.value = pvState.answers[el.name + '-Comment'];
+    }
+  });
+  // Show/hide other inputs based on current selection
+  els.forEach(el => {
+    if ((el.type === 'radiogroup' || el.type === 'checkbox') && el.showOtherItem) {
+      _pvUpdateOtherVisibility(el.name, el.type);
+    }
+  });
+}
+
+function pvToggleChoice(lbl, name, type) {
+  const val = lbl.dataset.val;
+  if (type === 'radiogroup') {
+    // Deselect all, select this one
+    document.querySelectorAll(`#pv_choices_${name} .pq-choice`).forEach(l => {
+      l.classList.remove('selected'); l.querySelector('input').checked = false;
+    });
+    lbl.classList.add('selected');
+    lbl.querySelector('input').checked = true;
+    pvState.answers[name] = val;
+  } else {
+    // Toggle this one
+    const isSelected = lbl.classList.contains('selected');
+    if (isSelected) {
+      lbl.classList.remove('selected'); lbl.querySelector('input').checked = false;
+    } else {
+      lbl.classList.add('selected'); lbl.querySelector('input').checked = true;
+    }
+    // Collect all selected
+    const selected = [];
+    document.querySelectorAll(`#pv_choices_${name} .pq-choice.selected`).forEach(l => selected.push(l.dataset.val));
+    pvState.answers[name] = selected;
+  }
+  _pvUpdateOtherVisibility(name, type);
+  // Re-evaluate visibleIf for other questions on this page (live filtering)
+  _pvRefreshQuestionVisibility();
+}
+
+function _pvUpdateOtherVisibility(name, type) {
+  const otherInp = document.getElementById('pv_other_' + name);
+  if (!otherInp) return;
+  const a = pvState.answers[name];
+  const showOther = type === 'radiogroup' ? a === '__other__' : (Array.isArray(a) && a.includes('__other__'));
+  otherInp.style.display = showOther ? 'block' : 'none';
+}
+
+function _pvRefreshQuestionVisibility() {
+  if (!pvState) return;
+  const pages = pvState.snap.pages || [];
+  const page  = pages[pvState.pageIdx];
+  if (!page) return;
+  (page.elements || []).forEach(el => {
+    const qEl = document.getElementById('pv_q_' + el.name);
+    if (!qEl) return;
+    const visible = !el.visibleIf || evalCondition(el.visibleIf, pvState.answers);
+    qEl.style.display = visible ? '' : 'none';
+  });
+  // Update question count
+  const visCount = _pvVisibleElements(page).length;
+  document.getElementById('previewFooterCenter').textContent =
+    `${visCount} question${visCount !== 1 ? 's' : ''} on this page`;
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function previewNext() {
+  if (!pvState) return;
+  const pages  = pvState.snap.pages || [];
+  const isLast = _pvNextPage(pvState.pageIdx) === -1;
+
+  if (isLast) {
+    // Show complete screen
+    document.getElementById('previewContent').innerHTML = `
+      <div class="preview-complete">
+        <div class="preview-complete-icon">✅</div>
+        <h2>Survey Complete</h2>
+        <p>Thank you for completing the survey.<br>Close this preview to return to the editor.</p>
+      </div>`;
+    document.getElementById('previewNextBtn').style.display = 'none';
+    document.getElementById('previewFooterCenter').textContent = '';
+    document.getElementById('previewProgressBar').style.width = '100%';
+    document.getElementById('previewProgressLabel').textContent = 'Done';
+    return;
+  }
+
+  pvState.history.push(pvState.pageIdx);
+  pvState.pageIdx = _pvNextPage(pvState.pageIdx);
+  _pvRender();
+}
+
+function previewBack() {
+  if (!pvState || pvState.history.length === 0) return;
+  pvState.pageIdx = pvState.history.pop();
+  document.getElementById('previewNextBtn').style.display = '';
+  _pvRender();
+}
+
 // ── Import modal keyboard shortcuts ──────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeImport();
+  if (e.key === 'Escape') { closePreview(); closeImport(); }
 });
 document.getElementById('importModal').addEventListener('click', e => {
   if (e.target === document.getElementById('importModal')) closeImport();
