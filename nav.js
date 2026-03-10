@@ -8,11 +8,12 @@
 
   // ── Links ────────────────────────────────────────────────────────────────
   const LINKS = [
-    { href: '/#about',      label: 'about' },
-    { href: '/#experience', label: 'experience' },
-    { href: '/#oss',        label: 'open source' },
-    { href: '/tools.html',  label: 'tools' },
-    { href: '/#contact',    label: 'contact' },
+    { href: '/#about',       label: 'about' },
+    { href: '/#experience',  label: 'experience' },
+    { href: '/#oss',         label: 'open source' },
+    { href: '/tools.html',   label: 'tools' },
+    { href: '/survey.html',  label: 'survey' },
+    { href: '/#contact',     label: 'contact' },
   ];
 
   const BACK_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -90,6 +91,7 @@
   function activeHref() {
     const p = window.location.pathname;
     if (p.startsWith('/tools')) return '/tools.html';
+    if (p.startsWith('/survey')) return '/survey.html';
     return null;
   }
 

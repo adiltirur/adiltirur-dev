@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survey Creator — Adil Tirur</title>
+  <meta name="description" content="Visual survey creator — build SurveyJS-compatible JSON surveys with pages, questions, and choices." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafafa;
+      --fg: #111111;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e5e7eb;
+      --surface: #ffffff;
+      --surface-2: #f3f4f6;
+      --surface-3: #f9fafb;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+      --radius: 10px;
+      --nav-h: 73px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .page-header-left {}
+    .page-tag {
+      font-family: var(--mono); font-size: 12px; color: var(--accent);
+      margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+    }
+    .page-tag::before {
+      content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent);
+    }
+    .page-header h1 {
+      font-size: 22px; font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.2;
+    }
+    .page-header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* ── Buttons ── */
+    .btn {
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      padding: 7px 14px; border-radius: 7px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted); cursor: pointer;
+      transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+      white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .btn.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+    .btn.btn-danger { color: var(--danger); }
+    .btn.btn-danger:hover { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+    .btn.btn-sm { font-size: 11px; padding: 4px 10px; border-radius: 5px; }
+    .btn.btn-icon { padding: 5px 8px; }
+
+    /* ── Main layout ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar (pages list) ── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .pages-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .page-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      gap: 8px;
+      position: relative;
+    }
+    .page-item:hover { background: var(--surface-2); }
+    .page-item.active { background: var(--accent-light); border-left-color: var(--accent); }
+    .page-item.active .page-item-name { color: var(--accent); }
+    .page-item-num {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      min-width: 20px;
+    }
+    .page-item-name {
+      font-size: 12px; color: var(--fg); flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .page-item-del {
+      opacity: 0; transition: opacity 0.15s;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); padding: 2px 4px; border-radius: 4px;
+      font-size: 14px; line-height: 1; flex-shrink: 0;
+    }
+    .page-item:hover .page-item-del { opacity: 1; }
+    .page-item-del:hover { color: var(--danger); background: var(--danger-light); }
+
+    /* ── Editor area ── */
+    .editor-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      background: var(--bg);
+    }
+
+    /* ── Survey title card ── */
+    .meta-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .meta-card-title {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    /* ── Page editor card ── */
+    .page-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+    .page-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-card-badge {
+      font-family: var(--mono); font-size: 10px; color: var(--accent);
+      background: var(--accent-light); padding: 2px 8px; border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .page-card-name {
+      font-size: 13px; font-weight: 500; flex: 1;
+    }
+    .page-card-body { padding: 20px; }
+
+    /* ── Form fields ── */
+    .field-group { margin-bottom: 14px; }
+    .field-row { display: flex; gap: 12px; margin-bottom: 14px; }
+    .field-row .field-group { flex: 1; margin-bottom: 0; }
+    .field-label {
+      font-size: 11px; font-weight: 500; color: var(--muted);
+      margin-bottom: 5px; display: block; text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    input[type="text"], input[type="number"], textarea, select {
+      width: 100%;
+      font-family: var(--sans); font-size: 13px;
+      padding: 7px 10px; border: 1px solid var(--border);
+      border-radius: 6px; background: var(--surface);
+      color: var(--fg); outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+    textarea { resize: vertical; min-height: 52px; line-height: 1.5; }
+    select { cursor: pointer; }
+    .field-inline { display: flex; align-items: center; gap: 8px; }
+    input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--accent); }
+    .checkbox-label { font-size: 13px; color: var(--fg); cursor: pointer; user-select: none; }
+
+    /* ── Section divider ── */
+    .section-divider {
+      font-family: var(--mono); font-size: 10px; font-weight: 500;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+      margin: 18px 0 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── Questions list ── */
+    .questions-list { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── Question card ── */
+    .question-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-3);
+    }
+    .question-card-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 8px 8px 0 0;
+      transition: background 0.1s;
+    }
+    .question-card-header:hover { background: var(--surface-2); }
+    .question-card.collapsed .question-card-header { border-radius: 8px; }
+    .question-card-toggle {
+      font-size: 11px; color: var(--muted); transition: transform 0.2s;
+      flex-shrink: 0; width: 16px;
+    }
+    .question-card.collapsed .question-card-toggle { transform: rotate(-90deg); }
+    .question-type-badge {
+      font-family: var(--mono); font-size: 10px;
+      padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+    }
+    .type-radio { background: #ede9fe; color: #7c3aed; }
+    .type-checkbox { background: #fef3c7; color: #d97706; }
+    .type-text { background: #dcfce7; color: #16a34a; }
+    .question-card-title {
+      font-size: 12px; color: var(--fg); flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .question-card-body {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .question-card.collapsed .question-card-body { display: none; }
+
+    /* ── Choices list ── */
+    .choices-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .choice-row {
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .choice-index {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      padding-top: 9px; min-width: 20px; text-align: right;
+      flex-shrink: 0;
+    }
+    .choice-fields { flex: 1; display: flex; gap: 8px; }
+    .choice-fields input { flex: 1; }
+    .choice-val { max-width: 140px; flex-shrink: 0; }
+    .choice-del {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      padding: 7px 5px; transition: color 0.15s; flex-shrink: 0;
+    }
+    .choice-del:hover { color: var(--danger); }
+
+    /* ── Drag handle ── */
+    .drag-handle {
+      cursor: grab; color: var(--muted); padding: 8px 4px; flex-shrink: 0;
+      user-select: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
+
+    /* ── Add buttons row ── */
+    .add-row {
+      display: flex; gap: 8px; align-items: center; margin-top: 8px;
+    }
+
+    /* ── JSON panel ── */
+    .json-panel {
+      width: 380px;
+      flex-shrink: 0;
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .json-panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .json-panel-title {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .json-output {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--fg);
+      white-space: pre;
+      background: var(--surface);
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--fg); color: #fff; padding: 10px 18px;
+      border-radius: 8px; font-size: 13px; z-index: 9999;
+      transform: translateY(60px); opacity: 0;
+      transition: all 0.25s; pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── Import modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface); border-radius: var(--radius);
+      width: min(600px, 95vw); padding: 24px;
+      transform: translateY(8px); transition: transform 0.2s;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .modal-title { font-size: 15px; font-weight: 600; }
+    .modal-close {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      font-size: 20px; line-height: 1; padding: 2px 6px;
+    }
+    .modal-close:hover { color: var(--fg); }
+    .modal textarea {
+      height: 280px; font-family: var(--mono); font-size: 11px;
+      background: var(--surface-2); resize: vertical;
+    }
+    .modal-footer { margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center; padding: 48px 24px; color: var(--muted);
+    }
+    .empty-state-icon { font-size: 32px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+  </style>
+</head>
+<body>
+
+<script src="/nav.js"></script>
+<site-nav></site-nav>
+
+<!-- ── Page header ─────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-header-left">
+    <div class="page-tag">survey creator</div>
+    <h1>Survey Builder</h1>
+  </div>
+  <div class="page-header-actions">
+    <button class="btn" onclick="openImport()">⬆ Import JSON</button>
+    <button class="btn" onclick="copyJSON()">⎘ Copy JSON</button>
+    <button class="btn btn-primary" onclick="downloadJSON()">⬇ Download JSON</button>
+  </div>
+</div>
+
+<!-- ── Main layout ─────────────────────────────────────────────────── -->
+<div class="main-layout">
+
+  <!-- Sidebar: pages list -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Pages</span>
+      <button class="btn btn-sm" onclick="addPage()">+ Add</button>
+    </div>
+    <div class="pages-list" id="pagesList"></div>
+  </div>
+
+  <!-- Editor area -->
+  <div class="editor-area" id="editorArea">
+    <div id="editorContent"></div>
+  </div>
+
+  <!-- JSON output panel -->
+  <div class="json-panel">
+    <div class="json-panel-header">
+      <span class="json-panel-title">JSON Output</span>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-icon" onclick="copyJSON()" title="Copy JSON">⎘</button>
+        <button class="btn btn-sm btn-icon" onclick="downloadJSON()" title="Download JSON">⬇</button>
+      </div>
+    </div>
+    <div class="json-output" id="jsonOutput"></div>
+  </div>
+
+</div>
+
+<!-- ── Import modal ─────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Import Survey JSON</div>
+      <button class="modal-close" onclick="closeImport()">×</button>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Paste SurveyJS-compatible JSON</label>
+      <textarea id="importInput" placeholder='{"title": "My Survey", "pages": [...]}'></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeImport()">Cancel</button>
+      <button class="btn btn-primary" onclick="doImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ─────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+
+let survey = {
+  title: { default: '', de: '' },
+  logoPosition: 'right',
+  pages: []
+};
+
+let activePage = null; // index into survey.pages
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function uid() {
+  return Math.random().toString(36).slice(2, 9);
+}
+
+function toast(msg, duration = 2000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+// ── Survey → JSON ────────────────────────────────────────────────────────────
+
+function buildJSON() {
+  const out = {};
+
+  // title
+  if (survey.title && (survey.title.default || survey.title.de)) {
+    if (survey.title.default && survey.title.de) {
+      out.title = { default: survey.title.default, de: survey.title.de };
+    } else {
+      out.title = survey.title.default || survey.title.de;
+    }
+  }
+
+  if (survey.logoPosition) out.logoPosition = survey.logoPosition;
+
+  out.pages = survey.pages.map(page => {
+    const p = {};
+    if (page.name) p.name = page.name;
+    if (page.title) p.title = page.title;
+    if (page.visibleIf) p.visibleIf = page.visibleIf;
+    if (page.description) p.description = page.description;
+
+    p.elements = (page.elements || []).map(el => buildElement(el));
+    return p;
+  });
+
+  return out;
+}
+
+function buildElement(el) {
+  const out = {};
+  if (el.type) out.type = el.type;
+  if (el.name) out.name = el.name;
+  if (el.title) out.title = el.title;
+  if (el.description) out.description = el.description;
+  if (el.isRequired) out.isRequired = true;
+  if (el.visibleIf) out.visibleIf = el.visibleIf;
+
+  if (el.type === 'radiogroup' || el.type === 'checkbox') {
+    if (el.choices && el.choices.length > 0) {
+      out.choices = el.choices.map(c => {
+        if (c.value === c.text) return c.value;
+        return { value: c.value, text: c.text };
+      });
+    }
+    if (el.showNoneItem) out.showNoneItem = true;
+    if (el.noneText) out.noneText = el.noneText;
+    if (el.showOtherItem || el.otherText) {
+      out.showOtherItem = true;
+      if (el.otherText) out.otherText = el.otherText;
+      if (el.otherPlaceholder) out.otherPlaceholder = el.otherPlaceholder;
+    }
+    if (el.commentPlaceholder) out.commentPlaceholder = el.commentPlaceholder;
+  }
+
+  if (el.type === 'text') {
+    if (el.inputType && el.inputType !== 'text') out.inputType = el.inputType;
+    if (el.placeholder) out.placeholder = el.placeholder;
+    if (el.maxLength) out.maxLength = parseInt(el.maxLength) || undefined;
+    if (el.inputType === 'range') {
+      if (el.min !== '' && el.min !== undefined) out.min = el.min;
+      if (el.max !== '' && el.max !== undefined) out.max = el.max;
+    }
+    if (el.inputType === 'date' || el.inputType === 'datetime-local') {
+      if (el.min) out.min = el.min;
+      if (el.max) out.max = el.max;
+    }
+  }
+
+  return out;
+}
+
+function refreshJSON() {
+  const json = buildJSON();
+  document.getElementById('jsonOutput').textContent = JSON.stringify(json, null, 2);
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+function render() {
+  renderSidebar();
+  renderEditor();
+  refreshJSON();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('pagesList');
+  if (survey.pages.length === 0) {
+    list.innerHTML = `<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages yet</div>`;
+    return;
+  }
+  list.innerHTML = survey.pages.map((page, i) => `
+    <div class="page-item ${activePage === i ? 'active' : ''}" onclick="selectPage(${i})">
+      <span class="page-item-num">${i + 1}</span>
+      <span class="page-item-name" title="${esc(page.title || page.name || 'Untitled page')}">${esc(page.title || page.name || 'Untitled page')}</span>
+      <button class="page-item-del" onclick="deletePage(event, ${i})" title="Delete page">✕</button>
+    </div>
+  `).join('');
+}
+
+function renderEditor() {
+  const content = document.getElementById('editorContent');
+
+  // Survey meta card (always shown at top of view)
+  const metaCard = `
+    <div class="meta-card" id="metaCard">
+      <div class="meta-card-title">Survey Settings</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Title (default)</label>
+          <input type="text" value="${esc(survey.title.default || '')}" oninput="survey.title.default=this.value;refreshJSON()" placeholder="Survey title" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Title (de)</label>
+          <input type="text" value="${esc(survey.title.de || '')}" oninput="survey.title.de=this.value;refreshJSON()" placeholder="German title" />
+        </div>
+      </div>
+      <div class="field-group" style="max-width:200px;">
+        <label class="field-label">Logo Position</label>
+        <select onchange="survey.logoPosition=this.value;refreshJSON()">
+          <option value="right" ${survey.logoPosition === 'right' ? 'selected' : ''}>Right</option>
+          <option value="left" ${survey.logoPosition === 'left' ? 'selected' : ''}>Left</option>
+          <option value="none" ${survey.logoPosition === 'none' ? 'selected' : ''}>None</option>
+        </select>
+      </div>
+    </div>
+  `;
+
+  if (activePage === null || activePage >= survey.pages.length) {
+    content.innerHTML = metaCard + `
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <p>Select a page from the sidebar, or add a new one to start building your survey.</p>
+      </div>`;
+    return;
+  }
+
+  const page = survey.pages[activePage];
+
+  const pageHtml = `
+    <div class="page-card">
+      <div class="page-card-header">
+        <span class="page-card-badge">page ${activePage + 1}</span>
+        <span class="page-card-name">${esc(page.title || page.name || 'Untitled page')}</span>
+        <div style="display:flex;gap:6px;margin-left:auto;">
+          <button class="btn btn-sm" onclick="movePage(${activePage}, -1)" ${activePage === 0 ? 'disabled' : ''}>↑</button>
+          <button class="btn btn-sm" onclick="movePage(${activePage}, 1)" ${activePage === survey.pages.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="btn btn-sm btn-danger" onclick="deletePage(null, ${activePage})">Delete Page</button>
+        </div>
+      </div>
+      <div class="page-card-body">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Page Name (id)</label>
+            <input type="text" value="${esc(page.name || '')}" oninput="survey.pages[${activePage}].name=this.value;renderSidebar();refreshJSON()" placeholder="page_name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Page Title</label>
+            <input type="text" value="${esc(page.title || '')}" oninput="survey.pages[${activePage}].title=this.value;renderSidebar();refreshJSON()" placeholder="Page title shown to user" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Visible If (condition)</label>
+          <input type="text" value="${esc(page.visibleIf || '')}" oninput="survey.pages[${activePage}].visibleIf=this.value;refreshJSON()" placeholder="{question} = 'value'" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <textarea oninput="survey.pages[${activePage}].description=this.value;refreshJSON()" placeholder="Optional page description">${esc(page.description || '')}</textarea>
+        </div>
+
+        <div class="section-divider">Questions (${(page.elements || []).length})</div>
+
+        <div class="questions-list" id="questionsList">
+          ${(page.elements || []).map((el, qi) => renderQuestion(activePage, qi, el)).join('')}
+        </div>
+
+        <div class="add-row" style="margin-top:16px;">
+          <button class="btn" onclick="addQuestion('radiogroup')">+ Radio Group</button>
+          <button class="btn" onclick="addQuestion('checkbox')">+ Checkbox</button>
+          <button class="btn" onclick="addQuestion('text')">+ Text Input</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  content.innerHTML = metaCard + pageHtml;
+}
+
+function renderQuestion(pi, qi, el) {
+  const typeBadgeClass = el.type === 'radiogroup' ? 'type-radio' : el.type === 'checkbox' ? 'type-checkbox' : 'type-text';
+  const id = `q_${pi}_${qi}`;
+
+  let choicesHtml = '';
+  if (el.type === 'radiogroup' || el.type === 'checkbox') {
+    const choices = el.choices || [];
+    choicesHtml = `
+      <div class="section-divider">Choices (${choices.length})</div>
+      <div class="choices-list" id="choices_${pi}_${qi}">
+        ${choices.map((c, ci) => renderChoice(pi, qi, ci, c)).join('')}
+      </div>
+      <div class="add-row">
+        <button class="btn btn-sm" onclick="addChoice(${pi}, ${qi})">+ Add Choice</button>
+      </div>
+
+      <div class="section-divider" style="margin-top:14px;">None / Other Options</div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-inline">
+            <input type="checkbox" id="none_${pi}_${qi}" ${el.showNoneItem ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].showNoneItem=this.checked;refreshJSON()" />
+            <label class="checkbox-label" for="none_${pi}_${qi}">Show "None" item</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">None Text</label>
+          <input type="text" value="${esc(el.noneText || '')}" oninput="survey.pages[${pi}].elements[${qi}].noneText=this.value;refreshJSON()" placeholder="None of the above" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-inline">
+            <input type="checkbox" id="other_${pi}_${qi}" ${el.showOtherItem ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].showOtherItem=this.checked;refreshJSON()" />
+            <label class="checkbox-label" for="other_${pi}_${qi}">Show "Other" item</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Other Text</label>
+          <input type="text" value="${esc(el.otherText || '')}" oninput="survey.pages[${pi}].elements[${qi}].otherText=this.value;refreshJSON()" placeholder="Other (please specify)" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Other Placeholder</label>
+        <input type="text" value="${esc(el.otherPlaceholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].otherPlaceholder=this.value;refreshJSON()" placeholder="Placeholder for other input" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Comment Placeholder</label>
+        <input type="text" value="${esc(el.commentPlaceholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].commentPlaceholder=this.value;refreshJSON()" placeholder="Comment placeholder" />
+      </div>
+    `;
+  }
+
+  let textHtml = '';
+  if (el.type === 'text') {
+    textHtml = `
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Input Type</label>
+          <select onchange="survey.pages[${pi}].elements[${qi}].inputType=this.value;renderEditor();refreshJSON()">
+            <option value="text" ${(el.inputType || 'text') === 'text' ? 'selected' : ''}>text</option>
+            <option value="date" ${el.inputType === 'date' ? 'selected' : ''}>date</option>
+            <option value="datetime-local" ${el.inputType === 'datetime-local' ? 'selected' : ''}>datetime-local</option>
+            <option value="range" ${el.inputType === 'range' ? 'selected' : ''}>range</option>
+            <option value="number" ${el.inputType === 'number' ? 'selected' : ''}>number</option>
+            <option value="email" ${el.inputType === 'email' ? 'selected' : ''}>email</option>
+            <option value="tel" ${el.inputType === 'tel' ? 'selected' : ''}>tel</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Placeholder</label>
+          <input type="text" value="${esc(el.placeholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].placeholder=this.value;refreshJSON()" placeholder="Input placeholder text" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Max Length</label>
+          <input type="number" value="${esc(el.maxLength || '')}" oninput="survey.pages[${pi}].elements[${qi}].maxLength=this.value;refreshJSON()" placeholder="e.g. 200" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Min</label>
+          <input type="text" value="${esc(el.min !== undefined ? el.min : '')}" oninput="survey.pages[${pi}].elements[${qi}].min=this.value;refreshJSON()" placeholder="${el.inputType === 'range' ? '0' : 'min value'}" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Max</label>
+          <input type="text" value="${esc(el.max !== undefined ? el.max : '')}" oninput="survey.pages[${pi}].elements[${qi}].max=this.value;refreshJSON()" placeholder="${el.inputType === 'range' ? '100' : 'max value'}" />
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="question-card" id="${id}">
+      <div class="question-card-header" onclick="toggleQuestion('${id}')">
+        <span class="question-card-toggle">▼</span>
+        <span class="question-type-badge ${typeBadgeClass}">${el.type}</span>
+        <span class="question-card-title" title="${esc(el.title || el.name || 'Untitled')}">${esc(el.title || el.name || 'Untitled question')}</span>
+        <div style="display:flex;gap:6px;" onclick="event.stopPropagation()">
+          <button class="btn btn-sm btn-icon" onclick="moveQuestion(${pi}, ${qi}, -1)" ${qi === 0 ? 'disabled' : ''} title="Move up">↑</button>
+          <button class="btn btn-sm btn-icon" onclick="moveQuestion(${pi}, ${qi}, 1)" ${qi === (survey.pages[pi].elements || []).length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+          <button class="btn btn-sm btn-danger btn-icon" onclick="deleteQuestion(${pi}, ${qi})" title="Delete question">✕</button>
+        </div>
+      </div>
+      <div class="question-card-body">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Question Name (id)</label>
+            <input type="text" value="${esc(el.name || '')}" oninput="survey.pages[${pi}].elements[${qi}].name=this.value;refreshJSON()" placeholder="question_id" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Type</label>
+            <select onchange="changeQuestionType(${pi}, ${qi}, this.value)">
+              <option value="radiogroup" ${el.type === 'radiogroup' ? 'selected' : ''}>radiogroup</option>
+              <option value="checkbox" ${el.type === 'checkbox' ? 'selected' : ''}>checkbox</option>
+              <option value="text" ${el.type === 'text' ? 'selected' : ''}>text</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Title</label>
+          <textarea oninput="survey.pages[${pi}].elements[${qi}].title=this.value;document.querySelector('#${id} .question-card-title').textContent=this.value||survey.pages[${pi}].elements[${qi}].name||'Untitled question';refreshJSON()" placeholder="Question text shown to user">${esc(el.title || '')}</textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <input type="text" value="${esc(el.description || '')}" oninput="survey.pages[${pi}].elements[${qi}].description=this.value;refreshJSON()" placeholder="Optional description below title" />
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-inline">
+              <input type="checkbox" id="req_${pi}_${qi}" ${el.isRequired ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].isRequired=this.checked;refreshJSON()" />
+              <label class="checkbox-label" for="req_${pi}_${qi}">Required</label>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Visible If</label>
+            <input type="text" value="${esc(el.visibleIf || '')}" oninput="survey.pages[${pi}].elements[${qi}].visibleIf=this.value;refreshJSON()" placeholder="{q_name} = 'value'" />
+          </div>
+        </div>
+        ${choicesHtml}
+        ${textHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderChoice(pi, qi, ci, c) {
+  return `
+    <div class="choice-row">
+      <span class="choice-index">${ci + 1}</span>
+      <div class="choice-fields">
+        <input type="text" class="choice-val" value="${esc(c.value || '')}" oninput="survey.pages[${pi}].elements[${qi}].choices[${ci}].value=this.value;refreshJSON()" placeholder="value" />
+        <input type="text" value="${esc(c.text || '')}" oninput="survey.pages[${pi}].elements[${qi}].choices[${ci}].text=this.value;refreshJSON()" placeholder="Display text" />
+      </div>
+      <button class="choice-del" onclick="deleteChoice(${pi}, ${qi}, ${ci})" title="Remove choice">✕</button>
+    </div>
+  `;
+}
+
+// ── Actions ──────────────────────────────────────────────────────────────────
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function selectPage(i) {
+  activePage = i;
+  render();
+  document.getElementById('editorArea').scrollTop = 0;
+}
+
+function addPage() {
+  const num = survey.pages.length + 1;
+  survey.pages.push({
+    name: `page${num}`,
+    title: `Page ${num}`,
+    visibleIf: '',
+    description: '',
+    elements: []
+  });
+  activePage = survey.pages.length - 1;
+  render();
+}
+
+function deletePage(event, i) {
+  if (event) event.stopPropagation();
+  if (!confirm(`Delete page "${survey.pages[i].title || survey.pages[i].name}"?`)) return;
+  survey.pages.splice(i, 1);
+  if (activePage >= survey.pages.length) activePage = survey.pages.length - 1;
+  if (activePage < 0) activePage = null;
+  render();
+}
+
+function movePage(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= survey.pages.length) return;
+  [survey.pages[i], survey.pages[j]] = [survey.pages[j], survey.pages[i]];
+  activePage = j;
+  render();
+}
+
+function addQuestion(type) {
+  if (activePage === null) return;
+  const num = (survey.pages[activePage].elements || []).length + 1;
+  const q = {
+    type,
+    name: `q${num}_${uid()}`,
+    title: '',
+    isRequired: false,
+    visibleIf: '',
+    description: ''
+  };
+  if (type === 'radiogroup' || type === 'checkbox') {
+    q.choices = [];
+    q.showNoneItem = false;
+    q.noneText = '';
+    q.showOtherItem = false;
+    q.otherText = '';
+    q.otherPlaceholder = '';
+    q.commentPlaceholder = '';
+  }
+  if (type === 'text') {
+    q.inputType = 'text';
+    q.placeholder = '';
+    q.maxLength = '';
+    q.min = '';
+    q.max = '';
+  }
+  if (!survey.pages[activePage].elements) survey.pages[activePage].elements = [];
+  survey.pages[activePage].elements.push(q);
+  renderEditor();
+  refreshJSON();
+  // scroll to new question
+  setTimeout(() => {
+    const ql = document.getElementById('questionsList');
+    if (ql) ql.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+function deleteQuestion(pi, qi) {
+  if (!confirm('Delete this question?')) return;
+  survey.pages[pi].elements.splice(qi, 1);
+  renderEditor();
+  refreshJSON();
+}
+
+function moveQuestion(pi, qi, dir) {
+  const els = survey.pages[pi].elements;
+  const j = qi + dir;
+  if (j < 0 || j >= els.length) return;
+  [els[qi], els[j]] = [els[j], els[qi]];
+  renderEditor();
+  refreshJSON();
+}
+
+function changeQuestionType(pi, qi, newType) {
+  const el = survey.pages[pi].elements[qi];
+  el.type = newType;
+
+  // clear fields that don't apply
+  if (newType === 'text') {
+    delete el.choices;
+    delete el.showNoneItem;
+    delete el.noneText;
+    delete el.showOtherItem;
+    delete el.otherText;
+    delete el.otherPlaceholder;
+    delete el.commentPlaceholder;
+    if (!el.inputType) el.inputType = 'text';
+    if (el.placeholder === undefined) el.placeholder = '';
+    if (el.maxLength === undefined) el.maxLength = '';
+    if (el.min === undefined) el.min = '';
+    if (el.max === undefined) el.max = '';
+  } else {
+    delete el.inputType;
+    delete el.placeholder;
+    delete el.maxLength;
+    delete el.min;
+    delete el.max;
+    if (!el.choices) el.choices = [];
+    if (el.showNoneItem === undefined) el.showNoneItem = false;
+    if (el.noneText === undefined) el.noneText = '';
+    if (el.showOtherItem === undefined) el.showOtherItem = false;
+    if (el.otherText === undefined) el.otherText = '';
+    if (el.otherPlaceholder === undefined) el.otherPlaceholder = '';
+    if (el.commentPlaceholder === undefined) el.commentPlaceholder = '';
+  }
+  renderEditor();
+  refreshJSON();
+}
+
+function toggleQuestion(id) {
+  const card = document.getElementById(id);
+  if (card) card.classList.toggle('collapsed');
+}
+
+function addChoice(pi, qi) {
+  if (!survey.pages[pi].elements[qi].choices) survey.pages[pi].elements[qi].choices = [];
+  const choices = survey.pages[pi].elements[qi].choices;
+  choices.push({ value: '', text: '' });
+
+  // re-render just the choices list + the section divider count
+  const container = document.getElementById(`choices_${pi}_${qi}`);
+  if (container) {
+    container.innerHTML = choices.map((c, ci) => renderChoice(pi, qi, ci, c)).join('');
+    // update choice count in divider
+    const dividers = container.closest('.question-card-body').querySelectorAll('.section-divider');
+    if (dividers[0]) dividers[0].textContent = `Choices (${choices.length})`;
+    // focus new value input
+    const rows = container.querySelectorAll('.choice-row');
+    const last = rows[rows.length - 1];
+    if (last) last.querySelector('input').focus();
+  }
+  refreshJSON();
+}
+
+function deleteChoice(pi, qi, ci) {
+  survey.pages[pi].elements[qi].choices.splice(ci, 1);
+  const choices = survey.pages[pi].elements[qi].choices;
+
+  const container = document.getElementById(`choices_${pi}_${qi}`);
+  if (container) {
+    container.innerHTML = choices.map((c, ci2) => renderChoice(pi, qi, ci2, c)).join('');
+    const dividers = container.closest('.question-card-body').querySelectorAll('.section-divider');
+    if (dividers[0]) dividers[0].textContent = `Choices (${choices.length})`;
+  }
+  refreshJSON();
+}
+
+// ── Import / Export ──────────────────────────────────────────────────────────
+
+function openImport() {
+  document.getElementById('importModal').classList.add('open');
+  document.getElementById('importInput').value = '';
+  setTimeout(() => document.getElementById('importInput').focus(), 100);
+}
+function closeImport() {
+  document.getElementById('importModal').classList.remove('open');
+}
+
+function doImport() {
+  let raw = document.getElementById('importInput').value.trim();
+  if (!raw) return;
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch(e) {
+    alert('Invalid JSON: ' + e.message); return;
+  }
+  loadSurvey(parsed);
+  closeImport();
+  toast('Survey imported successfully');
+}
+
+function loadSurvey(data) {
+  // Normalize title
+  if (typeof data.title === 'string') {
+    survey.title = { default: data.title, de: '' };
+  } else if (data.title && typeof data.title === 'object') {
+    survey.title = { default: data.title.default || '', de: data.title.de || '' };
+  } else {
+    survey.title = { default: '', de: '' };
+  }
+
+  survey.logoPosition = data.logoPosition || 'right';
+
+  survey.pages = (data.pages || []).map(page => {
+    return {
+      name: page.name || '',
+      title: page.title || '',
+      visibleIf: page.visibleIf || '',
+      description: page.description || '',
+      elements: (page.elements || []).map(el => loadElement(el))
+    };
+  });
+
+  activePage = survey.pages.length > 0 ? 0 : null;
+  render();
+}
+
+function loadElement(el) {
+  const out = {
+    type: el.type || 'text',
+    name: el.name || '',
+    title: el.title || '',
+    description: el.description || '',
+    isRequired: el.isRequired || false,
+    visibleIf: el.visibleIf || ''
+  };
+
+  if (out.type === 'radiogroup' || out.type === 'checkbox') {
+    out.choices = (el.choices || []).map(c => {
+      if (typeof c === 'string' || typeof c === 'number') {
+        return { value: String(c), text: String(c) };
+      }
+      return { value: String(c.value !== undefined ? c.value : ''), text: String(c.text !== undefined ? c.text : '') };
+    });
+    out.showNoneItem = el.showNoneItem || false;
+    out.noneText = el.noneText || '';
+    out.showOtherItem = el.showOtherItem || false;
+    out.otherText = el.otherText || '';
+    out.otherPlaceholder = el.otherPlaceholder || '';
+    out.commentPlaceholder = el.commentPlaceholder || '';
+  }
+
+  if (out.type === 'text') {
+    out.inputType = el.inputType || 'text';
+    out.placeholder = el.placeholder || '';
+    out.maxLength = el.maxLength !== undefined ? el.maxLength : '';
+    out.min = el.min !== undefined ? el.min : '';
+    out.max = el.max !== undefined ? el.max : '';
+  }
+
+  return out;
+}
+
+function copyJSON() {
+  const json = JSON.stringify(buildJSON(), null, 2);
+  navigator.clipboard.writeText(json).then(() => toast('JSON copied to clipboard!')).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = json;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('JSON copied!');
+  });
+}
+
+function downloadJSON() {
+  const json = JSON.stringify(buildJSON(), null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'survey.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('JSON downloaded!');
+}
+
+// ── Import modal keyboard shortcuts ──────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeImport();
+});
+document.getElementById('importModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('importModal')) closeImport();
+});
+
+// ── Initial render ────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
