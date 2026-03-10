@@ -485,7 +485,9 @@
     <h1>Survey</h1>
     <div class="survey-name-badge" id="surveyNameBadge">no file loaded</div>
   </div>
-  <div style="display:flex;gap:8px;">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="shareFeedback" style="font-family:var(--mono);font-size:11px;color:#16a34a;opacity:0;transition:opacity 0.3s;pointer-events:none;">Link copied!</span>
+    <button class="btn" id="shareLinkBtn" onclick="copyShareLink()" disabled title="Copy shareable link to this survey">🔗 Copy Link</button>
     <button class="btn" onclick="openImport()">⬆ Upload JSON</button>
     <button class="btn btn-primary" id="previewBtn" onclick="openPreview()" disabled>▶ Preview</button>
   </div>
@@ -608,6 +610,7 @@ function loadSurvey(data, name) {
 
   document.getElementById('surveyNameBadge').textContent = name || surveyTitle(data);
   document.getElementById('previewBtn').disabled = false;
+  document.getElementById('shareLinkBtn').disabled = false;
   document.getElementById('uploadState').style.display = 'none';
   document.getElementById('pageViewerArea').style.display = '';
 
@@ -1242,6 +1245,42 @@ function previewBack() {
   document.getElementById('previewNextBtn').style.display = '';
   _pvRender();
 }
+
+// ── Share link ─────────────────────────────────────────────────────────────────
+function _encodeContent(text) {
+  try { return btoa(unescape(encodeURIComponent(text))); } catch(e) { return btoa(text); }
+}
+function _decodeContent(b64) {
+  try { return decodeURIComponent(escape(atob(b64))); } catch(e) { return ''; }
+}
+
+function copyShareLink() {
+  if (!survey) return;
+  const json = JSON.stringify(survey);
+  const url  = location.origin + '/survey.html#' + _encodeContent(json);
+  navigator.clipboard.writeText(url).then(() => {
+    const fb = document.getElementById('shareFeedback');
+    fb.style.opacity = '1';
+    setTimeout(() => fb.style.opacity = '0', 2000);
+  });
+  // Also update the address bar so the current tab is already "shareable"
+  history.replaceState(null, '', '/survey.html#' + _encodeContent(json));
+}
+
+// ── Load from URL hash on page init ──────────────────────────────────────────
+(function () {
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  const json = _decodeContent(hash);
+  if (!json) return;
+  try {
+    const data = JSON.parse(json);
+    // defer so the DOM is fully ready
+    setTimeout(() => loadSurvey(data, surveyTitle(data) || 'Shared survey'), 0);
+  } catch(e) {
+    console.warn('survey.html: could not parse hash as JSON', e);
+  }
+})();
 
 // ── Keyboard shortcuts ────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
