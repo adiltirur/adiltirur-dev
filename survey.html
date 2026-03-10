@@ -521,7 +521,7 @@ function renderSidebar() {
   document.getElementById('pagesList').innerHTML = pages.length === 0
     ? '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages</div>'
     : pages.map((pg, i) => {
-        const title = stripMeta(pg.title || pg.name || 'Untitled page');
+        const title = pg.title || pg.name || 'Untitled page';
         const qCount = (pg.elements || []).length;
         const hasCond = !!pg.visibleIf;
         return `
@@ -549,8 +549,8 @@ function renderPageViewer() {
   if (!survey || pageIdx === null) { container.innerHTML = ''; return; }
 
   const pg = survey.pages[pageIdx];
-  const title = stripMeta(pg.title || pg.name || '');
-  const desc  = pg.description ? stripMeta(pg.description) : '';
+  const title = pg.title || pg.name || '';
+  const desc  = pg.description || '';
   const els   = pg.elements || [];
 
   const condHtml = pg.visibleIf
@@ -578,12 +578,12 @@ function renderPageViewer() {
 
 function renderQuestionRow(el) {
   const typeClass = el.type === 'radiogroup' ? 'q-type-radio' : el.type === 'checkbox' ? 'q-type-check' : 'q-type-text';
-  const title = stripMeta(el.title || el.name || '');
+  const title = el.title || el.name || '';
   const req   = el.isRequired ? '<span class="q-required">*</span>' : '';
 
   const choices = (el.choices || []).slice(0, 8).map(c => {
     const label = typeof c === 'string' ? c : (c.text || c.value || '');
-    return `<span class="q-choice-pill">${esc(stripMeta(label))}</span>`;
+    return `<span class="q-choice-pill">${esc(label)}</span>`;
   }).join('');
   const moreCount = (el.choices || []).length - 8;
   const moreHtml  = moreCount > 0 ? `<span class="q-choices-more">+${moreCount} more</span>` : '';
