@@ -164,6 +164,56 @@
     .page-item-qcount {
       font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px;
     }
+    .page-item-matches { margin-top: 5px; display: flex; flex-direction: column; gap: 3px; }
+    .page-item-match {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: flex; align-items: baseline; gap: 4px;
+    }
+    .page-item-match-icon { flex-shrink: 0; opacity: 0.6; }
+    .page-item-match-text { overflow: hidden; text-overflow: ellipsis; }
+    .page-item-match-more { font-size: 9px; color: var(--accent); margin-top: 2px; font-family: var(--mono); }
+
+    /* ── Sidebar search ── */
+    .sidebar-search {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar-search-wrap {
+      position: relative; display: flex; align-items: center;
+    }
+    .sidebar-search-wrap svg {
+      position: absolute; left: 8px; width: 12px; height: 12px;
+      color: var(--muted); pointer-events: none; flex-shrink: 0;
+    }
+    .sidebar-search input {
+      width: 100%; font-family: var(--mono); font-size: 11px;
+      padding: 5px 28px 5px 26px;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: var(--surface-2); color: var(--fg);
+      outline: none; transition: border-color 0.15s;
+    }
+    .sidebar-search input:focus { border-color: var(--accent); }
+    .sidebar-search input::placeholder { color: var(--muted); }
+    .sidebar-search-clear {
+      position: absolute; right: 6px; background: none; border: none;
+      cursor: pointer; color: var(--muted); font-size: 14px; line-height: 1;
+      padding: 1px 3px; border-radius: 3px; display: none;
+    }
+    .sidebar-search-clear:hover { color: var(--fg); }
+    .sidebar-search-clear.visible { display: block; }
+
+    mark {
+      background: #fef08a; color: #111; border-radius: 2px; padding: 0 1px;
+      font-style: normal;
+    }
+    [data-theme="dark"] mark { background: #713f12; color: #fef9c3; }
+
+    .search-empty {
+      padding: 24px 16px; text-align: center;
+      font-size: 11px; color: var(--muted); font-family: var(--mono);
+    }
 
     /* ── Content area ── */
     .content-area {
@@ -449,6 +499,17 @@
       <div class="sidebar-title">Pages</div>
       <div class="sidebar-count" id="sidebarCount">—</div>
     </div>
+    <div class="sidebar-search">
+      <div class="sidebar-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="sidebarSearch" placeholder="search pages & questions…"
+               oninput="filterSidebar(this.value)"
+               onkeydown="if(event.key==='Escape'){clearSearch();}" />
+        <button class="sidebar-search-clear" id="searchClearBtn" onclick="clearSearch()" title="Clear search">×</button>
+      </div>
+    </div>
     <div class="pages-list" id="pagesList"></div>
   </div>
 
@@ -509,8 +570,9 @@
 
 <script>
 // ── State ─────────────────────────────────────────────────────────────────────
-let survey  = null;   // parsed SurveyJS JSON
-let pageIdx = null;   // currently selected page index in sidebar
+let survey      = null;   // parsed SurveyJS JSON
+let pageIdx     = null;   // currently selected page index in sidebar
+let searchQuery = '';     // current sidebar search string
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function toast(msg, ms = 2200) {
@@ -554,28 +616,142 @@ function loadSurvey(data, name) {
   toast('Survey loaded — ' + (data.pages || []).length + ' pages');
 }
 
+// ── Search helpers ────────────────────────────────────────────────────────────
+function filterSidebar(q) {
+  searchQuery = q.trim().toLowerCase();
+  const clearBtn = document.getElementById('searchClearBtn');
+  if (clearBtn) clearBtn.classList.toggle('visible', searchQuery.length > 0);
+  renderSidebar();
+}
+
+function clearSearch() {
+  searchQuery = '';
+  const inp = document.getElementById('sidebarSearch');
+  if (inp) inp.value = '';
+  const clearBtn = document.getElementById('searchClearBtn');
+  if (clearBtn) clearBtn.classList.remove('visible');
+  renderSidebar();
+}
+
+// Highlight all occurrences of q in text (case-insensitive), returning HTML
+function hlText(text, q) {
+  if (!q) return esc(text);
+  const s = String(text || '');
+  const lower = s.toLowerCase();
+  let result = '', pos = 0;
+  let idx;
+  while ((idx = lower.indexOf(q, pos)) !== -1) {
+    result += esc(s.slice(pos, idx));
+    result += '<mark>' + esc(s.slice(idx, idx + q.length)) + '</mark>';
+    pos = idx + q.length;
+  }
+  result += esc(s.slice(pos));
+  return result;
+}
+
+function matchesQuery(text, q) {
+  return String(text || '').toLowerCase().includes(q);
+}
+
+// Collect all searchable hits within a page for a given query
+function pageSearchHits(pg, q) {
+  const hits = [];
+  for (const el of (pg.elements || [])) {
+    const elTitle = el.title || el.name || '';
+    if (matchesQuery(elTitle, q)) {
+      hits.push({ icon: '❓', text: elTitle });
+      continue; // if question title matched, don't also show its choices
+    }
+    // search choices
+    for (const c of (el.choices || [])) {
+      const cText = typeof c === 'string' ? c : (c.text || c.value || '');
+      if (matchesQuery(cText, q)) {
+        hits.push({ icon: '○', text: cText });
+        break; // one hit per question from choices
+      }
+    }
+  }
+  return hits;
+}
+
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 function renderSidebar() {
   const pages = (survey && survey.pages) || [];
-  document.getElementById('sidebarCount').textContent =
-    pages.length + ' page' + (pages.length !== 1 ? 's' : '');
+  const q = searchQuery;
 
-  document.getElementById('pagesList').innerHTML = pages.length === 0
-    ? '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages</div>'
-    : pages.map((pg, i) => {
-        const title = pg.title || pg.name || 'Untitled page';
-        const qCount = (pg.elements || []).length;
-        const hasCond = !!pg.visibleIf;
-        return `
-          <div class="page-item ${i === pageIdx ? 'active' : ''} ${hasCond ? 'hidden-page' : ''}"
-               onclick="selectPage(${i})">
-            <span class="page-item-num">${i + 1}</span>
-            <div class="page-item-info">
-              <div class="page-item-name" title="${esc(title)}">${esc(title)}</div>
-              <div class="page-item-qcount">${qCount} question${qCount !== 1 ? 's' : ''}${hasCond ? ' · conditional' : ''}</div>
-            </div>
-          </div>`;
-      }).join('');
+  if (!q) {
+    // ── Normal (no search) ─────────────────────────────────────────────────
+    document.getElementById('sidebarCount').textContent =
+      pages.length + ' page' + (pages.length !== 1 ? 's' : '');
+
+    document.getElementById('pagesList').innerHTML = pages.length === 0
+      ? '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages</div>'
+      : pages.map((pg, i) => {
+          const title = pg.title || pg.name || 'Untitled page';
+          const qCount = (pg.elements || []).length;
+          const hasCond = !!pg.visibleIf;
+          return `
+            <div class="page-item ${i === pageIdx ? 'active' : ''} ${hasCond ? 'hidden-page' : ''}"
+                 onclick="selectPage(${i})">
+              <span class="page-item-num">${i + 1}</span>
+              <div class="page-item-info">
+                <div class="page-item-name" title="${esc(title)}">${esc(title)}</div>
+                <div class="page-item-qcount">${qCount} question${qCount !== 1 ? 's' : ''}${hasCond ? ' · conditional' : ''}</div>
+              </div>
+            </div>`;
+        }).join('');
+    return;
+  }
+
+  // ── Search mode ────────────────────────────────────────────────────────────
+  const results = [];
+  for (let i = 0; i < pages.length; i++) {
+    const pg = pages[i];
+    const pageTitle = pg.title || pg.name || 'Untitled page';
+    const pageTitleMatches = matchesQuery(pageTitle, q);
+    const hits = pageSearchHits(pg, q);
+    if (pageTitleMatches || hits.length > 0) {
+      results.push({ pg, i, pageTitle, pageTitleMatches, hits });
+    }
+  }
+
+  const matchCount = results.reduce((n, r) => n + (r.pageTitleMatches ? 1 : 0) + r.hits.length, 0);
+  document.getElementById('sidebarCount').textContent =
+    results.length + ' page' + (results.length !== 1 ? 's' : '') +
+    ', ' + matchCount + ' match' + (matchCount !== 1 ? 'es' : '');
+
+  if (results.length === 0) {
+    document.getElementById('pagesList').innerHTML =
+      `<div class="search-empty">no results for<br>"${esc(q)}"</div>`;
+    return;
+  }
+
+  const MAX_SNIPPETS = 4;
+  document.getElementById('pagesList').innerHTML = results.map(({ pg, i, pageTitle, pageTitleMatches, hits }) => {
+    const hasCond = !!pg.visibleIf;
+    const snippets = hits.slice(0, MAX_SNIPPETS).map(h =>
+      `<span class="page-item-match">
+        <span class="page-item-match-icon">${h.icon}</span>
+        <span class="page-item-match-text">${hlText(h.text, q)}</span>
+      </span>`).join('');
+    const moreCount = hits.length - MAX_SNIPPETS;
+    const moreHtml  = moreCount > 0
+      ? `<span class="page-item-match-more">+${moreCount} more match${moreCount !== 1 ? 'es' : ''}</span>`
+      : '';
+
+    return `
+      <div class="page-item ${i === pageIdx ? 'active' : ''} ${hasCond ? 'hidden-page' : ''}"
+           onclick="selectPage(${i})">
+        <span class="page-item-num">${i + 1}</span>
+        <div class="page-item-info">
+          <div class="page-item-name" title="${esc(pageTitle)}">${hlText(pageTitle, q)}</div>
+          <div class="page-item-qcount">
+            ${(pg.elements || []).length} question${(pg.elements || []).length !== 1 ? 's' : ''}${hasCond ? ' · conditional' : ''}
+          </div>
+          ${snippets || moreHtml ? `<div class="page-item-matches">${snippets}${moreHtml}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function selectPage(i) {
