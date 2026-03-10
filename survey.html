@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Survey Creator — Adil Tirur</title>
-  <meta name="description" content="Visual survey creator — build SurveyJS-compatible JSON surveys with pages, questions, and choices." />
+  <title>Survey Viewer — Adil Tirur</title>
+  <meta name="description" content="Upload a SurveyJS JSON and preview it interactively." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -21,11 +21,6 @@
       --border: #e5e7eb;
       --surface: #ffffff;
       --surface-2: #f3f4f6;
-      --surface-3: #f9fafb;
-      --danger: #ef4444;
-      --danger-light: #fee2e2;
-      --success: #10b981;
-      --success-light: #d1fae5;
       --mono: 'JetBrains Mono', monospace;
       --sans: 'Inter', sans-serif;
       --radius: 10px;
@@ -48,27 +43,32 @@
 
     /* ── Page header ── */
     .page-header {
-      padding: 24px 32px 20px;
+      padding: 18px 32px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      background: var(--surface);
     }
-    .page-header-left {}
+    .page-header-left { display: flex; align-items: center; gap: 14px; }
     .page-tag {
-      font-family: var(--mono); font-size: 12px; color: var(--accent);
-      margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      display: flex; align-items: center; gap: 8px;
     }
     .page-tag::before {
-      content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent);
+      content: ''; display: inline-block; width: 16px; height: 1px; background: var(--accent);
     }
     .page-header h1 {
-      font-size: 22px; font-weight: 600;
-      letter-spacing: -0.03em; line-height: 1.2;
+      font-size: 18px; font-weight: 600; letter-spacing: -0.03em;
     }
-    .page-header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .survey-name-badge {
+      font-family: var(--mono); font-size: 11px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      padding: 3px 10px; border-radius: 5px; color: var(--muted);
+      max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
 
     /* ── Buttons ── */
     .btn {
@@ -81,10 +81,7 @@
     .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
     .btn.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn.btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
-    .btn.btn-danger { color: var(--danger); }
-    .btn.btn-danger:hover { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
-    .btn.btn-sm { font-size: 11px; padding: 4px 10px; border-radius: 5px; }
-    .btn.btn-icon { padding: 5px 8px; }
+    .btn:disabled { opacity: 0.4; pointer-events: none; }
 
     /* ── Main layout ── */
     .main-layout {
@@ -93,7 +90,7 @@
       overflow: hidden;
     }
 
-    /* ── Sidebar (pages list) ── */
+    /* ── Sidebar ── */
     .sidebar {
       width: 240px;
       flex-shrink: 0;
@@ -106,239 +103,155 @@
     .sidebar-header {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       flex-shrink: 0;
     }
     .sidebar-title {
-      font-family: var(--mono); font-size: 11px; font-weight: 500;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+      font-family: var(--mono); font-size: 10px; font-weight: 500;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .sidebar-count {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      margin-top: 2px;
     }
     .pages-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px 0;
+      padding: 6px 0;
     }
     .page-item {
       display: flex;
-      align-items: center;
-      padding: 8px 16px;
+      align-items: flex-start;
+      padding: 8px 14px;
       cursor: pointer;
       border-left: 2px solid transparent;
-      transition: all 0.15s;
+      transition: all 0.12s;
       gap: 8px;
-      position: relative;
     }
     .page-item:hover { background: var(--surface-2); }
     .page-item.active { background: var(--accent-light); border-left-color: var(--accent); }
-    .page-item.active .page-item-name { color: var(--accent); }
+    .page-item.active .page-item-name { color: var(--accent); font-weight: 500; }
+    .page-item.hidden-page { opacity: 0.45; }
     .page-item-num {
       font-family: var(--mono); font-size: 10px; color: var(--muted);
-      min-width: 20px;
+      min-width: 20px; padding-top: 1px;
     }
+    .page-item-info { flex: 1; min-width: 0; }
     .page-item-name {
-      font-size: 12px; color: var(--fg); flex: 1; min-width: 0;
+      font-size: 12px; color: var(--fg);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .page-item-del {
-      opacity: 0; transition: opacity 0.15s;
-      background: none; border: none; cursor: pointer;
-      color: var(--muted); padding: 2px 4px; border-radius: 4px;
-      font-size: 14px; line-height: 1; flex-shrink: 0;
+    .page-item-qcount {
+      font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px;
     }
-    .page-item:hover .page-item-del { opacity: 1; }
-    .page-item-del:hover { color: var(--danger); background: var(--danger-light); }
 
-    /* ── Editor area ── */
-    .editor-area {
+    /* ── Content area ── */
+    .content-area {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 28px;
+      padding: 32px 36px;
       background: var(--bg);
     }
 
-    /* ── Survey title card ── */
-    .meta-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 20px;
-    }
-    .meta-card-title {
-      font-family: var(--mono); font-size: 11px; font-weight: 500;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
-      margin-bottom: 14px;
-    }
-
-    /* ── Page editor card ── */
-    .page-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-bottom: 20px;
-    }
-    .page-card-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
+    /* ── Empty / upload state ── */
+    .upload-state {
+      height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
     }
-    .page-card-badge {
-      font-family: var(--mono); font-size: 10px; color: var(--accent);
-      background: var(--accent-light); padding: 2px 8px; border-radius: 4px;
-      flex-shrink: 0;
+    .upload-icon { font-size: 40px; margin-bottom: 16px; }
+    .upload-state h2 { font-size: 16px; font-weight: 500; color: var(--fg); margin-bottom: 8px; }
+    .upload-state p { font-size: 13px; margin-bottom: 20px; }
+    .upload-drop-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px 48px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%; max-width: 400px;
     }
-    .page-card-name {
-      font-size: 13px; font-weight: 500; flex: 1;
+    .upload-drop-area:hover, .upload-drop-area.drag-over {
+      border-color: var(--accent); background: var(--accent-light);
     }
-    .page-card-body { padding: 20px; }
+    .upload-drop-area input { display: none; }
 
-    /* ── Form fields ── */
-    .field-group { margin-bottom: 14px; }
-    .field-row { display: flex; gap: 12px; margin-bottom: 14px; }
-    .field-row .field-group { flex: 1; margin-bottom: 0; }
-    .field-label {
-      font-size: 11px; font-weight: 500; color: var(--muted);
-      margin-bottom: 5px; display: block; text-transform: uppercase;
-      letter-spacing: 0.04em;
+    /* ── Page viewer ── */
+    .page-viewer-header { margin-bottom: 24px; }
+    .page-viewer-badge {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
     }
-    input[type="text"], input[type="number"], textarea, select {
-      width: 100%;
-      font-family: var(--sans); font-size: 13px;
-      padding: 7px 10px; border: 1px solid var(--border);
-      border-radius: 6px; background: var(--surface);
-      color: var(--fg); outline: none;
-      transition: border-color 0.15s;
+    .page-viewer-badge::before {
+      content: ''; display: inline-block; width: 16px; height: 1px; background: var(--accent);
     }
-    input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
-      border-color: var(--accent);
+    .page-viewer-title {
+      font-size: 20px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 4px;
     }
-    textarea { resize: vertical; min-height: 52px; line-height: 1.5; }
-    select { cursor: pointer; }
-    .field-inline { display: flex; align-items: center; gap: 8px; }
-    input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--accent); }
-    .checkbox-label { font-size: 13px; color: var(--fg); cursor: pointer; user-select: none; }
-
-    /* ── Section divider ── */
-    .section-divider {
-      font-family: var(--mono); font-size: 10px; font-weight: 500;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
-      margin: 18px 0 12px;
-      display: flex; align-items: center; gap: 10px;
+    .page-viewer-meta {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px;
     }
-    .section-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
+    .page-viewer-meta span { display: flex; align-items: center; gap: 5px; }
+    .page-viewer-desc {
+      color: var(--muted); font-size: 13px; margin-top: 8px; line-height: 1.6;
+    }
+    .page-viewer-condition {
+      font-family: var(--mono); font-size: 11px;
+      background: #fef3c7; color: #92400e;
+      border: 1px solid #fde68a; border-radius: 5px;
+      padding: 4px 10px; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;
     }
 
     /* ── Questions list ── */
-    .questions-list { display: flex; flex-direction: column; gap: 12px; }
-
-    /* ── Question card ── */
-    .question-card {
+    .questions-list { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+    .question-row {
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      background: var(--surface-3);
+      padding: 14px 18px;
     }
-    .question-card-header {
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      user-select: none;
-      border-radius: 8px 8px 0 0;
-      transition: background 0.1s;
-    }
-    .question-card-header:hover { background: var(--surface-2); }
-    .question-card.collapsed .question-card-header { border-radius: 8px; }
-    .question-card-toggle {
-      font-size: 11px; color: var(--muted); transition: transform 0.2s;
-      flex-shrink: 0; width: 16px;
-    }
-    .question-card.collapsed .question-card-toggle { transform: rotate(-90deg); }
-    .question-type-badge {
+    .question-row-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+    .q-type {
       font-family: var(--mono); font-size: 10px;
-      padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+      padding: 2px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
     }
-    .type-radio { background: #ede9fe; color: #7c3aed; }
-    .type-checkbox { background: #fef3c7; color: #d97706; }
-    .type-text { background: #dcfce7; color: #16a34a; }
-    .question-card-title {
-      font-size: 12px; color: var(--fg); flex: 1; min-width: 0;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .question-card-body {
-      padding: 14px;
-      border-top: 1px solid var(--border);
-    }
-    .question-card.collapsed .question-card-body { display: none; }
-
-    /* ── Choices list ── */
-    .choices-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-    .choice-row {
-      display: flex; align-items: flex-start; gap: 8px;
-    }
-    .choice-index {
+    .q-type-radio { background: #ede9fe; color: #7c3aed; }
+    .q-type-check { background: #fef3c7; color: #d97706; }
+    .q-type-text  { background: #dcfce7; color: #16a34a; }
+    .q-name {
       font-family: var(--mono); font-size: 10px; color: var(--muted);
-      padding-top: 9px; min-width: 20px; text-align: right;
-      flex-shrink: 0;
+      flex-shrink: 0; margin-top: 3px;
     }
-    .choice-fields { flex: 1; display: flex; gap: 8px; }
-    .choice-fields input { flex: 1; }
-    .choice-val { max-width: 140px; flex-shrink: 0; }
-    .choice-del {
-      background: none; border: none; cursor: pointer; color: var(--muted);
-      padding: 7px 5px; transition: color 0.15s; flex-shrink: 0;
+    .q-title { font-size: 13px; font-weight: 500; line-height: 1.5; flex: 1; }
+    .q-required { color: #ef4444; margin-left: 3px; font-size: 12px; }
+    .q-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .q-tag {
+      font-family: var(--mono); font-size: 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      padding: 2px 8px; border-radius: 4px; color: var(--muted);
     }
-    .choice-del:hover { color: var(--danger); }
-
-    /* ── Drag handle ── */
-    .drag-handle {
-      cursor: grab; color: var(--muted); padding: 8px 4px; flex-shrink: 0;
-      user-select: none;
+    .q-choices { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .q-choice-pill {
+      font-size: 11px; padding: 3px 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--fg);
     }
-    .drag-handle:active { cursor: grabbing; }
-
-    /* ── Add buttons row ── */
-    .add-row {
-      display: flex; gap: 8px; align-items: center; margin-top: 8px;
+    .q-choices-more {
+      font-size: 11px; color: var(--muted); padding: 3px 8px;
     }
-
-    /* ── JSON panel ── */
-    .json-panel {
-      width: 380px;
-      flex-shrink: 0;
-      border-left: 1px solid var(--border);
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    .q-visibleif {
+      font-family: var(--mono); font-size: 10px; color: #92400e;
+      background: #fef3c7; border: 1px solid #fde68a;
+      padding: 2px 8px; border-radius: 4px; margin-top: 6px; display: inline-block;
     }
-    .json-panel-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-    .json-panel-title {
-      font-family: var(--mono); font-size: 11px; font-weight: 500;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
-    }
-    .json-output {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      font-family: var(--mono);
-      font-size: 11px;
-      line-height: 1.7;
-      color: var(--fg);
-      white-space: pre;
-      background: var(--surface);
+    .no-questions {
+      color: var(--muted); font-size: 13px; padding: 12px 0;
+      font-style: italic;
     }
 
     /* ── Toast ── */
@@ -356,8 +269,7 @@
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.35);
       display: flex; align-items: center; justify-content: center;
-      z-index: 1000; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s;
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal {
@@ -367,188 +279,102 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
     .modal-overlay.open .modal { transform: translateY(0); }
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
-    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .modal-title { font-size: 15px; font-weight: 600; }
-    .modal-close {
-      background: none; border: none; cursor: pointer; color: var(--muted);
-      font-size: 20px; line-height: 1; padding: 2px 6px;
-    }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 20px; line-height: 1; padding: 2px 6px; }
     .modal-close:hover { color: var(--fg); }
     .modal textarea {
-      height: 280px; font-family: var(--mono); font-size: 11px;
-      background: var(--surface-2); resize: vertical;
+      width: 100%; height: 260px;
+      font-family: var(--mono); font-size: 11px;
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+      background: var(--surface-2); resize: vertical; outline: none;
+      transition: border-color 0.15s;
     }
+    .modal textarea:focus { border-color: var(--accent); }
     .modal-footer { margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px; }
-
-    /* ── Empty state ── */
-    .empty-state {
-      text-align: center; padding: 48px 24px; color: var(--muted);
-    }
-    .empty-state-icon { font-size: 32px; margin-bottom: 12px; }
-    .empty-state p { font-size: 13px; }
+    .field-label { font-size: 11px; font-weight: 500; color: var(--muted); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.04em; }
 
     /* ── Preview overlay ── */
     .preview-overlay {
       position: fixed; inset: 0;
-      background: #fff;
-      z-index: 2000;
+      background: #fff; z-index: 2000;
       display: flex; flex-direction: column;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.2s;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
     }
     .preview-overlay.open { opacity: 1; pointer-events: all; }
-
     .preview-topbar {
-      flex-shrink: 0;
-      display: flex; align-items: center; gap: 16px;
-      padding: 0 32px;
-      height: 56px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
+      flex-shrink: 0; display: flex; align-items: center; gap: 16px;
+      padding: 0 32px; height: 56px;
+      border-bottom: 1px solid var(--border); background: var(--surface);
     }
-    .preview-title {
-      font-size: 14px; font-weight: 600; flex: 1;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .preview-progress-label {
-      font-family: var(--mono); font-size: 11px; color: var(--muted);
-      flex-shrink: 0;
-    }
+    .preview-title { font-size: 14px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .preview-progress-label { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; }
     .preview-close {
       background: none; border: none; cursor: pointer; color: var(--muted);
       font-size: 20px; line-height: 1; padding: 4px 8px; border-radius: 6px;
       flex-shrink: 0; transition: color 0.15s;
     }
-    .preview-close:hover { color: var(--danger); background: var(--danger-light); }
-
-    .preview-progress-bar-wrap {
-      flex-shrink: 0; height: 3px; background: var(--border);
-    }
-    .preview-progress-bar {
-      height: 100%; background: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    .preview-body {
-      flex: 1; overflow-y: auto;
-      display: flex; justify-content: center;
-      padding: 40px 24px 120px;
-    }
-    .preview-content {
-      width: 100%; max-width: 640px;
-    }
+    .preview-close:hover { color: #ef4444; background: #fee2e2; }
+    .preview-progress-bar-wrap { flex-shrink: 0; height: 3px; background: var(--border); }
+    .preview-progress-bar { height: 100%; background: var(--accent); transition: width 0.3s ease; }
+    .preview-body { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 40px 24px 120px; }
+    .preview-content { width: 100%; max-width: 640px; }
     .preview-page-tag {
       font-family: var(--mono); font-size: 11px; color: var(--accent);
       display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
     }
-    .preview-page-tag::before {
-      content: ''; display: inline-block; width: 16px; height: 1px; background: var(--accent);
-    }
-    .preview-page-title {
-      font-size: 22px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 6px;
-    }
-    .preview-page-desc {
-      color: var(--muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6;
-    }
-
+    .preview-page-tag::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--accent); }
+    .preview-page-title { font-size: 22px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .preview-page-desc { color: var(--muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6; }
     .preview-questions { display: flex; flex-direction: column; gap: 28px; }
-
-    .pq {
-      animation: pqIn 0.2s ease;
-    }
-    @keyframes pqIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .pq-title {
-      font-size: 15px; font-weight: 500; line-height: 1.5;
-      margin-bottom: 4px;
-    }
-    .pq-required { color: var(--danger); margin-left: 3px; }
+    .pq { animation: pqIn 0.2s ease; }
+    @keyframes pqIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .pq-title { font-size: 15px; font-weight: 500; line-height: 1.5; margin-bottom: 4px; }
+    .pq-required { color: #ef4444; margin-left: 3px; }
     .pq-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-
-    /* radio + checkbox */
     .pq-choices { display: flex; flex-direction: column; gap: 8px; }
     .pq-choice {
       display: flex; align-items: flex-start; gap: 12px;
-      padding: 10px 14px; border: 1px solid var(--border);
-      border-radius: 8px; cursor: pointer;
-      transition: all 0.12s; user-select: none;
+      padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; transition: all 0.12s; user-select: none;
     }
     .pq-choice:hover { border-color: var(--accent); background: var(--accent-light); }
     .pq-choice.selected { border-color: var(--accent); background: var(--accent-light); }
-    .pq-choice input[type="radio"],
-    .pq-choice input[type="checkbox"] {
+    .pq-choice input[type="radio"], .pq-choice input[type="checkbox"] {
       width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px;
       accent-color: var(--accent); cursor: pointer;
     }
     .pq-choice-label { font-size: 14px; line-height: 1.4; }
-
-    /* text input */
-    .pq input[type="text"],
-    .pq input[type="date"],
-    .pq input[type="datetime-local"],
-    .pq input[type="number"],
-    .pq input[type="email"],
-    .pq input[type="tel"] {
-      width: 100%; padding: 10px 14px;
-      border: 1px solid var(--border); border-radius: 8px;
+    .pq input[type="text"], .pq input[type="date"], .pq input[type="datetime-local"],
+    .pq input[type="number"], .pq input[type="email"], .pq input[type="tel"] {
+      width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
       font-family: var(--sans); font-size: 14px; color: var(--fg);
-      background: var(--surface); outline: none;
-      transition: border-color 0.15s;
+      background: var(--surface); outline: none; transition: border-color 0.15s;
     }
     .pq input:focus { border-color: var(--accent); }
-
-    /* range */
-    .pq-range-wrap {
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .pq-range-labels {
-      display: flex; justify-content: space-between;
-      font-size: 12px; color: var(--muted);
-    }
-    .pq-range-value {
-      text-align: center; font-family: var(--mono);
-      font-size: 13px; color: var(--accent); font-weight: 500;
-    }
-    .pq input[type="range"] {
-      width: 100%; accent-color: var(--accent); cursor: pointer;
-    }
-
-    /* other text input */
+    .pq-range-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .pq-range-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    .pq-range-value { text-align: center; font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+    .pq input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
     .pq-other-input {
-      margin-top: 8px;
-      padding: 10px 14px;
+      margin-top: 8px; padding: 10px 14px;
       border: 1px solid var(--border); border-radius: 8px;
       width: 100%; font-family: var(--sans); font-size: 14px;
       outline: none; transition: border-color 0.15s;
     }
     .pq-other-input:focus { border-color: var(--accent); }
-
-    /* footer nav */
     .preview-footer {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: var(--surface); border-top: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
       z-index: 2001;
     }
-    .preview-footer-center {
-      font-family: var(--mono); font-size: 11px; color: var(--muted);
-    }
-
-    /* complete screen */
-    .preview-complete {
-      text-align: center; padding: 60px 24px;
-    }
+    .preview-footer-center { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .preview-complete { text-align: center; padding: 60px 24px; }
     .preview-complete-icon { font-size: 48px; margin-bottom: 16px; }
     .preview-complete h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
     .preview-complete p { color: var(--muted); font-size: 14px; }
 
-    /* scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
@@ -560,70 +386,64 @@
 <script src="/nav.js"></script>
 <site-nav></site-nav>
 
-<!-- ── Page header ─────────────────────────────────────────────────── -->
+<!-- ── Header ── -->
 <div class="page-header">
   <div class="page-header-left">
-    <div class="page-tag">survey creator</div>
-    <h1>Survey Builder</h1>
+    <div class="page-tag">survey viewer</div>
+    <h1>Survey</h1>
+    <div class="survey-name-badge" id="surveyNameBadge">no file loaded</div>
   </div>
-  <div class="page-header-actions">
-    <button class="btn" onclick="openImport()">⬆ Import JSON</button>
-    <button class="btn" onclick="copyJSON()">⎘ Copy JSON</button>
-    <button class="btn" onclick="downloadJSON()">⬇ Download JSON</button>
-    <button class="btn btn-primary" onclick="openPreview()">▶ Preview</button>
+  <div style="display:flex;gap:8px;">
+    <button class="btn" onclick="openImport()">⬆ Upload JSON</button>
+    <button class="btn btn-primary" id="previewBtn" onclick="openPreview()" disabled>▶ Preview</button>
   </div>
 </div>
 
-<!-- ── Main layout ─────────────────────────────────────────────────── -->
+<!-- ── Main layout ── -->
 <div class="main-layout">
 
-  <!-- Sidebar: pages list -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-title">Pages</span>
-      <button class="btn btn-sm" onclick="addPage()">+ Add</button>
+      <div class="sidebar-title">Pages</div>
+      <div class="sidebar-count" id="sidebarCount">—</div>
     </div>
     <div class="pages-list" id="pagesList"></div>
   </div>
 
-  <!-- Editor area -->
-  <div class="editor-area" id="editorArea">
-    <div id="editorContent"></div>
-  </div>
-
-  <!-- JSON output panel -->
-  <div class="json-panel">
-    <div class="json-panel-header">
-      <span class="json-panel-title">JSON Output</span>
-      <div style="display:flex;gap:6px;">
-        <button class="btn btn-sm btn-icon" onclick="copyJSON()" title="Copy JSON">⎘</button>
-        <button class="btn btn-sm btn-icon" onclick="downloadJSON()" title="Download JSON">⬇</button>
+  <div class="content-area" id="contentArea">
+    <div class="upload-state" id="uploadState">
+      <div class="upload-icon">📋</div>
+      <h2>No survey loaded</h2>
+      <p>Upload a SurveyJS-compatible JSON file to browse pages and preview the survey.</p>
+      <div class="upload-drop-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".json,application/json" onchange="handleFileInput(this)" />
+        <div style="font-size:24px;margin-bottom:8px;">⬆</div>
+        <div style="font-size:13px;color:var(--muted)">Click to choose a .json file<br>or drag and drop here</div>
       </div>
+      <div style="font-size:12px;color:var(--muted)">or <a href="#" onclick="openImport();return false;" style="color:var(--accent);">paste JSON directly</a></div>
     </div>
-    <div class="json-output" id="jsonOutput"></div>
+    <div id="pageViewerArea" style="display:none;"></div>
   </div>
 
 </div>
 
-<!-- ── Import modal ─────────────────────────────────────────────────── -->
+<!-- ── Import modal ── -->
 <div class="modal-overlay" id="importModal">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">Import Survey JSON</div>
+      <div class="modal-title">Paste Survey JSON</div>
       <button class="modal-close" onclick="closeImport()">×</button>
     </div>
-    <div class="field-group">
-      <label class="field-label">Paste SurveyJS-compatible JSON</label>
-      <textarea id="importInput" placeholder='{"title": "My Survey", "pages": [...]}'></textarea>
-    </div>
+    <label class="field-label">SurveyJS-compatible JSON</label>
+    <textarea id="importInput" placeholder='{"title": "My Survey", "pages": [...]}'></textarea>
     <div class="modal-footer">
       <button class="btn" onclick="closeImport()">Cancel</button>
-      <button class="btn btn-primary" onclick="doImport()">Import</button>
+      <button class="btn btn-primary" onclick="doImport()">Load</button>
     </div>
   </div>
 </div>
 
-<!-- ── Preview overlay ───────────────────────────────────────────────── -->
+<!-- ── Preview overlay ── -->
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-topbar">
     <div class="preview-title" id="previewTitleBar"></div>
@@ -636,792 +456,344 @@
   <div class="preview-body">
     <div class="preview-content" id="previewContent"></div>
   </div>
-  <div class="preview-footer" id="previewFooter">
+  <div class="preview-footer">
     <button class="btn" id="previewBackBtn" onclick="previewBack()">← Back</button>
     <div class="preview-footer-center" id="previewFooterCenter"></div>
     <button class="btn btn-primary" id="previewNextBtn" onclick="previewNext()">Next →</button>
   </div>
 </div>
 
-<!-- ── Toast ─────────────────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ────────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
+let survey  = null;   // parsed SurveyJS JSON
+let pageIdx = null;   // currently selected page index in sidebar
 
-let survey = {
-  title: { default: '', de: '' },
-  logoPosition: 'right',
-  pages: []
-};
-
-let activePage = null; // index into survey.pages
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function uid() {
-  return Math.random().toString(36).slice(2, 9);
-}
-
-function toast(msg, duration = 2000) {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function toast(msg, ms = 2200) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), duration);
+  setTimeout(() => el.classList.remove('show'), ms);
 }
 
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-// ── Survey → JSON ────────────────────────────────────────────────────────────
-
-function buildJSON() {
-  const out = {};
-
-  // title
-  if (survey.title && (survey.title.default || survey.title.de)) {
-    if (survey.title.default && survey.title.de) {
-      out.title = { default: survey.title.default, de: survey.title.de };
-    } else {
-      out.title = survey.title.default || survey.title.de;
-    }
-  }
-
-  if (survey.logoPosition) out.logoPosition = survey.logoPosition;
-
-  out.pages = survey.pages.map(page => {
-    const p = {};
-    if (page.name) p.name = page.name;
-    if (page.title) p.title = page.title;
-    if (page.visibleIf) p.visibleIf = page.visibleIf;
-    if (page.description) p.description = page.description;
-
-    p.elements = (page.elements || []).map(el => buildElement(el));
-    return p;
-  });
-
-  return out;
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function buildElement(el) {
-  const out = {};
-  if (el.type) out.type = el.type;
-  if (el.name) out.name = el.name;
-  if (el.title) out.title = el.title;
-  if (el.description) out.description = el.description;
-  if (el.isRequired) out.isRequired = true;
-  if (el.visibleIf) out.visibleIf = el.visibleIf;
-
-  if (el.type === 'radiogroup' || el.type === 'checkbox') {
-    if (el.choices && el.choices.length > 0) {
-      out.choices = el.choices.map(c => {
-        if (c.value === c.text) return c.value;
-        return { value: c.value, text: c.text };
-      });
-    }
-    if (el.showNoneItem) out.showNoneItem = true;
-    if (el.noneText) out.noneText = el.noneText;
-    if (el.showOtherItem || el.otherText) {
-      out.showOtherItem = true;
-      if (el.otherText) out.otherText = el.otherText;
-      if (el.otherPlaceholder) out.otherPlaceholder = el.otherPlaceholder;
-    }
-    if (el.commentPlaceholder) out.commentPlaceholder = el.commentPlaceholder;
-  }
-
-  if (el.type === 'text') {
-    if (el.inputType && el.inputType !== 'text') out.inputType = el.inputType;
-    if (el.placeholder) out.placeholder = el.placeholder;
-    if (el.maxLength) out.maxLength = parseInt(el.maxLength) || undefined;
-    if (el.inputType === 'range') {
-      if (el.min !== '' && el.min !== undefined) out.min = el.min;
-      if (el.max !== '' && el.max !== undefined) out.max = el.max;
-    }
-    if (el.inputType === 'date' || el.inputType === 'datetime-local') {
-      if (el.min) out.min = el.min;
-      if (el.max) out.max = el.max;
-    }
-  }
-
-  return out;
+// Strip ${...} metadata (handles brackets inside)
+function stripMeta(str) {
+  if (str == null) return '';
+  let s = String(str), prev;
+  do { prev = s; s = s.replace(/\$\{[^${}]*(?:\{[^{}]*\}[^${}]*)?\}/g, ''); }
+  while (s !== prev);
+  return s.trim();
 }
 
-function refreshJSON() {
-  const json = buildJSON();
-  document.getElementById('jsonOutput').textContent = JSON.stringify(json, null, 2);
+function surveyTitle(s) {
+  if (!s || !s.title) return 'Untitled Survey';
+  const t = s.title;
+  return stripMeta(typeof t === 'object' ? (t.de || t.default || '') : t);
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
+// ── Load survey ───────────────────────────────────────────────────────────────
+function loadSurvey(data, name) {
+  survey = data;
+  pageIdx = data.pages && data.pages.length > 0 ? 0 : null;
 
-function render() {
+  document.getElementById('surveyNameBadge').textContent = name || surveyTitle(data);
+  document.getElementById('previewBtn').disabled = false;
+  document.getElementById('uploadState').style.display = 'none';
+  document.getElementById('pageViewerArea').style.display = '';
+
   renderSidebar();
-  renderEditor();
-  refreshJSON();
+  renderPageViewer();
+  toast('Survey loaded — ' + (data.pages || []).length + ' pages');
 }
 
+// ── Sidebar ───────────────────────────────────────────────────────────────────
 function renderSidebar() {
-  const list = document.getElementById('pagesList');
-  if (survey.pages.length === 0) {
-    list.innerHTML = `<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages yet</div>`;
-    return;
-  }
-  list.innerHTML = survey.pages.map((page, i) => `
-    <div class="page-item ${activePage === i ? 'active' : ''}" onclick="selectPage(${i})">
-      <span class="page-item-num">${i + 1}</span>
-      <span class="page-item-name" title="${esc(page.title || page.name || 'Untitled page')}">${esc(page.title || page.name || 'Untitled page')}</span>
-      <button class="page-item-del" onclick="deletePage(event, ${i})" title="Delete page">✕</button>
-    </div>
-  `).join('');
-}
+  const pages = (survey && survey.pages) || [];
+  document.getElementById('sidebarCount').textContent =
+    pages.length + ' page' + (pages.length !== 1 ? 's' : '');
 
-function renderEditor() {
-  const content = document.getElementById('editorContent');
-
-  // Survey meta card (always shown at top of view)
-  const metaCard = `
-    <div class="meta-card" id="metaCard">
-      <div class="meta-card-title">Survey Settings</div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">Title (default)</label>
-          <input type="text" value="${esc(survey.title.default || '')}" oninput="survey.title.default=this.value;refreshJSON()" placeholder="Survey title" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">Title (de)</label>
-          <input type="text" value="${esc(survey.title.de || '')}" oninput="survey.title.de=this.value;refreshJSON()" placeholder="German title" />
-        </div>
-      </div>
-      <div class="field-group" style="max-width:200px;">
-        <label class="field-label">Logo Position</label>
-        <select onchange="survey.logoPosition=this.value;refreshJSON()">
-          <option value="right" ${survey.logoPosition === 'right' ? 'selected' : ''}>Right</option>
-          <option value="left" ${survey.logoPosition === 'left' ? 'selected' : ''}>Left</option>
-          <option value="none" ${survey.logoPosition === 'none' ? 'selected' : ''}>None</option>
-        </select>
-      </div>
-    </div>
-  `;
-
-  if (activePage === null || activePage >= survey.pages.length) {
-    content.innerHTML = metaCard + `
-      <div class="empty-state">
-        <div class="empty-state-icon">📋</div>
-        <p>Select a page from the sidebar, or add a new one to start building your survey.</p>
-      </div>`;
-    return;
-  }
-
-  const page = survey.pages[activePage];
-
-  const pageHtml = `
-    <div class="page-card">
-      <div class="page-card-header">
-        <span class="page-card-badge">page ${activePage + 1}</span>
-        <span class="page-card-name">${esc(page.title || page.name || 'Untitled page')}</span>
-        <div style="display:flex;gap:6px;margin-left:auto;">
-          <button class="btn btn-sm" onclick="movePage(${activePage}, -1)" ${activePage === 0 ? 'disabled' : ''}>↑</button>
-          <button class="btn btn-sm" onclick="movePage(${activePage}, 1)" ${activePage === survey.pages.length - 1 ? 'disabled' : ''}>↓</button>
-          <button class="btn btn-sm btn-danger" onclick="deletePage(null, ${activePage})">Delete Page</button>
-        </div>
-      </div>
-      <div class="page-card-body">
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Page Name (id)</label>
-            <input type="text" value="${esc(page.name || '')}" oninput="survey.pages[${activePage}].name=this.value;renderSidebar();refreshJSON()" placeholder="page_name" />
-          </div>
-          <div class="field-group">
-            <label class="field-label">Page Title</label>
-            <input type="text" value="${esc(page.title || '')}" oninput="survey.pages[${activePage}].title=this.value;renderSidebar();refreshJSON()" placeholder="Page title shown to user" />
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Visible If (condition)</label>
-          <input type="text" value="${esc(page.visibleIf || '')}" oninput="survey.pages[${activePage}].visibleIf=this.value;refreshJSON()" placeholder="{question} = 'value'" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">Description</label>
-          <textarea oninput="survey.pages[${activePage}].description=this.value;refreshJSON()" placeholder="Optional page description">${esc(page.description || '')}</textarea>
-        </div>
-
-        <div class="section-divider">Questions (${(page.elements || []).length})</div>
-
-        <div class="questions-list" id="questionsList">
-          ${(page.elements || []).map((el, qi) => renderQuestion(activePage, qi, el)).join('')}
-        </div>
-
-        <div class="add-row" style="margin-top:16px;">
-          <button class="btn" onclick="addQuestion('radiogroup')">+ Radio Group</button>
-          <button class="btn" onclick="addQuestion('checkbox')">+ Checkbox</button>
-          <button class="btn" onclick="addQuestion('text')">+ Text Input</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  content.innerHTML = metaCard + pageHtml;
-}
-
-function renderQuestion(pi, qi, el) {
-  const typeBadgeClass = el.type === 'radiogroup' ? 'type-radio' : el.type === 'checkbox' ? 'type-checkbox' : 'type-text';
-  const id = `q_${pi}_${qi}`;
-
-  let choicesHtml = '';
-  if (el.type === 'radiogroup' || el.type === 'checkbox') {
-    const choices = el.choices || [];
-    choicesHtml = `
-      <div class="section-divider">Choices (${choices.length})</div>
-      <div class="choices-list" id="choices_${pi}_${qi}">
-        ${choices.map((c, ci) => renderChoice(pi, qi, ci, c)).join('')}
-      </div>
-      <div class="add-row">
-        <button class="btn btn-sm" onclick="addChoice(${pi}, ${qi})">+ Add Choice</button>
-      </div>
-
-      <div class="section-divider" style="margin-top:14px;">None / Other Options</div>
-      <div class="field-row">
-        <div class="field-group">
-          <div class="field-inline">
-            <input type="checkbox" id="none_${pi}_${qi}" ${el.showNoneItem ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].showNoneItem=this.checked;refreshJSON()" />
-            <label class="checkbox-label" for="none_${pi}_${qi}">Show "None" item</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">None Text</label>
-          <input type="text" value="${esc(el.noneText || '')}" oninput="survey.pages[${pi}].elements[${qi}].noneText=this.value;refreshJSON()" placeholder="None of the above" />
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <div class="field-inline">
-            <input type="checkbox" id="other_${pi}_${qi}" ${el.showOtherItem ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].showOtherItem=this.checked;refreshJSON()" />
-            <label class="checkbox-label" for="other_${pi}_${qi}">Show "Other" item</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Other Text</label>
-          <input type="text" value="${esc(el.otherText || '')}" oninput="survey.pages[${pi}].elements[${qi}].otherText=this.value;refreshJSON()" placeholder="Other (please specify)" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Other Placeholder</label>
-        <input type="text" value="${esc(el.otherPlaceholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].otherPlaceholder=this.value;refreshJSON()" placeholder="Placeholder for other input" />
-      </div>
-      <div class="field-group">
-        <label class="field-label">Comment Placeholder</label>
-        <input type="text" value="${esc(el.commentPlaceholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].commentPlaceholder=this.value;refreshJSON()" placeholder="Comment placeholder" />
-      </div>
-    `;
-  }
-
-  let textHtml = '';
-  if (el.type === 'text') {
-    textHtml = `
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">Input Type</label>
-          <select onchange="survey.pages[${pi}].elements[${qi}].inputType=this.value;renderEditor();refreshJSON()">
-            <option value="text" ${(el.inputType || 'text') === 'text' ? 'selected' : ''}>text</option>
-            <option value="date" ${el.inputType === 'date' ? 'selected' : ''}>date</option>
-            <option value="datetime-local" ${el.inputType === 'datetime-local' ? 'selected' : ''}>datetime-local</option>
-            <option value="range" ${el.inputType === 'range' ? 'selected' : ''}>range</option>
-            <option value="number" ${el.inputType === 'number' ? 'selected' : ''}>number</option>
-            <option value="email" ${el.inputType === 'email' ? 'selected' : ''}>email</option>
-            <option value="tel" ${el.inputType === 'tel' ? 'selected' : ''}>tel</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Placeholder</label>
-          <input type="text" value="${esc(el.placeholder || '')}" oninput="survey.pages[${pi}].elements[${qi}].placeholder=this.value;refreshJSON()" placeholder="Input placeholder text" />
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">Max Length</label>
-          <input type="number" value="${esc(el.maxLength || '')}" oninput="survey.pages[${pi}].elements[${qi}].maxLength=this.value;refreshJSON()" placeholder="e.g. 200" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">Min</label>
-          <input type="text" value="${esc(el.min !== undefined ? el.min : '')}" oninput="survey.pages[${pi}].elements[${qi}].min=this.value;refreshJSON()" placeholder="${el.inputType === 'range' ? '0' : 'min value'}" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">Max</label>
-          <input type="text" value="${esc(el.max !== undefined ? el.max : '')}" oninput="survey.pages[${pi}].elements[${qi}].max=this.value;refreshJSON()" placeholder="${el.inputType === 'range' ? '100' : 'max value'}" />
-        </div>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="question-card" id="${id}">
-      <div class="question-card-header" onclick="toggleQuestion('${id}')">
-        <span class="question-card-toggle">▼</span>
-        <span class="question-type-badge ${typeBadgeClass}">${el.type}</span>
-        <span class="question-card-title" title="${esc(el.title || el.name || 'Untitled')}">${esc(el.title || el.name || 'Untitled question')}</span>
-        <div style="display:flex;gap:6px;" onclick="event.stopPropagation()">
-          <button class="btn btn-sm btn-icon" onclick="moveQuestion(${pi}, ${qi}, -1)" ${qi === 0 ? 'disabled' : ''} title="Move up">↑</button>
-          <button class="btn btn-sm btn-icon" onclick="moveQuestion(${pi}, ${qi}, 1)" ${qi === (survey.pages[pi].elements || []).length - 1 ? 'disabled' : ''} title="Move down">↓</button>
-          <button class="btn btn-sm btn-danger btn-icon" onclick="deleteQuestion(${pi}, ${qi})" title="Delete question">✕</button>
-        </div>
-      </div>
-      <div class="question-card-body">
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Question Name (id)</label>
-            <input type="text" value="${esc(el.name || '')}" oninput="survey.pages[${pi}].elements[${qi}].name=this.value;refreshJSON()" placeholder="question_id" />
-          </div>
-          <div class="field-group">
-            <label class="field-label">Type</label>
-            <select onchange="changeQuestionType(${pi}, ${qi}, this.value)">
-              <option value="radiogroup" ${el.type === 'radiogroup' ? 'selected' : ''}>radiogroup</option>
-              <option value="checkbox" ${el.type === 'checkbox' ? 'selected' : ''}>checkbox</option>
-              <option value="text" ${el.type === 'text' ? 'selected' : ''}>text</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Title</label>
-          <textarea oninput="survey.pages[${pi}].elements[${qi}].title=this.value;document.querySelector('#${id} .question-card-title').textContent=this.value||survey.pages[${pi}].elements[${qi}].name||'Untitled question';refreshJSON()" placeholder="Question text shown to user">${esc(el.title || '')}</textarea>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Description</label>
-          <input type="text" value="${esc(el.description || '')}" oninput="survey.pages[${pi}].elements[${qi}].description=this.value;refreshJSON()" placeholder="Optional description below title" />
-        </div>
-        <div class="field-row">
-          <div class="field-group">
-            <div class="field-inline">
-              <input type="checkbox" id="req_${pi}_${qi}" ${el.isRequired ? 'checked' : ''} onchange="survey.pages[${pi}].elements[${qi}].isRequired=this.checked;refreshJSON()" />
-              <label class="checkbox-label" for="req_${pi}_${qi}">Required</label>
+  document.getElementById('pagesList').innerHTML = pages.length === 0
+    ? '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">No pages</div>'
+    : pages.map((pg, i) => {
+        const title = stripMeta(pg.title || pg.name || 'Untitled page');
+        const qCount = (pg.elements || []).length;
+        const hasCond = !!pg.visibleIf;
+        return `
+          <div class="page-item ${i === pageIdx ? 'active' : ''} ${hasCond ? 'hidden-page' : ''}"
+               onclick="selectPage(${i})">
+            <span class="page-item-num">${i + 1}</span>
+            <div class="page-item-info">
+              <div class="page-item-name" title="${esc(title)}">${esc(title)}</div>
+              <div class="page-item-qcount">${qCount} question${qCount !== 1 ? 's' : ''}${hasCond ? ' · conditional' : ''}</div>
             </div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Visible If</label>
-            <input type="text" value="${esc(el.visibleIf || '')}" oninput="survey.pages[${pi}].elements[${qi}].visibleIf=this.value;refreshJSON()" placeholder="{q_name} = 'value'" />
-          </div>
-        </div>
-        ${choicesHtml}
-        ${textHtml}
-      </div>
-    </div>
-  `;
-}
-
-function renderChoice(pi, qi, ci, c) {
-  return `
-    <div class="choice-row">
-      <span class="choice-index">${ci + 1}</span>
-      <div class="choice-fields">
-        <input type="text" class="choice-val" value="${esc(c.value || '')}" oninput="survey.pages[${pi}].elements[${qi}].choices[${ci}].value=this.value;refreshJSON()" placeholder="value" />
-        <input type="text" value="${esc(c.text || '')}" oninput="survey.pages[${pi}].elements[${qi}].choices[${ci}].text=this.value;refreshJSON()" placeholder="Display text" />
-      </div>
-      <button class="choice-del" onclick="deleteChoice(${pi}, ${qi}, ${ci})" title="Remove choice">✕</button>
-    </div>
-  `;
-}
-
-// ── Actions ──────────────────────────────────────────────────────────────────
-
-function esc(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+          </div>`;
+      }).join('');
 }
 
 function selectPage(i) {
-  activePage = i;
-  render();
-  document.getElementById('editorArea').scrollTop = 0;
+  pageIdx = i;
+  renderSidebar();
+  renderPageViewer();
+  document.getElementById('contentArea').scrollTop = 0;
 }
 
-function addPage() {
-  const num = survey.pages.length + 1;
-  survey.pages.push({
-    name: `page${num}`,
-    title: `Page ${num}`,
-    visibleIf: '',
-    description: '',
-    elements: []
-  });
-  activePage = survey.pages.length - 1;
-  render();
+// ── Page viewer (read-only) ───────────────────────────────────────────────────
+function renderPageViewer() {
+  const container = document.getElementById('pageViewerArea');
+  if (!survey || pageIdx === null) { container.innerHTML = ''; return; }
+
+  const pg = survey.pages[pageIdx];
+  const title = stripMeta(pg.title || pg.name || '');
+  const desc  = pg.description ? stripMeta(pg.description) : '';
+  const els   = pg.elements || [];
+
+  const condHtml = pg.visibleIf
+    ? `<div class="page-viewer-condition">⚡ visible if: ${esc(pg.visibleIf)}</div>`
+    : '';
+
+  const questionsHtml = els.length === 0
+    ? '<p class="no-questions">No questions on this page.</p>'
+    : els.map(el => renderQuestionRow(el)).join('');
+
+  container.innerHTML = `
+    <div class="page-viewer-header">
+      <div class="page-viewer-badge">page ${pageIdx + 1} of ${survey.pages.length}</div>
+      ${title ? `<h2 class="page-viewer-title">${esc(title)}</h2>` : ''}
+      <div class="page-viewer-meta">
+        <span>🏷 ${esc(pg.name || '')}</span>
+        <span>❓ ${els.length} question${els.length !== 1 ? 's' : ''}</span>
+      </div>
+      ${desc ? `<p class="page-viewer-desc">${esc(desc)}</p>` : ''}
+      ${condHtml}
+    </div>
+    <div class="questions-list">${questionsHtml}</div>
+  `;
 }
 
-function deletePage(event, i) {
-  if (event) event.stopPropagation();
-  if (!confirm(`Delete page "${survey.pages[i].title || survey.pages[i].name}"?`)) return;
-  survey.pages.splice(i, 1);
-  if (activePage >= survey.pages.length) activePage = survey.pages.length - 1;
-  if (activePage < 0) activePage = null;
-  render();
+function renderQuestionRow(el) {
+  const typeClass = el.type === 'radiogroup' ? 'q-type-radio' : el.type === 'checkbox' ? 'q-type-check' : 'q-type-text';
+  const title = stripMeta(el.title || el.name || '');
+  const req   = el.isRequired ? '<span class="q-required">*</span>' : '';
+
+  const choices = (el.choices || []).slice(0, 8).map(c => {
+    const label = typeof c === 'string' ? c : (c.text || c.value || '');
+    return `<span class="q-choice-pill">${esc(stripMeta(label))}</span>`;
+  }).join('');
+  const moreCount = (el.choices || []).length - 8;
+  const moreHtml  = moreCount > 0 ? `<span class="q-choices-more">+${moreCount} more</span>` : '';
+  const choicesHtml = (el.type === 'radiogroup' || el.type === 'checkbox') && el.choices
+    ? `<div class="q-choices">${choices}${moreHtml}</div>` : '';
+
+  const tags = [];
+  if (el.inputType && el.inputType !== 'text') tags.push(el.inputType);
+  if (el.maxLength) tags.push(`max ${el.maxLength} chars`);
+  if (el.showNoneItem) tags.push('none item');
+  if (el.showOtherItem || el.otherText) tags.push('other item');
+  const tagsHtml = tags.length ? `<div class="q-meta">${tags.map(t => `<span class="q-tag">${esc(t)}</span>`).join('')}</div>` : '';
+
+  const condHtml = el.visibleIf
+    ? `<div class="q-visibleif">⚡ ${esc(el.visibleIf)}</div>` : '';
+
+  return `
+    <div class="question-row">
+      <div class="question-row-header">
+        <span class="q-type ${typeClass}">${el.type}</span>
+        <div class="q-title">${esc(title)}${req}</div>
+        <span class="q-name">${esc(el.name || '')}</span>
+      </div>
+      ${tagsHtml}${choicesHtml}${condHtml}
+    </div>`;
 }
 
-function movePage(i, dir) {
-  const j = i + dir;
-  if (j < 0 || j >= survey.pages.length) return;
-  [survey.pages[i], survey.pages[j]] = [survey.pages[j], survey.pages[i]];
-  activePage = j;
-  render();
-}
-
-function addQuestion(type) {
-  if (activePage === null) return;
-  const num = (survey.pages[activePage].elements || []).length + 1;
-  const q = {
-    type,
-    name: `q${num}_${uid()}`,
-    title: '',
-    isRequired: false,
-    visibleIf: '',
-    description: ''
+// ── File input & drag-drop ────────────────────────────────────────────────────
+function handleFileInput(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      loadSurvey(data, file.name);
+    } catch(err) { alert('Invalid JSON: ' + err.message); }
   };
-  if (type === 'radiogroup' || type === 'checkbox') {
-    q.choices = [];
-    q.showNoneItem = false;
-    q.noneText = '';
-    q.showOtherItem = false;
-    q.otherText = '';
-    q.otherPlaceholder = '';
-    q.commentPlaceholder = '';
-  }
-  if (type === 'text') {
-    q.inputType = 'text';
-    q.placeholder = '';
-    q.maxLength = '';
-    q.min = '';
-    q.max = '';
-  }
-  if (!survey.pages[activePage].elements) survey.pages[activePage].elements = [];
-  survey.pages[activePage].elements.push(q);
-  renderEditor();
-  refreshJSON();
-  // scroll to new question
-  setTimeout(() => {
-    const ql = document.getElementById('questionsList');
-    if (ql) ql.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
+  reader.readAsText(file);
 }
 
-function deleteQuestion(pi, qi) {
-  if (!confirm('Delete this question?')) return;
-  survey.pages[pi].elements.splice(qi, 1);
-  renderEditor();
-  refreshJSON();
-}
+const dropArea = document.getElementById('dropArea');
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+dropArea.addEventListener('drop', e => {
+  e.preventDefault(); dropArea.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try { loadSurvey(JSON.parse(ev.target.result), file.name); }
+    catch(err) { alert('Invalid JSON: ' + err.message); }
+  };
+  reader.readAsText(file);
+});
 
-function moveQuestion(pi, qi, dir) {
-  const els = survey.pages[pi].elements;
-  const j = qi + dir;
-  if (j < 0 || j >= els.length) return;
-  [els[qi], els[j]] = [els[j], els[qi]];
-  renderEditor();
-  refreshJSON();
-}
-
-function changeQuestionType(pi, qi, newType) {
-  const el = survey.pages[pi].elements[qi];
-  el.type = newType;
-
-  // clear fields that don't apply
-  if (newType === 'text') {
-    delete el.choices;
-    delete el.showNoneItem;
-    delete el.noneText;
-    delete el.showOtherItem;
-    delete el.otherText;
-    delete el.otherPlaceholder;
-    delete el.commentPlaceholder;
-    if (!el.inputType) el.inputType = 'text';
-    if (el.placeholder === undefined) el.placeholder = '';
-    if (el.maxLength === undefined) el.maxLength = '';
-    if (el.min === undefined) el.min = '';
-    if (el.max === undefined) el.max = '';
-  } else {
-    delete el.inputType;
-    delete el.placeholder;
-    delete el.maxLength;
-    delete el.min;
-    delete el.max;
-    if (!el.choices) el.choices = [];
-    if (el.showNoneItem === undefined) el.showNoneItem = false;
-    if (el.noneText === undefined) el.noneText = '';
-    if (el.showOtherItem === undefined) el.showOtherItem = false;
-    if (el.otherText === undefined) el.otherText = '';
-    if (el.otherPlaceholder === undefined) el.otherPlaceholder = '';
-    if (el.commentPlaceholder === undefined) el.commentPlaceholder = '';
-  }
-  renderEditor();
-  refreshJSON();
-}
-
-function toggleQuestion(id) {
-  const card = document.getElementById(id);
-  if (card) card.classList.toggle('collapsed');
-}
-
-function addChoice(pi, qi) {
-  if (!survey.pages[pi].elements[qi].choices) survey.pages[pi].elements[qi].choices = [];
-  const choices = survey.pages[pi].elements[qi].choices;
-  choices.push({ value: '', text: '' });
-
-  // re-render just the choices list + the section divider count
-  const container = document.getElementById(`choices_${pi}_${qi}`);
-  if (container) {
-    container.innerHTML = choices.map((c, ci) => renderChoice(pi, qi, ci, c)).join('');
-    // update choice count in divider
-    const dividers = container.closest('.question-card-body').querySelectorAll('.section-divider');
-    if (dividers[0]) dividers[0].textContent = `Choices (${choices.length})`;
-    // focus new value input
-    const rows = container.querySelectorAll('.choice-row');
-    const last = rows[rows.length - 1];
-    if (last) last.querySelector('input').focus();
-  }
-  refreshJSON();
-}
-
-function deleteChoice(pi, qi, ci) {
-  survey.pages[pi].elements[qi].choices.splice(ci, 1);
-  const choices = survey.pages[pi].elements[qi].choices;
-
-  const container = document.getElementById(`choices_${pi}_${qi}`);
-  if (container) {
-    container.innerHTML = choices.map((c, ci2) => renderChoice(pi, qi, ci2, c)).join('');
-    const dividers = container.closest('.question-card-body').querySelectorAll('.section-divider');
-    if (dividers[0]) dividers[0].textContent = `Choices (${choices.length})`;
-  }
-  refreshJSON();
-}
-
-// ── Import / Export ──────────────────────────────────────────────────────────
-
+// ── Paste import modal ────────────────────────────────────────────────────────
 function openImport() {
   document.getElementById('importModal').classList.add('open');
   document.getElementById('importInput').value = '';
-  setTimeout(() => document.getElementById('importInput').focus(), 100);
+  setTimeout(() => document.getElementById('importInput').focus(), 80);
 }
-function closeImport() {
-  document.getElementById('importModal').classList.remove('open');
-}
-
+function closeImport() { document.getElementById('importModal').classList.remove('open'); }
 function doImport() {
-  let raw = document.getElementById('importInput').value.trim();
+  const raw = document.getElementById('importInput').value.trim();
   if (!raw) return;
-  let parsed;
-  try { parsed = JSON.parse(raw); } catch(e) {
-    alert('Invalid JSON: ' + e.message); return;
-  }
-  loadSurvey(parsed);
-  closeImport();
-  toast('Survey imported successfully');
+  try { loadSurvey(JSON.parse(raw), 'pasted JSON'); closeImport(); }
+  catch(e) { alert('Invalid JSON: ' + e.message); }
 }
 
-function loadSurvey(data) {
-  // Normalize title
-  if (typeof data.title === 'string') {
-    survey.title = { default: data.title, de: '' };
-  } else if (data.title && typeof data.title === 'object') {
-    survey.title = { default: data.title.default || '', de: data.title.de || '' };
-  } else {
-    survey.title = { default: '', de: '' };
-  }
-
-  survey.logoPosition = data.logoPosition || 'right';
-
-  survey.pages = (data.pages || []).map(page => {
-    return {
-      name: page.name || '',
-      title: page.title || '',
-      visibleIf: page.visibleIf || '',
-      description: page.description || '',
-      elements: (page.elements || []).map(el => loadElement(el))
-    };
-  });
-
-  activePage = survey.pages.length > 0 ? 0 : null;
-  render();
-}
-
-function loadElement(el) {
-  const out = {
-    type: el.type || 'text',
-    name: el.name || '',
-    title: el.title || '',
-    description: el.description || '',
-    isRequired: el.isRequired || false,
-    visibleIf: el.visibleIf || ''
-  };
-
-  if (out.type === 'radiogroup' || out.type === 'checkbox') {
-    out.choices = (el.choices || []).map(c => {
-      if (typeof c === 'string' || typeof c === 'number') {
-        return { value: String(c), text: String(c) };
+// ══════════════════════════════════════════════════════════════════════════════
+// ── VisibleIf parser
+// Tokenises a raw SurveyJS visibleIf string into a structured array of clauses:
+//   [{question, condition, values:[], logicalOperator:'and'|'or'|null}, ...]
+// ══════════════════════════════════════════════════════════════════════════════
+function parseVisibleIf(expr) {
+  if (!expr || !expr.trim()) return [];
+  const toks = _viTok(expr);
+  const out  = [];
+  let i = 0;
+  while (i < toks.length) {
+    // expect {var}
+    if (toks[i].t !== 'var') { i++; continue; }
+    const question = toks[i++].v;
+    if (i >= toks.length) break;
+    const condition = toks[i++].v.toLowerCase();
+    // values (absent for notempty / empty)
+    let values = [];
+    if (condition !== 'notempty' && condition !== 'empty') {
+      if (i < toks.length && toks[i].t !== 'logical' && toks[i].t !== 'var') {
+        values = [toks[i++].v];
       }
-      return { value: String(c.value !== undefined ? c.value : ''), text: String(c.text !== undefined ? c.text : '') };
-    });
-    out.showNoneItem = el.showNoneItem || false;
-    out.noneText = el.noneText || '';
-    out.showOtherItem = el.showOtherItem || false;
-    out.otherText = el.otherText || '';
-    out.otherPlaceholder = el.otherPlaceholder || '';
-    out.commentPlaceholder = el.commentPlaceholder || '';
+    }
+    // optional logical operator (and / or)
+    let logicalOperator = null;
+    if (i < toks.length && toks[i].t === 'logical') {
+      logicalOperator = toks[i++].v.toLowerCase();
+    }
+    out.push({ question, condition, values, logicalOperator });
   }
-
-  if (out.type === 'text') {
-    out.inputType = el.inputType || 'text';
-    out.placeholder = el.placeholder || '';
-    out.maxLength = el.maxLength !== undefined ? el.maxLength : '';
-    out.min = el.min !== undefined ? el.min : '';
-    out.max = el.max !== undefined ? el.max : '';
-  }
-
   return out;
 }
 
-function copyJSON() {
-  const json = JSON.stringify(buildJSON(), null, 2);
-  navigator.clipboard.writeText(json).then(() => toast('JSON copied to clipboard!')).catch(() => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = json;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('JSON copied!');
-  });
+function _viTok(expr) {
+  const toks = [];
+  let i = 0;
+  while (i < expr.length) {
+    while (i < expr.length && /\s/.test(expr[i])) i++;
+    if (i >= expr.length) break;
+    const ch = expr[i];
+    if (ch === '{') {
+      const j = expr.indexOf('}', i);
+      toks.push({ t: 'var', v: expr.slice(i + 1, j < 0 ? expr.length : j) });
+      i = j < 0 ? expr.length : j + 1;
+    } else if (ch === "'" || ch === '"') {
+      let j = i + 1;
+      while (j < expr.length && expr[j] !== ch) j++;
+      toks.push({ t: 'str', v: expr.slice(i + 1, j) });
+      i = j + 1;
+    } else if ('=!<>'.includes(ch)) {
+      const two = expr.slice(i, i + 2);
+      if (two === '==' || two === '!=' || two === '>=' || two === '<=') {
+        toks.push({ t: 'op', v: two }); i += 2;
+      } else {
+        toks.push({ t: 'op', v: ch }); i++;
+      }
+    } else {
+      let j = i;
+      while (j < expr.length && !/[\s{'"=!<>]/.test(expr[j])) j++;
+      const w = expr.slice(i, j);
+      const wl = w.toLowerCase();
+      toks.push({ t: (wl === 'and' || wl === 'or') ? 'logical' : 'op', v: w });
+      i = j;
+    }
+  }
+  return toks;
 }
 
-function downloadJSON() {
-  const json = JSON.stringify(buildJSON(), null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'survey.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('JSON downloaded!');
+// ══════════════════════════════════════════════════════════════════════════════
+// ── VisibleIf evaluator — matches the Dart production implementation exactly:
+//   • Unanswered question → skip clause (don't fail it)
+//   • All comparisons are case-insensitive
+//   • logicalOperator is the connector AFTER the current clause (left-associative)
+// ══════════════════════════════════════════════════════════════════════════════
+function evalVisibleIf(clauses, answers) {
+  let result = false;
+  let lastOp  = null;   // 'and' | 'or' | null (null = first clause)
+
+  for (const c of clauses) {
+    const raw = answers[c.question];
+
+    // No answer yet → skip this clause entirely (Dart: continue)
+    if (raw === undefined || raw === null) continue;
+
+    // Normalise to lowercase string array
+    const aList = (Array.isArray(raw) ? raw : [raw])
+      .map(a => String(a).trim().toLowerCase());
+    const vList = c.values.map(v => String(v).trim().toLowerCase());
+
+    let met = false;
+    switch (c.condition) {
+      case '=': case '==': case 'anyof':
+        met = aList.some(a => vList.includes(a)); break;
+      case '!=':
+        met = !aList.some(a => vList.includes(a)); break;
+      case 'notempty':
+        met = aList.some(a => a !== ''); break;
+      case 'empty':
+        met = aList.every(a => a === ''); break;
+      case 'contains':
+        // Dart: any answer exactly equals any value
+        met = aList.some(a => vList.some(v => a === v)); break;
+      case 'notcontains':
+        // Dart: every answer doesn't contain any value as substring
+        met = aList.every(a => vList.every(v => !a.includes(v))); break;
+      default: met = true;
+    }
+
+    if      (lastOp === 'and') result = result && met;
+    else if (lastOp === 'or')  result = result || met;
+    else                        result = met;   // first clause
+
+    lastOp = c.logicalOperator;
+  }
+  return result;
+}
+
+// Convenience wrappers
+function pageVisible(page, answers) {
+  if (!page.visibleIf) return false;  // no condition → not auto-navigated
+  return evalVisibleIf(parseVisibleIf(page.visibleIf), answers);
+}
+function elementVisible(el, answers) {
+  if (!el.visibleIf) return true;
+  return evalVisibleIf(parseVisibleIf(el.visibleIf), answers);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ── Preview runner
 // ══════════════════════════════════════════════════════════════════════════════
-
-// ── Strip ${...} metadata from text ──────────────────────────────────────────
-function stripMeta(str) {
-  if (str === null || str === undefined) return '';
-  let s = String(str);
-  // Iteratively remove ${...} blocks — handles nested brackets inside
-  let prev;
-  do {
-    prev = s;
-    s = s.replace(/\$\{[^${}]*(?:\{[^{}]*\}[^${}]*)?\}/g, '');
-  } while (s !== prev);
-  return s.trim();
-}
-
-// ── Condition evaluator (SurveyJS-style) ─────────────────────────────────────
-function evalCondition(expr, answers) {
-  if (!expr || !expr.trim()) return true;
-  try { return _evalOr(expr.trim(), answers); }
-  catch(e) { return true; }
-}
-
-function _evalOr(expr, answers) {
-  const parts = _split(expr, 'or');
-  return parts.length > 1
-    ? parts.some(p => _evalAnd(p.trim(), answers))
-    : _evalAnd(expr, answers);
-}
-
-function _evalAnd(expr, answers) {
-  const parts = _split(expr, 'and');
-  return parts.length > 1
-    ? parts.every(p => _evalAtom(p.trim(), answers))
-    : _evalAtom(expr, answers);
-}
-
-// Split by keyword but respect parentheses and quoted strings
-function _split(expr, kw) {
-  const parts = [];
-  let depth = 0, inQ = false, qCh = '', buf = '', i = 0;
-  const kwPad = ' ' + kw + ' ';
-  while (i < expr.length) {
-    const ch = expr[i];
-    if (inQ) { buf += ch; if (ch === qCh) inQ = false; i++; continue; }
-    if (ch === '"' || ch === "'") { inQ = true; qCh = ch; buf += ch; i++; continue; }
-    if (ch === '(') { depth++; buf += ch; i++; continue; }
-    if (ch === ')') { depth--; buf += ch; i++; continue; }
-    if (depth === 0) {
-      const rest = expr.slice(i).toLowerCase();
-      if (rest.startsWith(kwPad)) {
-        parts.push(buf.trim()); buf = ''; i += kwPad.length; continue;
-      }
-    }
-    buf += ch; i++;
-  }
-  if (buf.trim()) parts.push(buf.trim());
-  return parts.length > 1 ? parts : [expr];
-}
-
-function _evalAtom(expr, answers) {
-  expr = expr.trim();
-  // Strip outer parens
-  while (expr.startsWith('(') && expr.endsWith(')')) {
-    expr = expr.slice(1, -1).trim();
-  }
-
-  // {var} notempty
-  let m = expr.match(/^\{([^}]+)\}\s+notempty$/i);
-  if (m) { const v = answers[m[1]]; return v !== undefined && v !== '' && v !== null && !(Array.isArray(v) && v.length === 0); }
-
-  // {var} empty
-  m = expr.match(/^\{([^}]+)\}\s+empty$/i);
-  if (m) { const v = answers[m[1]]; return v === undefined || v === '' || v === null || (Array.isArray(v) && v.length === 0); }
-
-  // {var} contains 'val'
-  m = expr.match(/^\{([^}]+)\}\s+contains\s+['"]?([^'"]+)['"]?$/i);
-  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? v.includes(t) : String(v||'').includes(t); }
-
-  // {var} notcontains 'val'
-  m = expr.match(/^\{([^}]+)\}\s+notcontains\s+['"]?([^'"]+)['"]?$/i);
-  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? !v.includes(t) : !String(v||'').includes(t); }
-
-  // {var} = 'val'  or  {var} == 'val'
-  m = expr.match(/^\{([^}]+)\}\s*={1,2}\s*['"]?([^'"]+?)['"]?$/);
-  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? v.includes(t) : String(v||'') === t; }
-
-  // {var} != 'val'
-  m = expr.match(/^\{([^}]+)\}\s*!=\s*['"]?([^'"]+?)['"]?$/);
-  if (m) { const v = answers[m[1]], t = m[2].trim(); return Array.isArray(v) ? !v.includes(t) : String(v||'') !== t; }
-
-  // {var} >= <= > <  numeric
-  m = expr.match(/^\{([^}]+)\}\s*(>=|<=|>|<)\s*(.+)$/);
-  if (m) {
-    const v = parseFloat(answers[m[1]]) || 0, t = parseFloat(m[3]) || 0;
-    if (m[2] === '>=') return v >= t; if (m[2] === '<=') return v <= t;
-    if (m[2] === '>')  return v > t;  if (m[2] === '<')  return v < t;
-  }
-
-  return true; // unknown → show
-}
-
-// ── Preview state ─────────────────────────────────────────────────────────────
-let pvState = null; // { snap, answers, pageIdx, history }
+let pvState = null;
+// pvState = { snap, answers, pageIdx, history:[], answeredPages: Set }
 
 function openPreview() {
-  pvState = {
-    snap: buildJSON(),       // snapshot of the survey at this moment
-    answers: {},
-    pageIdx: -1,
-    history: []              // stack of visited page indices (for Back)
-  };
-  // Find first visible page
-  pvState.pageIdx = _pvNextPage(-1);
-  if (pvState.pageIdx === -1) {
-    toast('No pages to preview.'); return;
-  }
+  if (!survey) return;
+  const pages = survey.pages || [];
+  if (!pages.length) { toast('No pages.'); return; }
+  pvState = { snap: survey, answers: {}, pageIdx: 0, history: [], answeredPages: new Set() };
+  // Page 0 is the unconditional entry point (no visibleIf required)
+  pvState.pageIdx = 0;
   _pvRender();
   document.getElementById('previewOverlay').classList.add('open');
 }
@@ -1431,246 +803,201 @@ function closePreview() {
   pvState = null;
 }
 
-function _pvNextPage(from) {
+// Scan ALL pages from the start (like Dart's findNextPageIndex):
+// Return first page where visibleIf passes AND not yet in answeredPages.
+// excludeIdx: treat this index as already answered (used for isLast check).
+function _pvFindNext(excludeIdx = -1) {
   const pages = pvState.snap.pages || [];
-  for (let i = from + 1; i < pages.length; i++) {
-    const pg = pages[i];
-    if (!pg.visibleIf || evalCondition(pg.visibleIf, pvState.answers)) return i;
+  for (let i = 0; i < pages.length; i++) {
+    if (!pageVisible(pages[i], pvState.answers)) continue;   // visibleIf not met
+    if (pvState.answeredPages.has(i))            continue;   // already answered
+    if (i === excludeIdx)                        continue;   // treat as answered
+    const els = pages[i].elements || [];
+    if (els.length === 0) return i;                          // empty page, ok
+    return i;
   }
-  return -1;
+  return -1; // survey complete
 }
 
-function _pvVisibleElements(page) {
-  return (page.elements || []).filter(el =>
-    !el.visibleIf || evalCondition(el.visibleIf, pvState.answers)
-  );
+function _pvVisEls(page) {
+  return (page.elements || []).filter(el => elementVisible(el, pvState.answers));
 }
 
-// ── Render current page ───────────────────────────────────────────────────────
 function _pvRender() {
-  const pages  = pvState.snap.pages || [];
-  const total  = pages.length;
-  const idx    = pvState.pageIdx;
-  const page   = pages[idx];
-  const isLast = _pvNextPage(idx) === -1;
+  const pages = pvState.snap.pages || [];
+  const idx   = pvState.pageIdx;
+  const page  = pages[idx];
+  const total = pages.length;
 
-  // Progress
-  const pct = total > 1 ? Math.round(((idx) / (total - 1)) * 100) : 100;
-  document.getElementById('previewProgressBar').style.width = pct + '%';
-  document.getElementById('previewProgressLabel').textContent = `${idx + 1} / ${total}`;
+  // isLast: pretend current page is answered when looking for next
+  const isLast = _pvFindNext(idx) === -1;
 
-  // Title bar
-  const survTitle = pvState.snap.title;
-  const tStr = typeof survTitle === 'object'
-    ? (survTitle.de || survTitle.default || '')
-    : (survTitle || '');
-  document.getElementById('previewTitleBar').textContent = stripMeta(tStr) || 'Survey Preview';
+  // Progress — count how many pages are done vs total visible
+  const done = pvState.answeredPages.size;
+  const pct  = total > 1 ? Math.round((done / (total - 1)) * 100) : 0;
+  document.getElementById('previewProgressBar').style.width = Math.min(pct, 99) + '%';
+  document.getElementById('previewProgressLabel').textContent =
+    `${done + 1} / ~${total}`;
 
-  // Footer
+  document.getElementById('previewTitleBar').textContent =
+    surveyTitle(pvState.snap) || 'Survey Preview';
+
   document.getElementById('previewBackBtn').disabled = pvState.history.length === 0;
+  document.getElementById('previewNextBtn').style.display = '';
   document.getElementById('previewNextBtn').textContent = isLast ? 'Submit ✓' : 'Next →';
+
+  const els = _pvVisEls(page);
   document.getElementById('previewFooterCenter').textContent =
-    `${_pvVisibleElements(page).length} question${_pvVisibleElements(page).length !== 1 ? 's' : ''} on this page`;
+    `${els.length} question${els.length !== 1 ? 's' : ''} on this page`;
 
-  // Content
-  const els = _pvVisibleElements(page);
-  const html = `
-    <div class="preview-page-tag">page ${idx + 1}</div>
-    ${page.title ? `<h2 class="preview-page-title">${_pvEsc(stripMeta(page.title))}</h2>` : ''}
-    ${page.description ? `<p class="preview-page-desc">${_pvEsc(stripMeta(page.description))}</p>` : ''}
-    <div class="preview-questions">
-      ${els.map((el, i) => _pvRenderQuestion(el, i)).join('')}
-    </div>
-  `;
-  document.getElementById('previewContent').innerHTML = html;
-  document.getElementById('previewBody') && (document.getElementById('previewBody').scrollTop = 0);
+  document.getElementById('previewContent').innerHTML = `
+    <div class="preview-page-tag">${esc(stripMeta(page.name || ''))}</div>
+    ${page.title       ? `<h2 class="preview-page-title">${esc(stripMeta(page.title))}</h2>`       : ''}
+    ${page.description ? `<p class="preview-page-desc">${esc(stripMeta(page.description))}</p>` : ''}
+    <div class="preview-questions">${els.map(el => _pvRenderQ(el)).join('')}</div>`;
+
   document.querySelector('.preview-body').scrollTop = 0;
-
-  // Restore any existing answers into the inputs
   _pvRestoreAnswers(els);
 }
 
-function _pvEsc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function _pvRenderQuestion(el, qi) {
+function _pvRenderQ(el) {
   const title = stripMeta(el.title || el.name || '');
   const desc  = el.description ? stripMeta(el.description) : '';
   const req   = el.isRequired ? '<span class="pq-required">*</span>' : '';
-
-  let inputHtml = '';
+  let body    = '';
 
   if (el.type === 'radiogroup' || el.type === 'checkbox') {
-    const inputType = el.type === 'radiogroup' ? 'radio' : 'checkbox';
-    const choices = (el.choices || []).map(c => {
-      if (typeof c === 'string') return { value: c, text: c };
-      return { value: String(c.value || ''), text: String(c.text || c.value || '') };
-    });
-
-    const choiceItems = choices.map(c => `
-      <label class="pq-choice" data-val="${_pvEsc(c.value)}" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
-        <input type="${inputType}" name="pv_${el.name}" value="${_pvEsc(stripMeta(c.value))}" style="pointer-events:none" />
-        <span class="pq-choice-label">${_pvEsc(stripMeta(c.text || c.value))}</span>
-      </label>
-    `).join('');
-
-    let extras = '';
-    if (el.showNoneItem) {
-      const noneText = stripMeta(el.noneText || 'None');
-      extras += `
-        <label class="pq-choice" data-val="__none__" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
-          <input type="${inputType}" name="pv_${el.name}" value="__none__" style="pointer-events:none" />
-          <span class="pq-choice-label">${_pvEsc(noneText)}</span>
-        </label>`;
-    }
-    if (el.showOtherItem) {
-      const otherText = stripMeta(el.otherText || 'Other');
-      extras += `
-        <label class="pq-choice" data-val="__other__" onclick="pvToggleChoice(this,'${el.name}','${el.type}')">
-          <input type="${inputType}" name="pv_${el.name}" value="__other__" style="pointer-events:none" />
-          <span class="pq-choice-label">${_pvEsc(otherText)}</span>
-        </label>
-        <input class="pq-other-input" id="pv_other_${el.name}" type="text"
-          placeholder="${_pvEsc(stripMeta(el.otherPlaceholder || ''))}"
-          style="display:none"
-          oninput="pvState.answers['${el.name}-Comment']=this.value" />`;
-    }
-
-    inputHtml = `<div class="pq-choices" id="pv_choices_${el.name}">${choiceItems}${extras}</div>`;
+    const itype = el.type === 'radiogroup' ? 'radio' : 'checkbox';
+    const choices = (el.choices || []).map(c =>
+      typeof c === 'string' ? { value: c, text: c }
+      : { value: String(c.value ?? ''), text: String(c.text ?? c.value ?? '') }
+    );
+    let items = choices.map(c => `
+      <label class="pq-choice" data-val="${esc(c.value)}" onclick="pvToggle(this,'${el.name}','${el.type}')">
+        <input type="${itype}" name="pv_${el.name}" value="${esc(stripMeta(c.value))}" style="pointer-events:none"/>
+        <span class="pq-choice-label">${esc(stripMeta(c.text || c.value))}</span>
+      </label>`).join('');
+    if (el.showNoneItem)
+      items += `<label class="pq-choice" data-val="__none__" onclick="pvToggle(this,'${el.name}','${el.type}')">
+        <input type="${itype}" name="pv_${el.name}" value="__none__" style="pointer-events:none"/>
+        <span class="pq-choice-label">${esc(stripMeta(el.noneText || 'None'))}</span></label>`;
+    if (el.showOtherItem)
+      items += `<label class="pq-choice" data-val="__other__" onclick="pvToggle(this,'${el.name}','${el.type}')">
+        <input type="${itype}" name="pv_${el.name}" value="__other__" style="pointer-events:none"/>
+        <span class="pq-choice-label">${esc(stripMeta(el.otherText || 'Other'))}</span></label>
+        <input class="pq-other-input" id="pv_oth_${el.name}" type="text" style="display:none"
+          placeholder="${esc(stripMeta(el.otherPlaceholder || ''))}"
+          oninput="pvState.answers['${el.name}-Comment']=this.value"/>`;
+    body = `<div class="pq-choices" id="pvc_${el.name}">${items}</div>`;
 
   } else if (el.type === 'text') {
-    const iType = el.inputType || 'text';
-    const ph    = _pvEsc(stripMeta(el.placeholder || ''));
-    const ml    = el.maxLength ? `maxlength="${el.maxLength}"` : '';
-
-    if (iType === 'range') {
-      const mn = el.min !== '' && el.min !== undefined ? el.min : 0;
-      const mx = el.max !== '' && el.max !== undefined ? el.max : 100;
-      inputHtml = `
-        <div class="pq-range-wrap">
-          <div class="pq-range-labels"><span>${mn}</span><span>${mx}</span></div>
-          <input type="range" id="pv_${el.name}" name="pv_${el.name}"
-            min="${mn}" max="${mx}" value="${mn}"
-            oninput="document.getElementById('pv_rv_${el.name}').textContent=this.value;pvState.answers['${el.name}']=this.value" />
-          <div class="pq-range-value" id="pv_rv_${el.name}">${mn}</div>
-        </div>`;
+    const it = el.inputType || 'text';
+    const ph = esc(stripMeta(el.placeholder || ''));
+    const ml = el.maxLength ? `maxlength="${el.maxLength}"` : '';
+    if (it === 'range') {
+      const mn = el.min ?? 0, mx = el.max ?? 100;
+      body = `<div class="pq-range-wrap">
+        <div class="pq-range-labels"><span>${mn}</span><span>${mx}</span></div>
+        <input type="range" id="pv_${el.name}" min="${mn}" max="${mx}" value="${mn}"
+          oninput="document.getElementById('pv_rv_${el.name}').textContent=this.value;pvState.answers['${el.name}']=this.value"/>
+        <div class="pq-range-value" id="pv_rv_${el.name}">${mn}</div></div>`;
     } else {
-      const minA = (el.min !== '' && el.min !== undefined) ? `min="${_pvEsc(String(el.min))}"` : '';
-      const maxA = (el.max !== '' && el.max !== undefined) ? `max="${_pvEsc(String(el.max))}"` : '';
-      inputHtml = `<input type="${iType}" id="pv_${el.name}" name="pv_${el.name}"
-        placeholder="${ph}" ${ml} ${minA} ${maxA}
-        oninput="pvState.answers['${el.name}']=this.value" />`;
+      const minA = (el.min != null && el.min !== '') ? `min="${esc(String(el.min))}"` : '';
+      const maxA = (el.max != null && el.max !== '') ? `max="${esc(String(el.max))}"` : '';
+      body = `<input type="${it}" id="pv_${el.name}" placeholder="${ph}" ${ml} ${minA} ${maxA}
+        oninput="pvState.answers['${el.name}']=this.value"/>`;
     }
   }
-
-  return `
-    <div class="pq" id="pv_q_${el.name}">
-      <div class="pq-title">${_pvEsc(title)}${req}</div>
-      ${desc ? `<div class="pq-desc">${_pvEsc(desc)}</div>` : ''}
-      ${inputHtml}
-    </div>`;
+  return `<div class="pq" id="pv_q_${el.name}">
+    <div class="pq-title">${esc(title)}${req}</div>
+    ${desc ? `<div class="pq-desc">${esc(desc)}</div>` : ''}
+    ${body}</div>`;
 }
 
 function _pvRestoreAnswers(els) {
   els.forEach(el => {
-    const val = pvState.answers[el.name];
-    if (val === undefined) return;
-    if (el.type === 'radiogroup') {
-      document.querySelectorAll(`#pv_choices_${el.name} .pq-choice`).forEach(lbl => {
-        if (lbl.dataset.val === val) { lbl.classList.add('selected'); lbl.querySelector('input').checked = true; }
-      });
-    } else if (el.type === 'checkbox') {
-      const vals = Array.isArray(val) ? val : [val];
-      document.querySelectorAll(`#pv_choices_${el.name} .pq-choice`).forEach(lbl => {
-        if (vals.includes(lbl.dataset.val)) { lbl.classList.add('selected'); lbl.querySelector('input').checked = true; }
-      });
-    } else if (el.type === 'text') {
-      const inp = document.getElementById('pv_' + el.name);
-      if (inp) inp.value = val;
-      const rv  = document.getElementById('pv_rv_' + el.name);
-      if (rv)  rv.textContent = val;
+    const v = pvState.answers[el.name];
+    if (v !== undefined) {
+      if (el.type === 'radiogroup') {
+        document.querySelectorAll(`#pvc_${el.name} .pq-choice`).forEach(l => {
+          const on = l.dataset.val === v;
+          l.classList.toggle('selected', on);
+          l.querySelector('input').checked = on;
+        });
+      } else if (el.type === 'checkbox') {
+        const vals = Array.isArray(v) ? v : [v];
+        document.querySelectorAll(`#pvc_${el.name} .pq-choice`).forEach(l => {
+          const on = vals.includes(l.dataset.val);
+          l.classList.toggle('selected', on);
+          l.querySelector('input').checked = on;
+        });
+      } else {
+        const inp = document.getElementById('pv_' + el.name);
+        if (inp) inp.value = v;
+        const rv = document.getElementById('pv_rv_' + el.name);
+        if (rv)  rv.textContent = v;
+      }
     }
-    // Restore other-text
-    const otherInp = document.getElementById('pv_other_' + el.name);
-    if (otherInp && pvState.answers[el.name + '-Comment']) {
-      otherInp.value = pvState.answers[el.name + '-Comment'];
-    }
-  });
-  // Show/hide other inputs based on current selection
-  els.forEach(el => {
-    if ((el.type === 'radiogroup' || el.type === 'checkbox') && el.showOtherItem) {
-      _pvUpdateOtherVisibility(el.name, el.type);
+    const oi = document.getElementById('pv_oth_' + el.name);
+    if (oi) {
+      oi.value = pvState.answers[el.name + '-Comment'] || '';
+      _pvOtherVis(el.name, el.type);
     }
   });
 }
 
-function pvToggleChoice(lbl, name, type) {
+function pvToggle(lbl, name, type) {
   const val = lbl.dataset.val;
   if (type === 'radiogroup') {
-    // Deselect all, select this one
-    document.querySelectorAll(`#pv_choices_${name} .pq-choice`).forEach(l => {
+    document.querySelectorAll(`#pvc_${name} .pq-choice`).forEach(l => {
       l.classList.remove('selected'); l.querySelector('input').checked = false;
     });
-    lbl.classList.add('selected');
-    lbl.querySelector('input').checked = true;
+    lbl.classList.add('selected'); lbl.querySelector('input').checked = true;
     pvState.answers[name] = val;
   } else {
-    // Toggle this one
-    const isSelected = lbl.classList.contains('selected');
-    if (isSelected) {
-      lbl.classList.remove('selected'); lbl.querySelector('input').checked = false;
-    } else {
-      lbl.classList.add('selected'); lbl.querySelector('input').checked = true;
-    }
-    // Collect all selected
-    const selected = [];
-    document.querySelectorAll(`#pv_choices_${name} .pq-choice.selected`).forEach(l => selected.push(l.dataset.val));
-    pvState.answers[name] = selected;
+    const was = lbl.classList.contains('selected');
+    lbl.classList.toggle('selected', !was); lbl.querySelector('input').checked = !was;
+    const sel = [];
+    document.querySelectorAll(`#pvc_${name} .pq-choice.selected`).forEach(l => sel.push(l.dataset.val));
+    pvState.answers[name] = sel;
   }
-  _pvUpdateOtherVisibility(name, type);
-  // Re-evaluate visibleIf for other questions on this page (live filtering)
-  _pvRefreshQuestionVisibility();
+  _pvOtherVis(name, type);
+  _pvRefreshVis();
 }
 
-function _pvUpdateOtherVisibility(name, type) {
-  const otherInp = document.getElementById('pv_other_' + name);
-  if (!otherInp) return;
+function _pvOtherVis(name, type) {
+  const oi = document.getElementById('pv_oth_' + name); if (!oi) return;
   const a = pvState.answers[name];
-  const showOther = type === 'radiogroup' ? a === '__other__' : (Array.isArray(a) && a.includes('__other__'));
-  otherInp.style.display = showOther ? 'block' : 'none';
+  const show = type === 'radiogroup' ? a === '__other__' : (Array.isArray(a) && a.includes('__other__'));
+  oi.style.display = show ? 'block' : 'none';
 }
 
-function _pvRefreshQuestionVisibility() {
+function _pvRefreshVis() {
   if (!pvState) return;
-  const pages = pvState.snap.pages || [];
-  const page  = pages[pvState.pageIdx];
-  if (!page) return;
+  const page = (pvState.snap.pages || [])[pvState.pageIdx]; if (!page) return;
   (page.elements || []).forEach(el => {
-    const qEl = document.getElementById('pv_q_' + el.name);
-    if (!qEl) return;
-    const visible = !el.visibleIf || evalCondition(el.visibleIf, pvState.answers);
-    qEl.style.display = visible ? '' : 'none';
+    const node = document.getElementById('pv_q_' + el.name); if (!node) return;
+    node.style.display = elementVisible(el, pvState.answers) ? '' : 'none';
   });
-  // Update question count
-  const visCount = _pvVisibleElements(page).length;
+  const vis = _pvVisEls(page).length;
   document.getElementById('previewFooterCenter').textContent =
-    `${visCount} question${visCount !== 1 ? 's' : ''} on this page`;
+    `${vis} question${vis !== 1 ? 's' : ''} on this page`;
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────────
 function previewNext() {
   if (!pvState) return;
-  const pages  = pvState.snap.pages || [];
-  const isLast = _pvNextPage(pvState.pageIdx) === -1;
+  // Mark current page answered, push to history, then find next
+  pvState.answeredPages.add(pvState.pageIdx);
+  pvState.history.push(pvState.pageIdx);
 
-  if (isLast) {
-    // Show complete screen
+  const next = _pvFindNext();
+  if (next === -1) {
+    // Survey complete
     document.getElementById('previewContent').innerHTML = `
       <div class="preview-complete">
         <div class="preview-complete-icon">✅</div>
         <h2>Survey Complete</h2>
-        <p>Thank you for completing the survey.<br>Close this preview to return to the editor.</p>
+        <p>You have reached the end of the survey.<br>Close to return to the viewer.</p>
       </div>`;
     document.getElementById('previewNextBtn').style.display = 'none';
     document.getElementById('previewFooterCenter').textContent = '';
@@ -1678,29 +1005,33 @@ function previewNext() {
     document.getElementById('previewProgressLabel').textContent = 'Done';
     return;
   }
-
-  pvState.history.push(pvState.pageIdx);
-  pvState.pageIdx = _pvNextPage(pvState.pageIdx);
+  pvState.pageIdx = next;
   _pvRender();
 }
 
 function previewBack() {
-  if (!pvState || pvState.history.length === 0) return;
+  if (!pvState || !pvState.history.length) return;
+  // Remove answers for the page we're leaving
+  const pages = pvState.snap.pages || [];
+  const leaving = pages[pvState.pageIdx];
+  (leaving ? leaving.elements || [] : []).forEach(el => {
+    delete pvState.answers[el.name];
+    delete pvState.answers[el.name + '-Comment'];
+  });
+  pvState.answeredPages.delete(pvState.pageIdx);
+
   pvState.pageIdx = pvState.history.pop();
   document.getElementById('previewNextBtn').style.display = '';
   _pvRender();
 }
 
-// ── Import modal keyboard shortcuts ──────────────────────────────────────────
+// ── Keyboard shortcuts ────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closePreview(); closeImport(); }
 });
 document.getElementById('importModal').addEventListener('click', e => {
   if (e.target === document.getElementById('importModal')) closeImport();
 });
-
-// ── Initial render ────────────────────────────────────────────────────────────
-render();
 </script>
 </body>
 </html>
