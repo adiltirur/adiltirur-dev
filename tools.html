@@ -10,8 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link id="hljs-css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+
+  <!-- Anti-FOUC: apply saved/preferred theme before first paint -->
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,6 +40,17 @@
       --nav-h: 73px;
     }
 
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --fg: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-light: #1c2d42;
+      --border: #21262d;
+      --surface: #161b22;
+      --surface-2: #1c2128;
+    }
+
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--sans);
@@ -40,6 +60,7 @@
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* ── Page header ── */
@@ -303,6 +324,27 @@
     }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--fg); }
+
+    /* ── Dark mode overrides ── */
+    [data-theme="dark"] .json-key  { color: #79c0ff; }
+    [data-theme="dark"] .json-str  { color: #a5d6ff; }
+    [data-theme="dark"] .json-num  { color: #ffa657; }
+    [data-theme="dark"] .json-bool { color: #d2a8ff; }
+    [data-theme="dark"] .json-null { color: #ff7b72; }
+
+    [data-theme="dark"] .parse-error {
+      color: #ff7b72; background: #2d0d0d; border-color: #5a1a1a;
+    }
+    [data-theme="dark"] .md-output pre {
+      background: #1c2128; border-color: #21262d;
+    }
+    [data-theme="dark"] .md-output code {
+      background: #21262d;
+    }
+    [data-theme="dark"] .pane-body textarea {
+      background: #161b22; color: #e6edf3;
+    }
+    [data-theme="dark"] .pane-body textarea::placeholder { color: #4b5563; }
 
     @media (max-width: 640px) {
       .view-toggle { display: none; }
@@ -637,9 +679,35 @@ function minifyJSON() {
 }
 
 // ══════════════════════════════════════════════
+//  Theme-aware helpers: hljs + mermaid
+// ══════════════════════════════════════════════
+function isDarkTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+function updateHljsTheme() {
+  const dark = isDarkTheme();
+  document.getElementById('hljs-css').href = dark
+    ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'
+    : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+}
+// Watch for theme changes (triggered by nav toggle)
+new MutationObserver(updateHljsTheme)
+  .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+updateHljsTheme();
+
+// ══════════════════════════════════════════════
 //  Mermaid
 // ══════════════════════════════════════════════
-mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+function initMermaid() {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isDarkTheme() ? 'dark' : 'default',
+    securityLevel: 'loose'
+  });
+}
+initMermaid();
+new MutationObserver(() => { initMermaid(); if (document.getElementById('mermaid-input').value.trim()) renderMermaid(); })
+  .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 let mermaidTimer = null;
 function scheduleMermaid() {
   clearTimeout(mermaidTimer);
