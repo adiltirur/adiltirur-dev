@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Briefcase, Github, Linkedin, Mail, ArrowUpRight, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SectionReveal } from "@/components/section-reveal";
+
+const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 const heroVariants = {
   hidden: { opacity: 0, y: 18 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 0.6, ease: EASE, delay },
   }),
 };
 
@@ -125,7 +126,7 @@ export default function HomePage() {
             Adil Tirur
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1.1, repeat: Infinity, ease: "steps(1)" }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
               className="inline-block w-[3px] h-[0.85em] bg-blue-600 dark:bg-blue-400 ml-1 align-middle"
             />
           </motion.h1>
@@ -174,24 +175,18 @@ export default function HomePage() {
             animate="visible"
             className="flex gap-3 flex-wrap items-center"
           >
-            <Button asChild>
-              <a href="https://github.com/adiltirur" target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-colors" href="https://github.com/adiltirur" target="_blank" rel="noopener">
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
               </a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors" href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener">
                 <Linkedin className="h-4 w-4 mr-2" />
                 LinkedIn
               </a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="mailto:adiltirur@gmail.com">
+              <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors" href="mailto:adiltirur@gmail.com">
                 <Mail className="h-4 w-4 mr-2" />
                 Email
               </a>
-            </Button>
           </motion.div>
         </div>
       </header>
@@ -201,7 +196,7 @@ export default function HomePage() {
         <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
-              // about
+              {/* about */}
             </p>
           </SectionReveal>
           <SectionReveal delay={0.08}>
@@ -239,17 +234,13 @@ export default function HomePage() {
 
           <SectionReveal delay={0.4}>
             <div className="flex gap-2.5 flex-wrap mt-7 mb-8">
-              <Button variant="outline" size="sm" asChild>
-                <a href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener">
+                <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors text-xs px-2.5 py-1" href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener">
                   <Package className="h-3.5 w-3.5 mr-2" />
                   pub.dev packages
                 </a>
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <a href="https://medium.com/@adiltirur" target="_blank" rel="noopener">
+                <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors text-xs px-2.5 py-1" href="https://medium.com/@adiltirur" target="_blank" rel="noopener">
                   Medium articles
                 </a>
-              </Button>
             </div>
           </SectionReveal>
 
@@ -261,7 +252,7 @@ export default function HomePage() {
                   initial={{ opacity: 0, scale: 0.88, y: 8 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.055, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: i * 0.055, duration: 0.4, ease: EASE }}
                   whileHover={{ y: -2 }}
                   className={`font-mono text-xs px-3 py-1 rounded-md border cursor-default ${
                     tech.highlight
@@ -282,7 +273,7 @@ export default function HomePage() {
         <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
-              // experience
+              {/* experience */}
             </p>
           </SectionReveal>
           <SectionReveal delay={0.08}>
@@ -329,7 +320,7 @@ export default function HomePage() {
         <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
-              // open source
+              {/* open source */}
             </p>
           </SectionReveal>
           <SectionReveal delay={0.08}>
@@ -350,7 +341,7 @@ export default function HomePage() {
                   target="_blank"
                   rel="noopener"
                   whileHover={{ y: -3 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.25, ease: EASE }}
                   className="group flex justify-between items-start gap-4 p-4 sm:p-6 rounded-xl border border-border bg-card hover:border-blue-500 dark:hover:border-blue-400 transition-colors shadow-sm hover:shadow-md"
                 >
                   <div>
@@ -384,7 +375,7 @@ export default function HomePage() {
         <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
-              // contact
+              {/* contact */}
             </p>
           </SectionReveal>
           <SectionReveal delay={0.08}>
@@ -397,24 +388,18 @@ export default function HomePage() {
                 engineering — my inbox is open.
               </p>
               <div className="flex flex-wrap gap-3">
-                <Button asChild>
-                  <a href="mailto:adiltirur@gmail.com">
+                  <a className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-colors" href="mailto:adiltirur@gmail.com">
                     <Mail className="h-4 w-4 mr-2" />
                     adiltirur@gmail.com
                   </a>
-                </Button>
-                <Button variant="outline" asChild>
-                  <a href="https://github.com/adiltirur" target="_blank" rel="noopener">
+                  <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors" href="https://github.com/adiltirur" target="_blank" rel="noopener">
                     <Github className="h-4 w-4 mr-2" />
                     GitHub
                   </a>
-                </Button>
-                <Button variant="outline" asChild>
-                  <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener">
+                  <a className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors" href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener">
                     <Linkedin className="h-4 w-4 mr-2" />
                     LinkedIn
                   </a>
-                </Button>
               </div>
             </div>
           </SectionReveal>
