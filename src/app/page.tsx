@@ -102,8 +102,8 @@ export default function HomePage() {
   return (
     <main>
       {/* HERO */}
-      <header className="py-24 pb-20">
-        <div className="max-w-[680px] mx-auto px-6">
+      <header className="py-14 pb-12 sm:py-24 sm:pb-20">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <motion.div
             custom={0.05}
             variants={heroVariants}
@@ -145,7 +145,7 @@ export default function HomePage() {
             variants={heroVariants}
             initial="hidden"
             animate="visible"
-            className="text-lg text-muted-foreground font-normal mb-9 max-w-[520px]"
+            className="text-base sm:text-lg text-muted-foreground font-normal mb-9 max-w-[520px]"
           >
             Building robust mobile experiences from architecture to delivery. Flutter enthusiast. Robotics grad. Certified scuba diver.
           </motion.p>
@@ -197,8 +197,8 @@ export default function HomePage() {
       </header>
 
       {/* ABOUT */}
-      <section id="about" className="py-[72px] border-t border-border">
-        <div className="max-w-[680px] mx-auto px-6">
+      <section id="about" className="py-14 sm:py-[72px] border-t border-border">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
               // about
@@ -278,8 +278,8 @@ export default function HomePage() {
       </section>
 
       {/* EXPERIENCE */}
-      <section id="experience" className="py-[72px] border-t border-border">
-        <div className="max-w-[680px] mx-auto px-6">
+      <section id="experience" className="py-14 sm:py-[72px] border-t border-border">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
               // experience
@@ -292,7 +292,7 @@ export default function HomePage() {
           <div className="flex flex-col">
             {experience.map((exp, i) => (
               <SectionReveal key={i} delay={0.08 + i * 0.08}>
-                <div className="group grid grid-cols-[1px_1fr] gap-x-6 pb-10 last:pb-0">
+                <div className="group grid grid-cols-[1px_1fr] gap-x-4 sm:gap-x-6 pb-8 sm:pb-10 last:pb-0">
                   <div className="relative mt-[6px] w-px bg-border">
                     <div
                       className={`absolute top-0 left-1/2 -translate-x-1/2 w-[9px] h-[9px] rounded-full border-2 border-blue-500 transition-all duration-300 group-hover:scale-[1.4] ${
@@ -310,7 +310,7 @@ export default function HomePage() {
                           </span>
                         )}
                       </span>
-                      <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap pt-0.5">
+                      <span className="font-mono text-[11px] text-muted-foreground pt-0.5">
                         {exp.period}
                       </span>
                     </div>
@@ -325,8 +325,8 @@ export default function HomePage() {
       </section>
 
       {/* OPEN SOURCE */}
-      <section id="oss" className="py-[72px] border-t border-border">
-        <div className="max-w-[680px] mx-auto px-6">
+      <section id="oss" className="py-14 sm:py-[72px] border-t border-border">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
               // open source
@@ -351,7 +351,7 @@ export default function HomePage() {
                   rel="noopener"
                   whileHover={{ y: -3 }}
                   transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="group flex justify-between items-start gap-4 flex-wrap p-6 rounded-xl border border-border bg-card hover:border-blue-500 dark:hover:border-blue-400 transition-colors shadow-sm hover:shadow-md"
+                  className="group flex justify-between items-start gap-4 p-4 sm:p-6 rounded-xl border border-border bg-card hover:border-blue-500 dark:hover:border-blue-400 transition-colors shadow-sm hover:shadow-md"
                 >
                   <div>
                     <div className="text-[15px] font-semibold text-card-foreground mb-1">{proj.title}</div>
@@ -380,8 +380,8 @@ export default function HomePage() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="py-[72px] border-t border-border">
-        <div className="max-w-[680px] mx-auto px-6">
+      <section id="contact" className="py-14 sm:py-[72px] border-t border-border">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <SectionReveal>
             <p className="font-mono text-xs text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-8">
               // contact
@@ -391,7 +391,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-semibold tracking-tight mb-5">Get in touch</h2>
           </SectionReveal>
           <SectionReveal delay={0.16}>
-            <div className="bg-muted border border-border rounded-xl p-9">
+            <div className="bg-muted border border-border rounded-xl p-5 sm:p-9">
               <p className="text-muted-foreground mb-6 text-[15px]">
                 Whether it&apos;s a project, a role, a collaboration on Flutter packages, or just a chat about mobile
                 engineering — my inbox is open.
@@ -423,7 +423,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="py-8 border-t border-border">
-        <div className="max-w-[680px] mx-auto px-6 flex justify-between items-center flex-wrap gap-3">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6 flex justify-between items-center flex-wrap gap-3">
           <span className="font-mono text-xs text-muted-foreground">© 2026 adiltirur.dev</span>
           <div className="flex gap-5 flex-wrap">
             {[
