@@ -59,6 +59,12 @@ export function Nav() {
           >
             tools
           </Link>
+          <Link
+            href="/survey"
+            className="hidden sm:inline-flex text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1"
+          >
+            survey
+          </Link>
           {mounted && (
             <Button
               variant="ghost"
@@ -112,6 +118,13 @@ export function Nav() {
               className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-3 rounded-md hover:bg-accent min-h-[44px] flex items-center"
             >
               tools
+            </Link>
+            <Link
+              href="/survey"
+              onClick={() => setMobileOpen(false)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-3 rounded-md hover:bg-accent min-h-[44px] flex items-center"
+            >
+              survey
             </Link>
           </div>
         </div>
