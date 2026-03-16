@@ -1,0 +1,438 @@
+{
+  "_meta": {
+    "lang": "en",
+    "site": "adiltirur.dev",
+    "author": "Adil Chakkala Paramba"
+  },
+
+  "index": {
+    "hero": {
+      "tag": "Technical Lead · Mobile Engineering · Munich",
+      "name": "Adil Tirur",
+      "name_note": "// full name: Adil Chakkala Paramba — Tirur is where I'm from, and it just stuck.",
+      "subtitle": "Building robust mobile experiences from architecture to delivery. Flutter enthusiast. Robotics grad. Certified scuba diver.",
+      "location": "Munich, Germany",
+      "company": "SHL Telemedizin & GradSprint LLP",
+      "cta_github": "GitHub",
+      "cta_linkedin": "LinkedIn",
+      "cta_email": "Email"
+    },
+    "terminal": {
+      "file_tab": "health_bloc.dart",
+      "status": "flutter · dart · clean architecture"
+    },
+    "about": {
+      "section_label": "about",
+      "heading": "A bit about me",
+      "p1": "I'm a <strong>Technical Lead for Mobile Apps</strong> at <strong>SHL Telemedizin GmbH</strong> in Munich, and the <strong>Founder of GradSprint LLP</strong>. My day-to-day lives at the intersection of clean architecture, mobile engineering, and building products that genuinely improve people's lives — currently in the digital health space.",
+      "p2": "Here's the twist: I actually have an academic degree in <strong>Robotics</strong>. Somehow I ended up deep in mobile development and never looked back — turns out a robot's loss is Flutter's gain. I love the craft of writing clean, maintainable code and I'm particularly passionate about <strong>Flutter &amp; Dart</strong>, which I've been working with since its early days.",
+      "p3": "Outside of work, I'm slowly navigating Europe one trip at a time, and I'm a <strong>certified scuba diver</strong> — because apparently exploring the depths of the ocean and the depths of a codebase are the same kind of fun.",
+      "cta_pubdev": "pub.dev packages",
+      "cta_medium": "Medium articles",
+      "tech": ["Flutter", "Dart", "Swift", "Kotlin", "iOS", "Android", "Clean Architecture", "Mobile Leadership", "CI/CD", "Digital Health"]
+    },
+    "experience": {
+      "section_label": "experience",
+      "heading": "Where I've worked",
+      "badge_current": "current",
+      "items": [
+        { "title": "Technical Lead — Mobile Apps", "company": "SHL Telemedizin GmbH", "period": "Feb 2024 – Present",     "location": "Munich, Germany",                              "current": true  },
+        { "title": "Senior Software Engineer",     "company": "SHL Telemedizin GmbH", "period": "Jan 2022 – Jan 2024",   "location": "Munich, Germany · Flutter, Dart"                            },
+        { "title": "Chief Technology Officer",     "company": "Airo.Care GmbH",        "period": "Aug 2019 – Jul 2023",   "location": "Ingolstadt, Germany"                                        },
+        { "title": "Senior Software Engineer",     "company": "Bayerische Telemedallianz", "period": "Feb 2021 – Nov 2021", "location": "Baar-Ebenhausen, Germany · Flutter, Dart"               },
+        { "title": "Head of Software Engineering", "company": "GO-IN Gesundheitsorganisation Ingolstadt", "period": "Apr 2019 – Feb 2021", "location": "Ingolstadt, Germany · Flutter, Dart" },
+        { "title": "Artificial Intelligence Engineer", "company": "Digital Product School — UnternehmerTUM", "period": "May 2019 – Jul 2019", "location": "Munich, Germany"              },
+        { "title": "Software Engineer",            "company": "GO-IN Gesundheitsorganisation Ingolstadt", "period": "Jan 2019 – Mar 2019", "location": "Ingolstadt, Germany"               },
+        { "title": "Android Development Intern",   "company": "GO-IN Gesundheitsorganisation Ingolstadt", "period": "Oct 2018 – Dec 2018", "location": "Ingolstadt, Germany · Android, Firebase" }
+      ]
+    },
+    "oss": {
+      "section_label": "open source",
+      "heading": "Packages & writing",
+      "intro": "I publish Flutter and Dart packages on pub.dev and share mobile engineering insights on Medium. More packages coming — the goal is definitely packages (plural).",
+      "cards": [
+        { "icon": "📦", "title": "pub.dev — Flutter & Dart packages",       "desc": "Published packages under adiltirur.dev publisher."  },
+        { "icon": "✍️", "title": "Medium — mobile development articles",    "desc": "Insights and learnings from building mobile apps."   },
+        { "icon": "🐙", "title": "GitHub — @adiltirur",                     "desc": "All public repositories and contributions."         }
+      ],
+      "license_note": "All open source work is provided under the MIT License. See <a href=\"/terms\" style=\"color:var(--accent);text-decoration:none;\">Terms</a> &amp; <a href=\"/privacy\" style=\"color:var(--accent);text-decoration:none;\">Privacy</a> for full details."
+    },
+    "contact": {
+      "section_label": "contact",
+      "heading": "Get in touch",
+      "body": "Whether it's a project, a role, a collaboration on Flutter packages, or just a chat about mobile engineering — my inbox is open.",
+      "cta_email": "adiltirur@gmail.com",
+      "cta_github": "GitHub",
+      "cta_linkedin": "LinkedIn"
+    },
+    "footer": {
+      "copy": "© 2026 adiltirur.dev",
+      "link_github": "GitHub",
+      "link_linkedin": "LinkedIn",
+      "link_medium": "Medium",
+      "link_terms": "Terms",
+      "link_privacy": "Privacy"
+    }
+  },
+
+  "tools": {
+    "header": {
+      "breadcrumb_root": "adiltirur.dev",
+      "breadcrumb_page": "tools",
+      "privacy_note": "paste & preview instantly — nothing is uploaded"
+    },
+    "tabs": {
+      "md": "markdown.md",
+      "json": "data.json",
+      "mermaid": "diagram.mmd"
+    },
+    "view": {
+      "split": "⇔ split",
+      "input": "✎ input",
+      "output": "◻ preview"
+    },
+    "md": {
+      "input_label": "Input",
+      "preview_label": "Preview",
+      "placeholder": "# Hello World\n\nPaste your **Markdown** here...\n\n- Supports GFM tables, code blocks, blockquotes\n- Live preview as you type",
+      "stat_init": "0 lines · 0 words",
+      "btn_copy_link": "🔗 Copy Link",
+      "btn_clear": "Clear",
+      "btn_copy_html": "Copy HTML",
+      "btn_fullscreen": "⛶ Fullscreen",
+      "feedback_link": "Link copied!",
+      "feedback_copy": "Copied!",
+      "empty_state": "preview appears here",
+      "status": "markdown viewer"
+    },
+    "json": {
+      "input_label": "Input",
+      "formatted_label": "Formatted",
+      "placeholder": "{\n  \"name\": \"Adil\",\n  \"role\": \"Technical Lead\",\n  \"stack\": [\"Flutter\",\"Dart\",\"Go\"],\n  \"active\": true\n}",
+      "btn_copy_link": "🔗 Copy Link",
+      "btn_clear": "Clear",
+      "btn_copy": "Copy",
+      "btn_minify": "Minify",
+      "btn_fullscreen": "⛶ Fullscreen",
+      "feedback_link": "Link copied!",
+      "feedback_copy": "Copied!",
+      "empty_state": "formatted output appears here",
+      "status": "json formatter & syntax highlighter"
+    },
+    "mermaid": {
+      "input_label": "Diagram Source",
+      "diagram_label": "Diagram",
+      "placeholder": "graph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Do it]\n    B -->|No|  D[Skip it]\n    C --> E[End]\n    D --> E",
+      "btn_copy_link": "🔗 Copy Link",
+      "btn_example": "Example",
+      "btn_clear": "Clear",
+      "btn_render": "Render",
+      "btn_fullscreen": "⛶ Fullscreen",
+      "feedback_link": "Link copied!",
+      "empty_state": "diagram appears here",
+      "status": "mermaid diagram renderer",
+      "cheatsheet_summary": "Quick reference — diagram types"
+    },
+    "fullscreen": {
+      "default_title": "Preview",
+      "btn_copy": "Copy",
+      "feedback_copy": "Copied!"
+    },
+    "footer": {
+      "path": "adiltirur.dev / tools",
+      "link_home": "home",
+      "link_survey": "survey",
+      "link_terms": "terms",
+      "link_privacy": "privacy"
+    }
+  },
+
+  "survey": {
+    "header": {
+      "breadcrumb_root": "adiltirur.dev",
+      "breadcrumb_page": "survey_preview",
+      "badge_empty": "no file loaded",
+      "btn_share": "🔗 Copy Link",
+      "btn_upload": "⬆ Upload JSON",
+      "btn_preview": "▶ Preview",
+      "feedback_share": "Link copied!"
+    },
+    "sidebar": {
+      "title": "Pages",
+      "search_placeholder": "search pages & questions…"
+    },
+    "upload_state": {
+      "heading": "No survey loaded",
+      "body": "Upload a SurveyJS-compatible JSON file to browse pages and preview the survey.",
+      "drop_icon": "⬆",
+      "drop_label": "Click to choose a .json file\nor drag and drop here",
+      "paste_prefix": "or ",
+      "paste_link": "paste JSON directly"
+    },
+    "import_modal": {
+      "title": "Paste Survey JSON",
+      "field_label": "SurveyJS-compatible JSON",
+      "placeholder": "{\"title\": \"My Survey\", \"pages\": [...]}",
+      "btn_cancel": "Cancel",
+      "btn_load": "Load"
+    },
+    "preview": {
+      "btn_back": "← Back",
+      "btn_next": "Next →"
+    }
+  },
+
+  "legal": {
+    "meta": {
+      "title": "Terms & Privacy — adiltirur.dev",
+      "description": "Terms of Use and Privacy Policy for adiltirur.dev, open source packages, and bots published by Adil Chakkala Paramba."
+    },
+    "page_tag": "// legal",
+    "heading": "Terms of Use & Privacy Policy",
+    "intro": "Last updated: March 2026. These terms apply to adiltirur.dev, all open source packages, bots, and other software published by Adil Chakkala Paramba.",
+    "toc_title": "// contents",
+    "toc": {
+      "terms": "Terms of Use",
+      "oss": "Open Source Software Disclaimer",
+      "bots": "Bots & Automated Tools",
+      "privacy": "Privacy Policy",
+      "contact": "Contact"
+    },
+    "terms": {
+      "label": "01 // terms of use",
+      "heading": "Terms of Use",
+      "callout": "<strong>Plain English:</strong> This website is a personal portfolio. All software I publish is offered in good faith. Use it, build with it — but don't hold me responsible if something goes wrong.",
+      "permitted_h": "Permitted Use",
+      "permitted_p": "You may use this Website and associated software for lawful purposes only. You agree not to use them in any way that violates applicable laws or regulations, infringes the rights of others, or could harm, disable, or overburden any system or service.",
+      "ip_h": "Intellectual Property",
+      "ip_p": "The content on this Website — including text, design, and code — is owned by me unless otherwise stated. Open source packages are separately licensed under their respective licenses (typically MIT). See the individual repository for the applicable license.",
+      "warranty_h": "No Warranty",
+      "warranty_p": "This Website and all associated software are provided <strong>\"as is\"</strong> and <strong>\"as available\"</strong>, without warranty of any kind, express or implied. I make no guarantees regarding accuracy, reliability, availability, or fitness for a particular purpose.",
+      "liability_h": "Limitation of Liability",
+      "liability_p": "To the fullest extent permitted by applicable law, I shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of or in connection with your use of this Website or any software I publish — even if I have been advised of the possibility of such damages.",
+      "links_h": "Links to Third Parties",
+      "links_p": "This Website contains links to external sites (GitHub, LinkedIn, Medium, pub.dev, etc.). I have no control over the content or practices of those sites and accept no responsibility for them.",
+      "changes_h": "Changes to These Terms",
+      "changes_p": "I may update these Terms at any time. Continued use of the Website or software after changes are posted constitutes acceptance of the updated Terms. The \"last updated\" date at the top of this page reflects the most recent revision.",
+      "intro_p": "By accessing or using adiltirur.dev (the \"Website\") or any software, packages, bots, or tools published by <strong>Adil Chakkala Paramba</strong> (\"I\", \"me\", \"my\"), you agree to these Terms of Use. If you do not agree, please do not use the Website or any of the associated software."
+    },
+    "oss": {
+      "label": "02 // open source",
+      "heading": "Open Source Software Disclaimer",
+      "callout": "<strong>Important:</strong> All open source software I publish is provided with no guarantees. Use at your own risk. I am not liable for any damage, data loss, or other issues resulting from its use in any environment.",
+      "intro_p": "All packages published on <a href=\"https://pub.dev/publishers/adiltirur.dev/packages\" target=\"_blank\" rel=\"noopener\">pub.dev</a> and repositories on <a href=\"https://github.com/adiltirur\" target=\"_blank\" rel=\"noopener\">GitHub</a> are released under the <strong>MIT License</strong> unless a specific repository states otherwise.",
+      "summary_h": "MIT License — Summary",
+      "summary_p": "The MIT License permits you to:",
+      "summary_li": ["Use, copy, modify, merge, publish, distribute, sublicense, or sell copies of the software", "Use the software in personal, commercial, or open source projects"],
+      "conditions_p": "Subject to the following conditions:",
+      "conditions_li": ["The above copyright notice and this permission notice must be included in all copies or substantial portions of the software"],
+      "disclaimer_h": "Full Disclaimer (MIT)",
+      "disclaimer_p": "THE SOFTWARE IS PROVIDED <strong>\"AS IS\"</strong>, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+      "versioning_h": "Versioning & Maintenance",
+      "versioning_p": "I maintain open source packages on a best-effort basis. There is no guarantee of bug fixes, security patches, or continued development on any particular timeline. You are encouraged to pin specific versions in production use and to evaluate any package before integrating it into critical systems.",
+      "security_h": "Security Vulnerabilities",
+      "security_p": "If you discover a security vulnerability in any of my open source packages, please disclose it responsibly by emailing <a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a> before making it public. I will make every reasonable effort to address critical issues promptly."
+    },
+    "bots": {
+      "label": "03 // bots & automated tools",
+      "heading": "Bots & Automated Tools",
+      "callout": "<strong>No responsibility:</strong> Bots and automated tools I publish are provided strictly as-is. I accept no liability for any actions taken by or with these tools, including but not limited to messages sent, data processed, or integrations triggered.",
+      "intro_p": "Any bots, automation scripts, or integrations (including but not limited to Microsoft Teams bots, Slack apps, or other messaging platform integrations) published under my name or by adiltirur.dev are independent software projects provided without warranty.",
+      "user_h": "User Responsibility",
+      "user_p": "You are solely responsible for:",
+      "user_li": ["How you configure, deploy, and use any bot or automated tool I publish", "Ensuring your deployment complies with the terms of service of the platform you are running it on (e.g., Microsoft Teams, Slack)", "Any messages sent, data transmitted, or actions triggered by the bot in your environment", "Securing access credentials, API keys, and tokens used by the bot", "Obtaining any necessary consents from end users who interact with the bot"],
+      "data_h": "Data Handling by Bots",
+      "data_p": "Any bot I publish does not intentionally collect, store, or transmit personal user data unless explicitly documented in that project's README. You should review the source code of any bot before deployment to understand its data handling behaviour. I am not responsible for how you configure data storage or logging in your own deployment.",
+      "platform_h": "Platform Compliance",
+      "platform_p": "It is your responsibility to ensure that the bot complies with all applicable policies of the platform on which it is deployed, including Microsoft's Bot Framework policies, Teams App policies, or equivalent. I make no representations that any bot will meet these requirements in your specific use case.",
+      "support_h": "No Support Guarantee",
+      "support_p": "Support for bots and automated tools is provided on a best-effort, voluntary basis. There is no SLA, no guaranteed response time, and no obligation to maintain compatibility with future platform updates."
+    },
+    "privacy": {
+      "label": "04 // privacy policy",
+      "heading": "Privacy Policy",
+      "intro_p": "Your privacy matters to me. This policy explains what data, if any, is collected when you visit adiltirur.dev or use software I publish.",
+      "website_h": "This Website (adiltirur.dev)",
+      "website_p1": "This is a static personal website. I do not operate any servers that collect or store personal data. I do not run analytics, tracking pixels, or advertising scripts on this site.",
+      "website_p2": "If you contact me via email at <a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a>, the content of your message is handled by Google (Gmail) and subject to <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener\">Google's Privacy Policy</a>.",
+      "website_p3": "Links to third-party sites (GitHub, LinkedIn, Medium, pub.dev) are governed by their respective privacy policies. I have no control over data collected by these platforms.",
+      "packages_h": "Open Source Packages",
+      "packages_p": "My pub.dev packages and GitHub repositories do not, by design, collect any personal data. If a package interacts with network services, this will be clearly documented. You should audit any third-party package — including mine — before use in a production environment.",
+      "bots_h": "Bots & Automated Tools",
+      "bots_p": "Any bot I publish does not intentionally send data to external servers unless explicitly stated in the project documentation. You, as the operator deploying the bot, are the data controller for any data processed in your environment. I am not a data processor or sub-processor in your deployment.",
+      "cookies_h": "Cookies",
+      "cookies_p": "adiltirur.dev does not use cookies or any form of local storage for tracking purposes.",
+      "children_h": "Children's Privacy",
+      "children_p": "This Website and associated software are not directed at children under the age of 13. I do not knowingly collect personal information from children.",
+      "changes_h": "Changes to This Policy",
+      "changes_p": "I may update this Privacy Policy from time to time. The \"last updated\" date at the top of this page reflects the most recent revision. Continued use of the Website after changes are posted constitutes acknowledgement of the updated policy.",
+      "law_h": "Governing Law",
+      "law_p": "These Terms and this Privacy Policy are governed by the laws of Germany, without regard to conflict-of-law principles. Any disputes shall be subject to the exclusive jurisdiction of the courts of Munich, Germany."
+    },
+    "contact": {
+      "label": "05 // contact",
+      "heading": "Questions?",
+      "intro_p": "If you have any questions about these Terms or this Privacy Policy, or to report a security issue, please contact me at:",
+      "address": "<strong>Adil Chakkala Paramba</strong><br /><a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a><br />Munich, Germany"
+    },
+    "footer": {
+      "copy": "© 2026 adiltirur.dev",
+      "link_home": "Home",
+      "link_github": "GitHub",
+      "link_email": "Email"
+    }
+  },
+
+  "privacy": {
+    "meta": {
+      "title": "Privacy Policy — adiltirur.dev",
+      "description": "Privacy Policy for adiltirur.dev and software published by Adil Chakkala Paramba."
+    },
+    "page_tag": "// privacy policy",
+    "heading": "Privacy Policy",
+    "intro": "Last updated: March 2026 · Applies to adiltirur.dev and all software published by Adil Chakkala Paramba.",
+    "toc_title": "// contents",
+    "toc": {
+      "website": "This Website",
+      "packages": "Open Source Packages",
+      "bots": "Bots & Automated Tools",
+      "cookies": "Cookies",
+      "children": "Children's Privacy",
+      "changes": "Changes to This Policy",
+      "contact": "Contact"
+    },
+    "website": {
+      "label": "01 // this website",
+      "heading": "This Website (adiltirur.dev)",
+      "callout": "<strong>Short version:</strong> This is a static personal website. I don't collect, store, or track any personal data.",
+      "p1": "adiltirur.dev is a static personal portfolio site. I do not operate any servers that collect or store personal data. I do not run analytics scripts, tracking pixels, or advertising of any kind on this site.",
+      "p2": "If you contact me via email at <a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a>, your message is handled by Google (Gmail) and is subject to <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener\">Google's Privacy Policy</a>.",
+      "p3": "Links to third-party platforms (GitHub, LinkedIn, Medium, pub.dev) are governed by their respective privacy policies. I have no control over data those platforms collect."
+    },
+    "packages": {
+      "label": "02 // open source packages",
+      "heading": "Open Source Packages",
+      "p1": "Packages published on <a href=\"https://pub.dev/publishers/adiltirur.dev/packages\" target=\"_blank\" rel=\"noopener\">pub.dev</a> and repositories on <a href=\"https://github.com/adiltirur\" target=\"_blank\" rel=\"noopener\">GitHub</a> do not, by design, collect any personal data.",
+      "p2": "If a package makes network requests or interacts with external services, this will be clearly documented in that package's README and changelog. You should audit any third-party package — including mine — before deploying it in a production environment that handles personal data."
+    },
+    "bots": {
+      "label": "03 // bots & automated tools",
+      "heading": "Bots & Automated Tools",
+      "p1": "Any bot or automated tool I publish (including but not limited to Microsoft Teams bots and messaging platform integrations) does not intentionally send data to external servers unless explicitly stated in that project's documentation.",
+      "p2": "<strong>You, as the operator deploying the bot, are the data controller</strong> for any data processed in your environment. I am not a data processor or sub-processor in your deployment. It is your responsibility to ensure compliance with applicable data protection laws (e.g., GDPR) for any personal data that flows through a bot you deploy.",
+      "p3": "Please review the source code of any bot before deployment to fully understand its data handling behaviour."
+    },
+    "cookies": {
+      "label": "04 // cookies",
+      "heading": "Cookies",
+      "p1": "adiltirur.dev does not use cookies, local storage, or any other form of client-side tracking technology."
+    },
+    "children": {
+      "label": "05 // children's privacy",
+      "heading": "Children's Privacy",
+      "p1": "This Website and associated software are not directed at children under the age of 13. I do not knowingly collect personal information from children. If you believe a child has provided personal information in connection with this site or my software, please contact me and I will take steps to delete it."
+    },
+    "changes": {
+      "label": "06 // changes",
+      "heading": "Changes to This Policy",
+      "p1": "I may update this Privacy Policy from time to time. The \"last updated\" date at the top of this page will reflect the most recent revision. Continued use of this Website or my software after changes are posted constitutes acknowledgement of the updated policy."
+    },
+    "contact": {
+      "label": "07 // contact",
+      "heading": "Questions?",
+      "p1": "If you have any questions about this Privacy Policy, please contact me:",
+      "address": "<strong>Adil Chakkala Paramba</strong><br /><a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a><br />Munich, Germany",
+      "also_see": "Also see: <a href=\"/terms\">Terms of Use →</a>"
+    },
+    "footer": {
+      "copy": "© 2026 adiltirur.dev",
+      "link_home": "Home",
+      "link_terms": "Terms",
+      "link_email": "Email"
+    }
+  },
+
+  "terms": {
+    "meta": {
+      "title": "Terms of Use — adiltirur.dev",
+      "description": "Terms of Use for adiltirur.dev, open source packages, and bots published by Adil Chakkala Paramba."
+    },
+    "page_tag": "// terms of use",
+    "heading": "Terms of Use",
+    "intro": "Last updated: March 2026 · Applies to adiltirur.dev, open source packages, bots, and all software published by Adil Chakkala Paramba.",
+    "toc_title": "// contents",
+    "toc": {
+      "general": "General Terms",
+      "oss": "Open Source Software",
+      "bots": "Bots & Automated Tools",
+      "liability": "Limitation of Liability",
+      "governing": "Governing Law",
+      "contact": "Contact"
+    },
+    "general": {
+      "label": "01 // general terms",
+      "heading": "General Terms",
+      "callout": "<strong>Plain English:</strong> Use this site and my software freely. Don't do anything illegal with them, and don't hold me responsible if something goes wrong.",
+      "intro_p": "By accessing adiltirur.dev (the \"Website\") or using any software, packages, bots, or tools published by <strong>Adil Chakkala Paramba</strong> (\"I\", \"me\", \"my\"), you agree to these Terms. If you do not agree, please do not use them.",
+      "permitted_h": "Permitted Use",
+      "permitted_p": "You may use this Website and associated software for lawful purposes only. You agree not to use them in any way that violates applicable laws or regulations, infringes the rights of others, or could harm, disable, or overburden any system or service.",
+      "ip_h": "Intellectual Property",
+      "ip_p": "The content on this Website — including text, design, and code — is owned by me unless otherwise stated. Open source packages are separately licensed under their respective licenses (typically MIT). Refer to the individual repository for the applicable license.",
+      "warranty_h": "No Warranty",
+      "warranty_p": "This Website and all associated software are provided <strong>\"as is\"</strong> and <strong>\"as available\"</strong>, without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, or non-infringement.",
+      "links_h": "Links to Third Parties",
+      "links_p": "This Website contains links to external sites (GitHub, LinkedIn, Medium, pub.dev, etc.). I have no control over the content or practices of those sites and accept no responsibility for them.",
+      "changes_h": "Changes to These Terms",
+      "changes_p": "I may update these Terms at any time. The \"last updated\" date at the top of this page reflects the most recent revision. Continued use of the Website or software after changes are posted constitutes acceptance of the updated Terms."
+    },
+    "oss": {
+      "label": "02 // open source software",
+      "heading": "Open Source Software",
+      "callout": "<strong>Important:</strong> All open source software is provided with no guarantees. Use it at your own risk. I am not liable for any damage, data loss, or issues arising from its use in any environment.",
+      "intro_p": "All packages published on <a href=\"https://pub.dev/publishers/adiltirur.dev/packages\" target=\"_blank\" rel=\"noopener\">pub.dev</a> and repositories on <a href=\"https://github.com/adiltirur\" target=\"_blank\" rel=\"noopener\">GitHub</a> are released under the <strong>MIT License</strong> unless a specific repository states otherwise.",
+      "mit_text": "MIT License\n\nCopyright (c) 2026 Adil Chakkala Paramba\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+      "versioning_h": "Versioning & Maintenance",
+      "versioning_p": "Packages are maintained on a best-effort, voluntary basis. There is no guarantee of bug fixes, security patches, or continued development on any particular timeline. Pin specific versions in production and evaluate any package before integrating it into critical systems.",
+      "security_h": "Security Vulnerabilities",
+      "security_p": "If you discover a security vulnerability in any of my open source packages, please disclose it responsibly by emailing <a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a> before making it public."
+    },
+    "bots": {
+      "label": "03 // bots & automated tools",
+      "heading": "Bots & Automated Tools",
+      "callout": "<strong>No responsibility:</strong> I accept no liability whatsoever for any actions taken by or with bots and tools I publish — including messages sent, data processed, or integrations triggered in your environment.",
+      "intro_p": "Any bots, automation scripts, or platform integrations (including but not limited to <strong>Microsoft Teams bots</strong>, Slack apps, or other messaging integrations) published under my name or at adiltirur.dev are independent software projects provided without warranty of any kind.",
+      "operator_h": "Your Responsibilities as Operator",
+      "operator_p": "By deploying any bot or automated tool I publish, you accept sole responsibility for:",
+      "operator_li": ["How you configure, deploy, and operate the bot in your environment", "Ensuring your deployment complies with the Terms of Service of the platform it runs on (e.g., Microsoft Teams, Slack, Discord)", "All messages sent, data transmitted, or actions triggered by the bot under your deployment", "Securing all access credentials, API keys, tokens, and secrets used by the bot", "Obtaining any necessary consents from end users who interact with the bot", "Compliance with applicable data protection laws (e.g., GDPR, CCPA) for any personal data processed"],
+      "platform_h": "Platform Compliance",
+      "platform_p": "It is your responsibility to ensure any bot complies with all applicable platform policies. I make no representations that any bot will meet those requirements for your specific use case or deployment.",
+      "support_h": "No Support Guarantee",
+      "support_p": "Support for bots and automated tools is provided on a best-effort, voluntary basis. There is no SLA, no guaranteed response time, and no obligation to maintain compatibility with future platform updates."
+    },
+    "liability": {
+      "label": "04 // limitation of liability",
+      "heading": "Limitation of Liability",
+      "intro_p": "To the fullest extent permitted by applicable law, <strong>Adil Chakkala Paramba shall not be liable</strong> for any direct, indirect, incidental, special, consequential, exemplary, or punitive damages arising out of or in connection with:",
+      "li": ["Your use of, or inability to use, this Website or any software I publish", "Any errors, bugs, or inaccuracies in the software", "Unauthorised access to or alteration of your data", "Any third-party conduct or content linked to from this Website", "Any other matter relating to this Website or associated software"],
+      "closing_p": "This limitation applies even if I have been advised of the possibility of such damages. Some jurisdictions do not allow the exclusion of certain warranties or the limitation or exclusion of liability for certain damages. In such jurisdictions, my liability is limited to the maximum extent permitted by law."
+    },
+    "governing": {
+      "label": "05 // governing law",
+      "heading": "Governing Law",
+      "p1": "These Terms are governed by and construed in accordance with the laws of the <strong>Federal Republic of Germany</strong>, without regard to conflict-of-law principles. Any disputes arising from these Terms or your use of this Website shall be subject to the exclusive jurisdiction of the competent courts of <strong>Munich, Germany</strong>."
+    },
+    "contact": {
+      "label": "06 // contact",
+      "heading": "Questions?",
+      "p1": "If you have any questions about these Terms, please contact me:",
+      "address": "<strong>Adil Chakkala Paramba</strong><br /><a href=\"mailto:adiltirur@gmail.com\">adiltirur@gmail.com</a><br />Munich, Germany",
+      "also_see": "Also see: <a href=\"/privacy\">Privacy Policy →</a>"
+    },
+    "footer": {
+      "copy": "© 2026 adiltirur.dev",
+      "link_home": "Home",
+      "link_privacy": "Privacy",
+      "link_email": "Email"
+    }
+  }
+}

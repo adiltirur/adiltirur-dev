@@ -28,109 +28,134 @@
     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="m15 18-6-6 6-6"/></svg>`;
 
-  const MOON_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+  const MOON_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>`;
 
-  const SUN_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+  const SUN_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="4"/>
     <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
 
   // ── Shared CSS (injected once) ────────────────────────────────────────────
   const CSS = `
-    site-nav {
-      display: block;
-    }
+    site-nav { display: block; }
+
     site-nav nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 32px;
-      height: 73px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 0 40px;
+      height: 60px;
+      border-bottom: 1px solid var(--border, #1a2030);
       position: sticky;
       top: 0;
-      background: rgba(250, 250, 250, 0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(11, 14, 22, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 200;
       transition: background 0.3s, border-color 0.3s;
     }
-    [data-theme="dark"] site-nav nav {
-      background: rgba(13, 17, 23, 0.92);
-      border-bottom-color: #21262d;
+    [data-theme="light"] site-nav nav,
+    :root:not([data-theme="dark"]) site-nav nav {
+      background: rgba(248, 250, 252, 0.92);
+      border-bottom-color: #e2e8f0;
     }
+
+    /* Logo */
     .sn-logo {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
-      color: #111111;
+      color: var(--fg, #dce5f5);
       text-decoration: none;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
       flex-shrink: 0;
       transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0;
     }
-    [data-theme="dark"] .sn-logo { color: #e6edf3; }
-    .sn-logo span { color: #2563eb; }
-    [data-theme="dark"] .sn-logo span { color: #58a6ff; }
+    .sn-logo .sn-prompt {
+      color: var(--accent, #00e599);
+      margin-right: 6px;
+      font-weight: 600;
+    }
+    .sn-logo .sn-tld { color: var(--accent, #00e599); }
+    .sn-logo:hover .sn-name { opacity: 0.8; }
+
+    /* Nav links */
     .sn-links {
       display: flex;
-      gap: 28px;
+      gap: 0;
       list-style: none;
+      align-items: center;
     }
     .sn-links a {
-      font-size: 14px;
-      color: #6b7280;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted, #5e6e8a);
       text-decoration: none;
-      transition: color 0.2s;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+      display: block;
     }
-    .sn-links a:hover   { color: #111111; }
-    .sn-links a.sn-active { color: #111111; }
-    [data-theme="dark"] .sn-links a         { color: #8b949e; }
-    [data-theme="dark"] .sn-links a:hover   { color: #e6edf3; }
-    [data-theme="dark"] .sn-links a.sn-active { color: #e6edf3; }
+    .sn-links a:hover   { color: var(--fg, #dce5f5); background: var(--surface-2, #161b27); }
+    .sn-links a.sn-active {
+      color: var(--accent, #00e599);
+    }
+
+    /* Right controls */
     .sn-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
     .sn-theme-btn {
       background: none;
-      border: none;
+      border: 1px solid var(--border, #1a2030);
       cursor: pointer;
-      padding: 6px 7px;
+      padding: 6px;
       border-radius: 7px;
-      color: #6b7280;
+      color: var(--muted, #5e6e8a);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: color 0.2s, background 0.2s;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
       flex-shrink: 0;
       line-height: 1;
+      width: 32px;
+      height: 32px;
     }
     .sn-theme-btn:hover {
-      color: #111111;
-      background: rgba(0, 0, 0, 0.06);
+      color: var(--accent, #00e599);
+      border-color: var(--accent, #00e599);
+      background: var(--accent-dim, rgba(0,229,153,0.08));
     }
-    [data-theme="dark"] .sn-theme-btn       { color: #8b949e; }
-    [data-theme="dark"] .sn-theme-btn:hover { color: #e6edf3; background: rgba(255,255,255,0.07); }
+
+    /* Back link variant */
     .sn-back {
       font-size: 13px;
-      color: #6b7280;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted, #5e6e8a);
       text-decoration: none;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: color 0.2s;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
     }
-    .sn-back:hover { color: #111111; }
-    [data-theme="dark"] .sn-back       { color: #8b949e; }
-    [data-theme="dark"] .sn-back:hover { color: #e6edf3; }
-    @media (max-width: 600px) {
-      site-nav nav { padding: 0 16px; height: auto; min-height: 64px; }
-      .sn-links { gap: 14px; flex-wrap: wrap; }
-      .sn-links a { font-size: 13px; }
+    .sn-back:hover { color: var(--fg, #dce5f5); background: var(--surface-2, #161b27); }
+
+    @media (max-width: 640px) {
+      site-nav nav { padding: 0 20px; }
+      .sn-links { gap: 0; }
+      .sn-links a { padding: 6px 10px; font-size: 12px; }
+    }
+    @media (max-width: 500px) {
+      .sn-links { display: none; }
     }
   `;
 
@@ -142,7 +167,7 @@
     document.head.appendChild(el);
   }
 
-  // ── Theme toggle logic ─────────────────────────────────────────────────
+  // ── Theme toggle logic ──────────────────────────────────────────────────
   function currentTheme() {
     return document.documentElement.getAttribute('data-theme') || 'light';
   }
@@ -151,27 +176,30 @@
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('theme', next); } catch (_) {}
-    // Update all toggle buttons on the page
     document.querySelectorAll('.sn-theme-btn').forEach(function (btn) {
       btn.innerHTML = next === 'dark' ? SUN_ICON : MOON_ICON;
       btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     });
   }
 
-  // ── Detect which link is active ───────────────────────────────────────────
+  // ── Detect active link ────────────────────────────────────────────────────
   function activeHref() {
     const p = window.location.pathname;
-    if (p.startsWith('/tools')) return '/tools.html';
+    if (p.startsWith('/tools'))  return '/tools.html';
     if (p.startsWith('/survey')) return '/survey.html';
     return null;
   }
 
-  // ── Web Component ─────────────────────────────────────────────────────────
+  // ── Web Component ──────────────────────────────────────────────────────────
   class SiteNav extends HTMLElement {
     connectedCallback() {
       injectStyles();
 
-      const logo = `<a href="/" class="sn-logo">adiltirur<span>.dev</span></a>`;
+      const logo = `<a href="/" class="sn-logo">
+        <span class="sn-prompt">&gt;</span>
+        <span class="sn-name">adiltirur</span><span class="sn-tld">.dev</span>
+      </a>`;
+
       const isDark = currentTheme() === 'dark';
       const themeBtn = `<button class="sn-theme-btn" aria-label="${isDark ? 'Switch to light mode' : 'Switch to dark mode'}">${isDark ? SUN_ICON : MOON_ICON}</button>`;
 
@@ -194,7 +222,7 @@
           <nav>
             ${logo}
             <ul class="sn-links">${items}</ul>
-            ${themeBtn}
+            <div class="sn-right">${themeBtn}</div>
           </nav>`;
       }
 

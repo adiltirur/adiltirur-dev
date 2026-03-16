@@ -7,9 +7,10 @@
   <meta name="description" content="Adil Chakkala Paramba (Tirur) — Technical Lead at SHL Telemedizin, Founder of GradSprint, Flutter & mobile engineering enthusiast based in Munich." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared.css" />
 
-  <!-- Anti-FOUC: apply saved/preferred theme before first paint -->
+  <!-- Anti-FOUC -->
   <script>
     (function () {
       var t = localStorage.getItem('theme') ||
@@ -19,105 +20,26 @@
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ── Design Tokens ── */
-    :root {
-      --bg: #fafafa;
-      --fg: #111111;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --accent-light: #dbeafe;
-      --border: #e5e7eb;
-      --surface: #f3f4f6;
-      --surface-raised: #ffffff;
-      --fg-body: #374151;
-      --pill-bg: #f3f4f6;
-      --pill-fg: #374151;
-      --badge-bg: #dcfce7;
-      --badge-fg: #166534;
-      --badge-border: #bbf7d0;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    [data-theme="dark"] {
-      --bg: #0d1117;
-      --fg: #e6edf3;
-      --muted: #8b949e;
-      --accent: #58a6ff;
-      --accent-light: #1c2d42;
-      --border: #21262d;
-      --surface: #161b22;
-      --surface-raised: #1c2128;
-      --fg-body: #c9d1d9;
-      --pill-bg: #21262d;
-      --pill-fg: #c9d1d9;
-      --badge-bg: #0d4429;
-      --badge-fg: #56d364;
-      --badge-border: #238636;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.7;
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ── Scroll reveal ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    /* Stagger helpers */
-    .reveal-d1 { transition-delay: 0.08s; }
-    .reveal-d2 { transition-delay: 0.16s; }
-    .reveal-d3 { transition-delay: 0.24s; }
-    .reveal-d4 { transition-delay: 0.32s; }
-    .reveal-d5 { transition-delay: 0.40s; }
-    .reveal-d6 { transition-delay: 0.48s; }
-    .reveal-d7 { transition-delay: 0.56s; }
-    .reveal-d8 { transition-delay: 0.64s; }
-
-    /* ── Hero entrance ── */
-    @keyframes heroIn {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
     /* ── Hero ── */
-    .hero { padding: 96px 0 80px; }
+    .hero {
+      padding: 100px 0 80px;
+      overflow: hidden;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
     .hero-tag {
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 12px;
       color: var(--accent);
       margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 8px;
-      animation: heroIn 0.6s var(--ease-out) both;
+      animation: heroIn 0.5s var(--ease-out) both;
       animation-delay: 0.05s;
     }
     .hero-tag::before {
@@ -128,126 +50,180 @@
       background: var(--accent);
     }
     .hero h1 {
-      font-size: clamp(32px, 6vw, 52px);
+      font-size: clamp(40px, 6vw, 68px);
       font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 12px;
-      animation: heroIn 0.6s var(--ease-out) both;
-      animation-delay: 0.15s;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 14px;
+      animation: heroIn 0.55s var(--ease-out) both;
+      animation-delay: 0.12s;
     }
     .hero h1 .cursor {
       display: inline-block;
       width: 3px;
-      height: 0.85em;
+      height: 0.8em;
       background: var(--accent);
-      margin-left: 4px;
+      margin-left: 6px;
       vertical-align: middle;
       animation: blink 1.1s step-end infinite;
     }
     .hero-name-note {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
-      margin-bottom: 20px;
-      animation: heroIn 0.6s var(--ease-out) both;
-      animation-delay: 0.22s;
+      margin-bottom: 22px;
+      animation: heroIn 0.55s var(--ease-out) both;
+      animation-delay: 0.18s;
     }
-    .hero-name-note a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .hero-name-note a { color: var(--accent); text-decoration: none; }
     .hero-sub {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--fg-body);
       font-weight: 400;
-      margin-bottom: 36px;
-      max-width: 520px;
-      animation: heroIn 0.6s var(--ease-out) both;
-      animation-delay: 0.3s;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 480px;
+      animation: heroIn 0.55s var(--ease-out) both;
+      animation-delay: 0.24s;
     }
     .hero-meta {
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
       margin-bottom: 36px;
-      animation: heroIn 0.6s var(--ease-out) both;
-      animation-delay: 0.38s;
+      animation: heroIn 0.55s var(--ease-out) both;
+      animation-delay: 0.30s;
     }
     .hero-meta-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
+      font-size: 12px;
+      font-family: var(--mono);
       color: var(--muted);
     }
-    .hero-meta-item svg { flex-shrink: 0; }
     .hero-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
       align-items: center;
-      animation: heroIn 0.6s var(--ease-out) both;
-      animation-delay: 0.46s;
+      animation: heroIn 0.55s var(--ease-out) both;
+      animation-delay: 0.36s;
     }
 
-    /* ── Buttons ── */
-    .btn {
-      display: inline-flex;
+    /* ── Terminal widget ── */
+    .terminal-widget {
+      background: #0b0e16;
+      border: 1px solid #1e2a40;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+      animation: heroIn 0.65s var(--ease-out) both;
+      animation-delay: 0.2s;
+    }
+    [data-theme="light"] .terminal-widget {
+      box-shadow: 0 20px 60px rgba(15,23,42,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+    }
+    .terminal-chrome {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      background: #13161e;
+      border-bottom: 1px solid #1a2030;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .terminal-file-tabs {
+      display: flex;
+      gap: 0;
+      margin-left: 12px;
+    }
+    .terminal-file-tab {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 3px 14px;
+      border-radius: 5px 5px 0 0;
+      color: #5e6e8a;
+    }
+    .terminal-file-tab.active {
+      background: #0b0e16;
+      color: #a0b0cc;
+      border: 1px solid #1a2030;
+      border-bottom: 1px solid #0b0e16;
+    }
+    .terminal-body {
+      padding: 20px 0;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #a0b0cc;
+      counter-reset: line;
+    }
+    .t-line {
+      display: flex;
+      padding: 0 20px;
+      animation: terminalLine 0.3s var(--ease-out) both;
+    }
+    .t-line:nth-child(1)  { animation-delay: 0.4s; }
+    .t-line:nth-child(2)  { animation-delay: 0.46s; }
+    .t-line:nth-child(3)  { animation-delay: 0.52s; }
+    .t-line:nth-child(4)  { animation-delay: 0.58s; }
+    .t-line:nth-child(5)  { animation-delay: 0.64s; }
+    .t-line:nth-child(6)  { animation-delay: 0.70s; }
+    .t-line:nth-child(7)  { animation-delay: 0.76s; }
+    .t-line:nth-child(8)  { animation-delay: 0.82s; }
+    .t-line:nth-child(9)  { animation-delay: 0.88s; }
+    .t-line:nth-child(10) { animation-delay: 0.94s; }
+    .t-line:nth-child(11) { animation-delay: 1.00s; }
+    .t-line:nth-child(12) { animation-delay: 1.06s; }
+    .t-line:nth-child(13) { animation-delay: 1.12s; }
+    .t-line:nth-child(14) { animation-delay: 1.18s; }
+    .t-line:nth-child(15) { animation-delay: 1.24s; }
+    .t-ln {
+      min-width: 28px;
+      color: #2a3650;
+      user-select: none;
+      flex-shrink: 0;
+      font-size: 11px;
+      padding-top: 1px;
+    }
+    .t-code { flex: 1; }
+    .t-kw  { color: #c792ea; }
+    .t-cls { color: #82aaff; }
+    .t-fn  { color: #82cfff; }
+    .t-str { color: #c3e88d; }
+    .t-cm  { color: #2a3a50; font-style: italic; }
+    .t-acc { color: #00e599; }
+    .t-num { color: #f78c6c; }
+    .terminal-status {
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s var(--ease-out);
-      cursor: pointer;
-      border: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-primary { background: var(--fg); color: var(--bg); }
-    .btn-primary:hover {
-      background: var(--fg);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    [data-theme="dark"] .btn-primary:hover {
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
-    .btn-outline { border: 1px solid var(--border); color: var(--fg); background: transparent; }
-    .btn-outline:hover {
-      border-color: var(--muted);
-      background: var(--surface);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    [data-theme="dark"] .btn-outline:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .btn-sm { padding: 7px 14px; font-size: 13px; }
-
-    /* ── Section Base ── */
-    section { padding: 72px 0; border-top: 1px solid var(--border); }
-    .section-label {
+      padding: 8px 20px;
+      border-top: 1px solid #1a2030;
+      background: #13161e;
       font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 32px;
+      font-size: 10px;
+      color: #2a3650;
     }
-    h2 {
-      font-size: 26px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
+    .terminal-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00e599;
+      animation: blink 2s ease-in-out infinite;
     }
 
     /* ── About ── */
     .about-text {
-      font-size: 15.5px;
+      font-size: 15px;
       color: var(--fg-body);
       line-height: 1.85;
       margin-bottom: 18px;
@@ -260,158 +236,176 @@
       margin-top: 28px;
       margin-bottom: 32px;
     }
-
-    /* ── Tech Stack ── */
     .tech-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 8px;
     }
+
+    /* Pill animations */
     .tech-pill {
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 5px 12px;
-      border-radius: 6px;
-      background: var(--pill-bg);
-      color: var(--pill-fg);
-      border: 1px solid var(--border);
-      transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
       opacity: 0;
-      transform: scale(0.88) translateY(8px);
+      transform: scale(0.88) translateY(6px);
     }
     .tech-pill.pill-visible {
       opacity: 1;
       transform: scale(1) translateY(0);
-      transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out),
-                  box-shadow 0.2s;
-    }
-    .tech-pill:hover {
-      transform: scale(1) translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    [data-theme="dark"] .tech-pill:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-    .tech-pill.highlight {
-      background: var(--accent-light);
-      border-color: #bfdbfe;
-      color: var(--accent);
-    }
-    [data-theme="dark"] .tech-pill.highlight {
-      border-color: #1d3461;
+      transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out),
+                  box-shadow 0.2s, border-color 0.2s;
     }
 
-    /* ── Experience ── */
+    /* ── Experience timeline ── */
     .exp-list { display: flex; flex-direction: column; }
     .exp-item {
       display: grid;
-      grid-template-columns: 1px 1fr;
-      gap: 0 24px;
-      padding-bottom: 40px;
-      position: relative;
+      grid-template-columns: 20px 1fr;
+      gap: 0 20px;
+      padding-bottom: 36px;
     }
     .exp-item:last-child { padding-bottom: 0; }
     .exp-line {
-      width: 1px;
-      background: var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       position: relative;
-      margin-top: 6px;
     }
-    .exp-line::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 9px;
-      height: 9px;
+    .exp-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--accent);
-      transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease-out);
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: border-color 0.2s, background 0.2s, transform 0.25s var(--ease-out);
+      position: relative;
+      z-index: 1;
     }
-    .exp-item:hover .exp-line::before {
-      transform: translateX(-50%) scale(1.4);
-    }
-    .exp-item.current .exp-line::before {
+    .exp-item.current .exp-dot {
       background: var(--accent);
+      border-color: var(--accent);
     }
-    .exp-content {}
+    .exp-item:hover .exp-dot {
+      transform: scale(1.5);
+      border-color: var(--accent);
+    }
+    .exp-line-bar {
+      width: 1px;
+      flex: 1;
+      background: var(--border);
+      margin-top: 4px;
+    }
+    .exp-item:last-child .exp-line-bar { display: none; }
+    .exp-content { padding-bottom: 4px; }
     .exp-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       flex-wrap: wrap;
       gap: 4px;
     }
-    .exp-title { font-size: 15px; font-weight: 600; color: var(--fg); }
+    .exp-title { font-size: 14px; font-weight: 600; color: var(--fg); }
     .exp-period {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
       white-space: nowrap;
-      padding-top: 2px;
+      padding-top: 3px;
     }
     .exp-company {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--accent);
       font-weight: 500;
-      margin-bottom: 8px;
+      margin-bottom: 3px;
     }
     .exp-location {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
-      margin-bottom: 8px;
       font-family: var(--mono);
     }
     .exp-badge {
       display: inline-block;
       font-family: var(--mono);
-      font-size: 10px;
-      padding: 2px 8px;
+      font-size: 9px;
+      padding: 2px 7px;
       border-radius: 4px;
-      background: var(--badge-bg);
-      color: var(--badge-fg);
-      border: 1px solid var(--badge-border);
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid var(--accent);
       margin-left: 8px;
       vertical-align: middle;
+      letter-spacing: 0.03em;
     }
 
-    /* ── Open Source ── */
+    /* ── OSS cards ── */
+    .oss-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
     .oss-card {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: var(--radius);
+      padding: 22px;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 10px;
       transition: border-color 0.2s, transform 0.25s var(--ease-out), box-shadow 0.25s;
       text-decoration: none;
-      background: var(--surface-raised);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .oss-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent-dim);
+      opacity: 0;
+      transition: opacity 0.25s;
     }
     .oss-card:hover {
       border-color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
     }
     [data-theme="dark"] .oss-card:hover {
-      box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1);
+      box-shadow: 0 12px 32px rgba(0, 229, 153, 0.08);
     }
-    .oss-card-title { font-size: 15px; font-weight: 600; color: var(--fg); margin-bottom: 4px; }
-    .oss-card-desc { font-size: 13px; color: var(--muted); }
-    .oss-arrow {
-      width: 18px;
-      height: 18px;
+    .oss-card:hover::before { opacity: 1; }
+    .oss-card-icon {
+      font-size: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .oss-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg);
+      position: relative;
+      z-index: 1;
+    }
+    .oss-card-desc {
+      font-size: 12px;
       color: var(--muted);
-      flex-shrink: 0;
-      transition: transform 0.25s var(--ease-out), color 0.2s;
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
+      flex: 1;
     }
-    .oss-card:hover .oss-arrow {
-      transform: translate(3px, -3px);
+    .oss-card-arrow {
+      align-self: flex-end;
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      transition: transform 0.25s var(--ease-out), color 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .oss-card:hover .oss-card-arrow {
+      transform: translate(4px, -4px);
       color: var(--accent);
     }
 
@@ -419,238 +413,264 @@
     .contact-block {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 36px;
+      border-radius: 14px;
+      padding: 40px;
     }
-    .contact-block p { color: var(--fg-body); margin-bottom: 24px; font-size: 15px; }
+    .contact-block p {
+      color: var(--fg-body);
+      margin-bottom: 28px;
+      font-size: 15px;
+      max-width: 520px;
+      line-height: 1.7;
+    }
     .contact-links { display: flex; flex-wrap: wrap; gap: 12px; }
 
-    /* ── Footer ── */
-    footer {
-      padding: 32px 0;
-      border-top: 1px solid var(--border);
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .terminal-widget { max-width: 520px; }
+      .oss-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    footer .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .footer-copy { font-size: 12px; color: var(--muted); font-family: var(--mono); }
-    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-links a {
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      position: relative;
-    }
-    .footer-links a::after {
-      content: '';
-      position: absolute;
-      left: 0; bottom: -2px;
-      width: 0; height: 1px;
-      background: var(--fg);
-      transition: width 0.2s var(--ease-out);
-    }
-    .footer-links a:hover { color: var(--fg); }
-    .footer-links a:hover::after { width: 100%; }
-
-    .icon { width: 15px; height: 15px; flex-shrink: 0; }
-
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .hero { padding: 64px 0 56px; }
-      section { padding: 56px 0; }
-      .contact-block { padding: 24px; }
+      .section { padding: 64px 0; }
+      .oss-grid { grid-template-columns: 1fr; }
+      .contact-block { padding: 28px 24px; }
     }
   </style>
   <script src="/nav.js"></script>
+  <script src="/i18n.js"></script>
 </head>
 <body>
 
-  <!-- NAV -->
   <site-nav></site-nav>
 
-  <!-- HERO -->
+  <!-- ── HERO ── -->
   <header class="hero">
     <div class="container">
-      <div class="hero-tag">Technical Lead · Mobile Engineering · Munich</div>
-      <h1>Adil Tirur<span class="cursor"></span></h1>
-      <p class="hero-name-note">// full name: Adil Chakkala Paramba &mdash; Tirur is where I'm from, and it just stuck.</p>
-      <p class="hero-sub">
-        Building robust mobile experiences from architecture to delivery.
-        Flutter enthusiast. Robotics grad. Certified scuba diver.
-      </p>
-      <div class="hero-meta">
-        <span class="hero-meta-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Munich, Germany
-        </span>
-        <span class="hero-meta-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-          SHL Telemedizin &amp; GradSprint LLP
-        </span>
-      </div>
-      <div class="hero-actions">
-        <a href="https://github.com/adiltirur" target="_blank" rel="noopener" class="btn btn-primary">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-          GitHub
-        </a>
-        <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener" class="btn btn-outline">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          LinkedIn
-        </a>
-        <a href="mailto:adiltirur@gmail.com" class="btn btn-outline">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          Email
-        </a>
+      <div class="hero-inner">
+
+        <!-- Left: text -->
+        <div>
+          <div class="hero-tag" data-i18n="index.hero.tag">Technical Lead · Mobile Engineering · Munich</div>
+          <h1><span data-i18n="index.hero.name">Adil Tirur</span><span class="cursor"></span></h1>
+          <p class="hero-name-note" data-i18n="index.hero.name_note">// full name: Adil Chakkala Paramba — Tirur is where I'm from, and it just stuck.</p>
+          <p class="hero-sub" data-i18n="index.hero.subtitle">
+            Building robust mobile experiences from architecture to delivery.
+            Flutter enthusiast. Robotics grad. Certified scuba diver.
+          </p>
+          <div class="hero-meta">
+            <span class="hero-meta-item">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span data-i18n="index.hero.location">Munich, Germany</span>
+            </span>
+            <span class="hero-meta-item">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              <span data-i18n="index.hero.company">SHL Telemedizin &amp; GradSprint LLP</span>
+            </span>
+          </div>
+          <div class="hero-actions">
+            <a href="https://github.com/adiltirur" target="_blank" rel="noopener" class="btn btn-primary">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              <span data-i18n="index.hero.cta_github">GitHub</span>
+            </a>
+            <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener" class="btn btn-outline">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              <span data-i18n="index.hero.cta_linkedin">LinkedIn</span>
+            </a>
+            <a href="mailto:adiltirur@gmail.com" class="btn btn-outline">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span data-i18n="index.hero.cta_email">Email</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: terminal widget -->
+        <div>
+          <div class="terminal-widget">
+            <div class="terminal-chrome">
+              <span class="dot dot-r"></span>
+              <span class="dot dot-y"></span>
+              <span class="dot dot-g"></span>
+              <div class="terminal-file-tabs">
+                <span class="terminal-file-tab active" data-i18n="index.terminal.file_tab">health_bloc.dart</span>
+              </div>
+            </div>
+            <div class="terminal-body">
+              <div class="t-line"><span class="t-ln">1</span><span class="t-code t-cm">// SHL Telemedizin — Flutter health monitor</span></div>
+              <div class="t-line"><span class="t-ln">2</span><span class="t-code"></span></div>
+              <div class="t-line"><span class="t-ln">3</span><span class="t-code"><span class="t-kw">class</span> <span class="t-cls">HealthBloc</span> <span class="t-kw">extends</span></span></div>
+              <div class="t-line"><span class="t-ln">4</span><span class="t-code">    <span class="t-cls">Bloc</span>&lt;<span class="t-cls">HealthEvent</span>, <span class="t-cls">HealthState</span>&gt; {</span></div>
+              <div class="t-line"><span class="t-ln">5</span><span class="t-code">  <span class="t-kw">final</span> <span class="t-cls">HealthRepository</span> _repo;</span></div>
+              <div class="t-line"><span class="t-ln">6</span><span class="t-code"></span></div>
+              <div class="t-line"><span class="t-ln">7</span><span class="t-code">  <span class="t-cls">HealthBloc</span>(<span class="t-kw">this</span>._repo)</span></div>
+              <div class="t-line"><span class="t-ln">8</span><span class="t-code">      : <span class="t-kw">super</span>(<span class="t-cls">HealthInitial</span>()) {</span></div>
+              <div class="t-line"><span class="t-ln">9</span><span class="t-code">    <span class="t-fn">on</span>&lt;<span class="t-cls">FetchReadings</span>&gt;(_onFetch);</span></div>
+              <div class="t-line"><span class="t-ln">10</span><span class="t-code">  }</span></div>
+              <div class="t-line"><span class="t-ln">11</span><span class="t-code"></span></div>
+              <div class="t-line"><span class="t-ln">12</span><span class="t-code">  <span class="t-cls">Future</span>&lt;<span class="t-kw">void</span>&gt; _onFetch(</span></div>
+              <div class="t-line"><span class="t-ln">13</span><span class="t-code">    <span class="t-cls">FetchReadings</span> event,</span></div>
+              <div class="t-line"><span class="t-ln">14</span><span class="t-code">    <span class="t-cls">Emitter</span>&lt;<span class="t-cls">HealthState</span>&gt; emit,</span></div>
+              <div class="t-line"><span class="t-ln">15</span><span class="t-code">  ) <span class="t-kw">async</span> {</span></div>
+              <div class="t-line"><span class="t-ln">16</span><span class="t-code">    <span class="t-fn">emit</span>(<span class="t-cls">HealthLoading</span>());</span></div>
+              <div class="t-line"><span class="t-ln">17</span><span class="t-code">    <span class="t-kw">final</span> readings = <span class="t-kw">await</span> _repo.<span class="t-fn">getReadings</span>();</span></div>
+              <div class="t-line"><span class="t-ln">18</span><span class="t-code">    <span class="t-fn">emit</span>(<span class="t-cls">HealthLoaded</span>(readings));</span></div>
+              <div class="t-line"><span class="t-ln">19</span><span class="t-code">  }</span></div>
+              <div class="t-line"><span class="t-ln">20</span><span class="t-code">}</span></div>
+            </div>
+            <div class="terminal-status">
+              <span class="terminal-status-dot"></span>
+              <span data-i18n="index.terminal.status">flutter · dart · clean architecture</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </header>
 
-  <!-- ABOUT -->
-  <section id="about">
+  <!-- ── ABOUT ── -->
+  <section id="about" class="section">
     <div class="container">
-      <div class="section-label reveal">// about</div>
-      <h2 class="reveal reveal-d1">A bit about me</h2>
+      <div class="section-label reveal" data-i18n="index.about.section_label">about</div>
+      <h2 class="reveal reveal-d1" style="font-size:26px;font-weight:600;letter-spacing:-0.02em;margin-bottom:24px;" data-i18n="index.about.heading">A bit about me</h2>
 
-      <p class="about-text reveal reveal-d2">
+      <p class="about-text reveal reveal-d2" data-i18n-html="index.about.p1">
         I'm a <strong>Technical Lead for Mobile Apps</strong> at <strong>SHL Telemedizin GmbH</strong> in Munich, and the <strong>Founder of GradSprint LLP</strong>. My day-to-day lives at the intersection of clean architecture, mobile engineering, and building products that genuinely improve people's lives — currently in the digital health space.
       </p>
-      <p class="about-text reveal reveal-d3">
+      <p class="about-text reveal reveal-d3" data-i18n-html="index.about.p2">
         Here's the twist: I actually have an academic degree in <strong>Robotics</strong>. Somehow I ended up deep in mobile development and never looked back — turns out a robot's loss is Flutter's gain. I love the craft of writing clean, maintainable code and I'm particularly passionate about <strong>Flutter &amp; Dart</strong>, which I've been working with since its early days.
       </p>
-      <p class="about-text reveal reveal-d4">
+      <p class="about-text reveal reveal-d4" data-i18n-html="index.about.p3">
         Outside of work, I'm slowly navigating Europe one trip at a time, and I'm a <strong>certified scuba diver</strong> — because apparently exploring the depths of the ocean and the depths of a codebase are the same kind of fun.
       </p>
 
       <div class="about-links reveal reveal-d5">
         <a href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-          pub.dev packages
+          <span data-i18n="index.about.cta_pubdev">pub.dev packages</span>
         </a>
         <a href="https://medium.com/@adiltirur" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
           <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
-          Medium articles
+          <span data-i18n="index.about.cta_medium">Medium articles</span>
         </a>
       </div>
 
-      <div class="tech-grid" id="tech-grid">
-        <span class="tech-pill highlight">Flutter</span>
-        <span class="tech-pill highlight">Dart</span>
-        <span class="tech-pill">Swift</span>
-        <span class="tech-pill">Kotlin</span>
-        <span class="tech-pill">iOS</span>
-        <span class="tech-pill">Android</span>
-        <span class="tech-pill">Clean Architecture</span>
-        <span class="tech-pill">Mobile Leadership</span>
-        <span class="tech-pill">CI/CD</span>
-        <span class="tech-pill">Digital Health</span>
+      <div class="tech-grid reveal reveal-d6" id="tech-grid">
+        <span class="tech-pill highlight" data-i18n="index.about.tech.0">Flutter</span>
+        <span class="tech-pill highlight" data-i18n="index.about.tech.1">Dart</span>
+        <span class="tech-pill" data-i18n="index.about.tech.2">Swift</span>
+        <span class="tech-pill" data-i18n="index.about.tech.3">Kotlin</span>
+        <span class="tech-pill" data-i18n="index.about.tech.4">iOS</span>
+        <span class="tech-pill" data-i18n="index.about.tech.5">Android</span>
+        <span class="tech-pill" data-i18n="index.about.tech.6">Clean Architecture</span>
+        <span class="tech-pill" data-i18n="index.about.tech.7">Mobile Leadership</span>
+        <span class="tech-pill" data-i18n="index.about.tech.8">CI/CD</span>
+        <span class="tech-pill" data-i18n="index.about.tech.9">Digital Health</span>
       </div>
     </div>
   </section>
 
-  <!-- EXPERIENCE -->
-  <section id="experience">
+  <!-- ── EXPERIENCE ── -->
+  <section id="experience" class="section">
     <div class="container">
-      <div class="section-label reveal">// experience</div>
-      <h2 class="reveal reveal-d1">Where I've worked</h2>
+      <div class="section-label reveal" data-i18n="index.experience.section_label">experience</div>
+      <h2 class="reveal reveal-d1" style="font-size:26px;font-weight:600;letter-spacing:-0.02em;margin-bottom:36px;" data-i18n="index.experience.heading">Where I've worked</h2>
       <div class="exp-list">
 
         <div class="exp-item current reveal reveal-d2">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Technical Lead — Mobile Apps <span class="exp-badge">current</span></span>
-              <span class="exp-period">Feb 2024 – Present</span>
+              <span class="exp-title"><span data-i18n="index.experience.items.0.title">Technical Lead — Mobile Apps</span> <span class="exp-badge" data-i18n="index.experience.badge_current">current</span></span>
+              <span class="exp-period" data-i18n="index.experience.items.0.period">Feb 2024 – Present</span>
             </div>
-            <div class="exp-company">SHL Telemedizin GmbH</div>
-            <div class="exp-location">Munich, Germany</div>
+            <div class="exp-company" data-i18n="index.experience.items.0.company">SHL Telemedizin GmbH</div>
+            <div class="exp-location" data-i18n="index.experience.items.0.location">Munich, Germany</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d3">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Senior Software Engineer</span>
-              <span class="exp-period">Jan 2022 – Jan 2024</span>
+              <span class="exp-title" data-i18n="index.experience.items.1.title">Senior Software Engineer</span>
+              <span class="exp-period" data-i18n="index.experience.items.1.period">Jan 2022 – Jan 2024</span>
             </div>
-            <div class="exp-company">SHL Telemedizin GmbH</div>
-            <div class="exp-location">Munich, Germany · Flutter, Dart</div>
+            <div class="exp-company" data-i18n="index.experience.items.1.company">SHL Telemedizin GmbH</div>
+            <div class="exp-location" data-i18n="index.experience.items.1.location">Munich, Germany · Flutter, Dart</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d4">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Chief Technology Officer</span>
-              <span class="exp-period">Aug 2019 – Jul 2023</span>
+              <span class="exp-title" data-i18n="index.experience.items.2.title">Chief Technology Officer</span>
+              <span class="exp-period" data-i18n="index.experience.items.2.period">Aug 2019 – Jul 2023</span>
             </div>
-            <div class="exp-company">Airo.Care GmbH</div>
-            <div class="exp-location">Ingolstadt, Germany</div>
+            <div class="exp-company" data-i18n="index.experience.items.2.company">Airo.Care GmbH</div>
+            <div class="exp-location" data-i18n="index.experience.items.2.location">Ingolstadt, Germany</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d5">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Senior Software Engineer</span>
-              <span class="exp-period">Feb 2021 – Nov 2021</span>
+              <span class="exp-title" data-i18n="index.experience.items.3.title">Senior Software Engineer</span>
+              <span class="exp-period" data-i18n="index.experience.items.3.period">Feb 2021 – Nov 2021</span>
             </div>
-            <div class="exp-company">Bayerische Telemedallianz</div>
-            <div class="exp-location">Baar-Ebenhausen, Germany · Flutter, Dart</div>
+            <div class="exp-company" data-i18n="index.experience.items.3.company">Bayerische Telemedallianz</div>
+            <div class="exp-location" data-i18n="index.experience.items.3.location">Baar-Ebenhausen, Germany · Flutter, Dart</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d6">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Head of Software Engineering</span>
-              <span class="exp-period">Apr 2019 – Feb 2021</span>
+              <span class="exp-title" data-i18n="index.experience.items.4.title">Head of Software Engineering</span>
+              <span class="exp-period" data-i18n="index.experience.items.4.period">Apr 2019 – Feb 2021</span>
             </div>
-            <div class="exp-company">GO-IN Gesundheitsorganisation Ingolstadt</div>
-            <div class="exp-location">Ingolstadt, Germany · Flutter, Dart</div>
+            <div class="exp-company" data-i18n="index.experience.items.4.company">GO-IN Gesundheitsorganisation Ingolstadt</div>
+            <div class="exp-location" data-i18n="index.experience.items.4.location">Ingolstadt, Germany · Flutter, Dart</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d7">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Artificial Intelligence Engineer</span>
-              <span class="exp-period">May 2019 – Jul 2019</span>
+              <span class="exp-title" data-i18n="index.experience.items.5.title">Artificial Intelligence Engineer</span>
+              <span class="exp-period" data-i18n="index.experience.items.5.period">May 2019 – Jul 2019</span>
             </div>
-            <div class="exp-company">Digital Product School — UnternehmerTUM</div>
-            <div class="exp-location">Munich, Germany</div>
+            <div class="exp-company" data-i18n="index.experience.items.5.company">Digital Product School — UnternehmerTUM</div>
+            <div class="exp-location" data-i18n="index.experience.items.5.location">Munich, Germany</div>
           </div>
         </div>
 
         <div class="exp-item reveal reveal-d8">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Software Engineer</span>
-              <span class="exp-period">Jan 2019 – Mar 2019</span>
+              <span class="exp-title" data-i18n="index.experience.items.6.title">Software Engineer</span>
+              <span class="exp-period" data-i18n="index.experience.items.6.period">Jan 2019 – Mar 2019</span>
             </div>
-            <div class="exp-company">GO-IN Gesundheitsorganisation Ingolstadt</div>
-            <div class="exp-location">Ingolstadt, Germany</div>
+            <div class="exp-company" data-i18n="index.experience.items.6.company">GO-IN Gesundheitsorganisation Ingolstadt</div>
+            <div class="exp-location" data-i18n="index.experience.items.6.location">Ingolstadt, Germany</div>
           </div>
         </div>
 
         <div class="exp-item reveal">
-          <div class="exp-line"></div>
+          <div class="exp-line"><div class="exp-dot"></div><div class="exp-line-bar"></div></div>
           <div class="exp-content">
             <div class="exp-header">
-              <span class="exp-title">Android Development Intern</span>
-              <span class="exp-period">Oct 2018 – Dec 2018</span>
+              <span class="exp-title" data-i18n="index.experience.items.7.title">Android Development Intern</span>
+              <span class="exp-period" data-i18n="index.experience.items.7.period">Oct 2018 – Dec 2018</span>
             </div>
-            <div class="exp-company">GO-IN Gesundheitsorganisation Ingolstadt</div>
-            <div class="exp-location">Ingolstadt, Germany · Android, Firebase</div>
+            <div class="exp-company" data-i18n="index.experience.items.7.company">GO-IN Gesundheitsorganisation Ingolstadt</div>
+            <div class="exp-location" data-i18n="index.experience.items.7.location">Ingolstadt, Germany · Android, Firebase</div>
           </div>
         </div>
 
@@ -658,115 +678,100 @@
     </div>
   </section>
 
-  <!-- OPEN SOURCE -->
-  <section id="oss">
+  <!-- ── OPEN SOURCE ── -->
+  <section id="oss" class="section">
     <div class="container">
-      <div class="section-label reveal">// open source</div>
-      <h2 class="reveal reveal-d1">Packages &amp; writing</h2>
-      <p class="reveal reveal-d2" style="color:var(--fg-body);font-size:15px;margin-bottom:28px;">
+      <div class="section-label reveal" data-i18n="index.oss.section_label">open source</div>
+      <h2 class="reveal reveal-d1" style="font-size:26px;font-weight:600;letter-spacing:-0.02em;margin-bottom:12px;" data-i18n="index.oss.heading">Packages &amp; writing</h2>
+      <p class="reveal reveal-d2" style="color:var(--fg-body);font-size:15px;margin-bottom:28px;max-width:540px;" data-i18n="index.oss.intro">
         I publish Flutter and Dart packages on pub.dev and share mobile engineering insights on Medium. More packages coming — the goal is definitely packages (plural).
       </p>
-      <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="oss-grid">
         <a href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener" class="oss-card reveal reveal-d3">
-          <div>
-            <div class="oss-card-title">pub.dev — Flutter &amp; Dart packages</div>
-            <div class="oss-card-desc">Published packages under adiltirur.dev</div>
-          </div>
-          <svg class="oss-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <div class="oss-card-icon" data-i18n="index.oss.cards.0.icon">📦</div>
+          <div class="oss-card-title" data-i18n="index.oss.cards.0.title">pub.dev — Flutter &amp; Dart packages</div>
+          <div class="oss-card-desc" data-i18n="index.oss.cards.0.desc">Published packages under adiltirur.dev publisher.</div>
+          <svg class="oss-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
         </a>
         <a href="https://medium.com/@adiltirur" target="_blank" rel="noopener" class="oss-card reveal reveal-d4">
-          <div>
-            <div class="oss-card-title">Medium — articles on mobile development</div>
-            <div class="oss-card-desc">Insights and learnings from building mobile apps</div>
-          </div>
-          <svg class="oss-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <div class="oss-card-icon" data-i18n="index.oss.cards.1.icon">✍️</div>
+          <div class="oss-card-title" data-i18n="index.oss.cards.1.title">Medium — mobile development articles</div>
+          <div class="oss-card-desc" data-i18n="index.oss.cards.1.desc">Insights and learnings from building mobile apps.</div>
+          <svg class="oss-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
         </a>
         <a href="https://github.com/adiltirur" target="_blank" rel="noopener" class="oss-card reveal reveal-d5">
-          <div>
-            <div class="oss-card-title">GitHub — @adiltirur</div>
-            <div class="oss-card-desc">All public repositories and contributions</div>
-          </div>
-          <svg class="oss-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <div class="oss-card-icon" data-i18n="index.oss.cards.2.icon">🐙</div>
+          <div class="oss-card-title" data-i18n="index.oss.cards.2.title">GitHub — @adiltirur</div>
+          <div class="oss-card-desc" data-i18n="index.oss.cards.2.desc">All public repositories and contributions.</div>
+          <svg class="oss-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
         </a>
       </div>
-      <p class="reveal" style="margin-top:20px;font-size:13px;color:var(--muted);">
+      <p class="reveal" style="margin-top:20px;font-size:12px;color:var(--muted);font-family:var(--mono);" data-i18n-html="index.oss.license_note">
         All open source work is provided under the MIT License. See <a href="/terms" style="color:var(--accent);text-decoration:none;">Terms</a> &amp; <a href="/privacy" style="color:var(--accent);text-decoration:none;">Privacy</a> for full details.
       </p>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
+  <!-- ── CONTACT ── -->
+  <section id="contact" class="section">
     <div class="container">
-      <div class="section-label reveal">// contact</div>
-      <h2 class="reveal reveal-d1">Get in touch</h2>
+      <div class="section-label reveal" data-i18n="index.contact.section_label">contact</div>
+      <h2 class="reveal reveal-d1" style="font-size:26px;font-weight:600;letter-spacing:-0.02em;margin-bottom:28px;" data-i18n="index.contact.heading">Get in touch</h2>
       <div class="contact-block reveal reveal-d2">
-        <p>
-          Whether it's a project, a role, a collaboration on Flutter packages, or just a chat about mobile engineering — my inbox is open.
-        </p>
+        <p data-i18n="index.contact.body">Whether it's a project, a role, a collaboration on Flutter packages, or just a chat about mobile engineering — my inbox is open.</p>
         <div class="contact-links">
           <a href="mailto:adiltirur@gmail.com" class="btn btn-primary">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            adiltirur@gmail.com
+            <span data-i18n="index.contact.cta_email">adiltirur@gmail.com</span>
           </a>
           <a href="https://github.com/adiltirur" target="_blank" rel="noopener" class="btn btn-outline">
             <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-            GitHub
+            <span data-i18n="index.contact.cta_github">GitHub</span>
           </a>
           <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener" class="btn btn-outline">
             <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            LinkedIn
+            <span data-i18n="index.contact.cta_linkedin">LinkedIn</span>
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ── FOOTER ── -->
   <footer>
     <div class="container">
-      <span class="footer-copy">© 2026 adiltirur.dev</span>
+      <span class="footer-copy" data-i18n="index.footer.copy">© 2026 adiltirur.dev</span>
       <div class="footer-links">
-        <a href="https://github.com/adiltirur" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://medium.com/@adiltirur" target="_blank" rel="noopener">Medium</a>
-        <a href="/terms">Terms</a>
-        <a href="/privacy">Privacy</a>
+        <a href="https://github.com/adiltirur" target="_blank" rel="noopener" data-i18n="index.footer.link_github">GitHub</a>
+        <a href="https://linkedin.com/in/adil-cp/" target="_blank" rel="noopener" data-i18n="index.footer.link_linkedin">LinkedIn</a>
+        <a href="https://medium.com/@adiltirur" target="_blank" rel="noopener" data-i18n="index.footer.link_medium">Medium</a>
+        <a href="/terms" data-i18n="index.footer.link_terms">Terms</a>
+        <a href="/privacy" data-i18n="index.footer.link_privacy">Privacy</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // ── Scroll reveal via IntersectionObserver ──────────────────────────────
+    // ── Scroll reveal ─────────────────────────────────────────────────────────
     (function () {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            io.unobserve(e.target);
-          }
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
         });
       }, { threshold: 0.08 });
-
-      document.querySelectorAll('.reveal').forEach(function (el) {
-        io.observe(el);
-      });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
 
       // ── Tech pills staggered entrance ─────────────────────────────────────
       var pillIo = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           if (e.isIntersecting) {
-            var pills = e.target.querySelectorAll('.tech-pill');
-            pills.forEach(function (pill, i) {
-              setTimeout(function () {
-                pill.classList.add('pill-visible');
-              }, i * 55);
+            e.target.querySelectorAll('.tech-pill').forEach(function (pill, i) {
+              setTimeout(function () { pill.classList.add('pill-visible'); }, i * 55);
             });
             pillIo.unobserve(e.target);
           }
         });
       }, { threshold: 0.1 });
-
       var grid = document.getElementById('tech-grid');
       if (grid) pillIo.observe(grid);
     })();

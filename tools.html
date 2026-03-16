@@ -8,12 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <link id="hljs-css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
 
-  <!-- Anti-FOUC: apply saved/preferred theme before first paint -->
+  <!-- Anti-FOUC -->
   <script>
     (function () {
       var t = localStorage.getItem('theme') ||
@@ -23,97 +24,109 @@
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #fafafa;
-      --fg: #111111;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --accent-light: #dbeafe;
-      --border: #e5e7eb;
-      --surface: #ffffff;
-      --surface-2: #f3f4f6;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
-      --radius: 10px;
-      --nav-h: 73px;
-    }
-
-    [data-theme="dark"] {
-      --bg: #0d1117;
-      --fg: #e6edf3;
-      --muted: #8b949e;
-      --accent: #58a6ff;
-      --accent-light: #1c2d42;
-      --border: #21262d;
-      --surface: #161b22;
-      --surface-2: #1c2128;
-    }
-
-    html { scroll-behavior: smooth; }
     body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.7;
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-      transition: background 0.3s ease, color 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ── Page header ── */
-    .page-header { padding: 48px 32px 36px; border-bottom: 1px solid var(--border); }
-    .page-tag {
-      font-family: var(--mono); font-size: 13px; color: var(--accent);
-      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-    }
-    .page-tag::before {
-      content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent);
-    }
-    .page-header h1 {
-      font-size: clamp(24px, 3.5vw, 34px); font-weight: 600;
-      letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 8px;
-    }
-    .page-header p { color: var(--muted); font-size: 14px; }
-
-    /* ── Tab bar ── */
-    .tab-bar-row {
+    .page-header {
+      padding: 0 40px;
+      height: 52px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
       display: flex;
       align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .page-header-breadcrumb {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-header-breadcrumb .sep { color: var(--border); }
+    .page-header-title {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--fg);
+    }
+
+    /* ── Tab bar (IDE file tabs) ── */
+    .tab-bar-row {
+      display: flex;
+      align-items: stretch;
       justify-content: space-between;
-      padding: 0 32px;
       border-bottom: 1px solid var(--border);
-      background: var(--bg);
+      background: var(--surface-2);
       position: sticky;
       top: var(--nav-h);
       z-index: 100;
+      flex-shrink: 0;
     }
-    .tab-bar { display: flex; gap: 2px; }
+    .tab-bar { display: flex; align-items: stretch; }
     .tab-btn {
-      font-family: var(--mono); font-size: 13px; font-weight: 500;
-      padding: 12px 18px; border: none; background: transparent; color: var(--muted);
-      cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: color 0.15s; letter-spacing: -0.01em;
-      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 400;
+      padding: 10px 18px;
+      border: none;
+      border-right: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
     }
-    .tab-btn:hover { color: var(--fg); }
-    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-btn:hover { color: var(--fg); background: var(--surface); }
+    .tab-btn.active {
+      color: var(--fg);
+      background: var(--bg);
+      border-bottom-color: var(--accent);
+    }
+    .tab-btn .tab-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+    .tab-btn.active .tab-dot { background: var(--accent); opacity: 1; }
 
-    /* layout view toggle */
-    .view-toggle { display: flex; gap: 4px; align-items: center; }
+    /* View toggle */
+    .view-toggle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 14px;
+    }
     .view-btn {
-      font-family: var(--mono); font-size: 11px; padding: 4px 10px;
-      border: 1px solid var(--border); border-radius: 6px;
-      background: var(--surface); color: var(--muted); cursor: pointer;
-      transition: all 0.15s; white-space: nowrap;
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface-2);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
     }
     .view-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .view-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+    .view-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
     /* ── Tab panels ── */
-    .tab-panel { display: none; height: calc(100vh - var(--nav-h) - 42px - 1px); }
+    .tab-panel { display: none; flex: 1; min-height: 0; }
     .tab-panel.active { display: flex; flex-direction: column; }
 
     /* ── Split editor ── */
@@ -142,68 +155,105 @@
     .view-output .drag-handle  { display: none !important; }
     .view-output .output-pane  { flex: 1 !important; }
 
-    /* pane header */
+    /* Pane header */
     .pane-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 14px;
       border-bottom: 1px solid var(--border);
-      background: var(--surface-2);
+      background: var(--surface);
       flex-shrink: 0;
     }
     .pane-label {
-      font-family: var(--mono); font-size: 11px; font-weight: 500;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .btn-row { display: flex; gap: 6px; align-items: center; }
+    .pane-label::before {
+      content: '>';
+      color: var(--accent);
+      font-size: 11px;
+    }
+    .btn-row { display: flex; gap: 5px; align-items: center; }
     .btn-small {
-      font-family: var(--mono); font-size: 11px; padding: 3px 10px;
-      border: 1px solid var(--border); border-radius: 5px;
-      background: var(--surface); color: var(--muted); cursor: pointer;
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface-2);
+      color: var(--muted);
+      cursor: pointer;
       transition: all 0.15s;
     }
-    .btn-small:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-small.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .btn-small.primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+    .btn-small:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .btn-small.primary { background: var(--accent); border-color: var(--accent); color: var(--btn-p-fg, #0b0e16); }
+    .btn-small.primary:hover { opacity: 0.85; }
 
-    /* pane body */
+    /* Pane body */
     .pane-body { flex: 1; overflow: auto; min-height: 0; position: relative; }
 
     /* textarea */
     .pane-body textarea {
-      width: 100%; height: 100%;
-      font-family: var(--mono); font-size: 13px; line-height: 1.65;
-      padding: 16px; border: none; outline: none;
-      background: var(--surface); color: var(--fg);
-      resize: none; display: block;
+      width: 100%;
+      height: 100%;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      padding: 16px;
+      border: none;
+      outline: none;
+      background: var(--bg);
+      color: var(--fg);
+      resize: none;
+      display: block;
     }
-    .pane-body textarea::placeholder { color: #9ca3af; }
+    .pane-body textarea::placeholder { color: var(--muted); opacity: 0.5; }
 
-    /* output body */
+    /* output */
     .output-body { padding: 24px 28px; }
 
     /* drag handle */
     .drag-handle {
-      width: 5px; flex-shrink: 0; background: var(--border);
-      cursor: col-resize; position: relative; transition: background 0.15s;
-      display: flex; align-items: center; justify-content: center;
+      width: 4px;
+      flex-shrink: 0;
+      background: var(--border);
+      cursor: col-resize;
+      position: relative;
+      transition: background 0.15s;
     }
     .drag-handle:hover, .drag-handle.dragging { background: var(--accent); }
-    .drag-handle::after {
-      content: '⋮'; color: #fff; font-size: 14px; opacity: 0;
-      transition: opacity 0.15s; pointer-events: none;
-    }
-    .drag-handle:hover::after, .drag-handle.dragging::after { opacity: 1; }
 
-    /* ── stat bar ── */
+    /* stat bar */
     .stat-bar {
-      font-family: var(--mono); font-size: 10px; color: var(--muted);
-      padding: 4px 14px; border-top: 1px solid var(--border);
-      background: var(--surface-2); flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      padding: 5px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stat-bar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
     }
 
     /* ── Markdown output ── */
-    .md-output h1,.md-output h2,.md-output h3,
-    .md-output h4,.md-output h5,.md-output h6 {
+    .md-output h1,.md-output h2,.md-output h3,.md-output h4,.md-output h5,.md-output h6 {
       font-weight: 600; letter-spacing: -0.02em; line-height: 1.3;
       margin-top: 1.5em; margin-bottom: 0.5em;
     }
@@ -218,7 +268,7 @@
       background: var(--surface-2); padding: 1px 6px; border-radius: 4px;
     }
     .md-output pre {
-      background: #f8f9fa; border: 1px solid var(--border);
+      background: var(--surface); border: 1px solid var(--border);
       border-radius: 8px; padding: 16px; overflow-x: auto; margin-bottom: 1em;
     }
     .md-output pre code { background: none; padding: 0; font-size: 13px; }
@@ -243,12 +293,20 @@
     .json-num  { color: #953800; }
     .json-bool { color: #8250df; font-weight: 500; }
     .json-null { color: #cf222e; font-weight: 500; }
+    [data-theme="dark"] .json-key  { color: #79c0ff; }
+    [data-theme="dark"] .json-str  { color: #a5d6ff; }
+    [data-theme="dark"] .json-num  { color: #ffa657; }
+    [data-theme="dark"] .json-bool { color: #d2a8ff; }
+    [data-theme="dark"] .json-null { color: #ff7b72; }
 
-    /* ── error ── */
+    /* ── Error ── */
     .parse-error {
       font-family: var(--mono); font-size: 13px; color: #cf222e;
       background: #fff0f0; border: 1px solid #fecaca;
       border-radius: 8px; padding: 14px 16px;
+    }
+    [data-theme="dark"] .parse-error {
+      color: #ff7b72; background: #2d0d0d; border-color: #5a1a1a;
     }
 
     /* ── Mermaid ── */
@@ -259,14 +317,14 @@
     .empty-state {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; height: 100%;
-      min-height: 200px; color: #9ca3af;
+      min-height: 200px; color: var(--muted);
     }
-    .empty-state .ei { font-size: 32px; margin-bottom: 10px; opacity: 0.45; }
-    .empty-state p { font-size: 13px; font-family: var(--mono); }
+    .empty-state .ei { font-size: 28px; margin-bottom: 10px; opacity: 0.4; }
+    .empty-state p { font-size: 11px; font-family: var(--mono); }
 
     /* ── Copy feedback ── */
     .copy-feedback {
-      font-size: 10px; color: #16a34a; font-family: var(--mono);
+      font-size: 10px; color: var(--accent); font-family: var(--mono);
       opacity: 0; transition: opacity 0.3s;
     }
     .copy-feedback.show { opacity: 1; }
@@ -274,31 +332,32 @@
     /* ── Fullscreen modal ── */
     .fs-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55); z-index: 9000;
+      background: rgba(0,0,0,0.6); z-index: 9000;
       align-items: center; justify-content: center;
       padding: 20px;
     }
     .fs-overlay.open { display: flex; }
     .fs-modal {
       background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border);
       width: 100%; max-width: 860px;
       max-height: calc(100vh - 40px);
       display: flex; flex-direction: column;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
       overflow: hidden;
     }
     .fs-modal-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      padding: 12px 18px; border-bottom: 1px solid var(--border);
       background: var(--surface-2);
     }
-    .fs-modal-title { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .fs-modal-title { font-family: var(--mono); font-size: 12px; color: var(--muted); }
     .fs-close {
-      font-size: 20px; line-height: 1; border: none; background: none;
-      cursor: pointer; color: var(--muted); padding: 2px 6px; border-radius: 4px;
+      font-size: 18px; line-height: 1; border: none; background: none;
+      cursor: pointer; color: var(--muted); padding: 3px 7px; border-radius: 4px;
       transition: background 0.15s;
     }
-    .fs-close:hover { background: var(--border); color: var(--fg); }
+    .fs-close:hover { background: var(--surface-3); color: var(--fg); }
     .fs-body { overflow: auto; padding: 28px 32px; flex: 1; }
 
     /* ── Mermaid cheatsheet ── */
@@ -307,53 +366,40 @@
       background: var(--surface);
     }
     .cheatsheet summary {
-      padding: 10px 14px; cursor: pointer; font-size: 12px;
+      padding: 9px 14px; cursor: pointer; font-size: 11px;
       font-family: var(--mono); color: var(--muted);
       background: var(--surface-2); user-select: none;
     }
     .cheatsheet-grid {
       padding: 14px; display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px; font-size: 12px; font-family: var(--mono);
+      gap: 10px; font-size: 11px; font-family: var(--mono);
     }
 
-    /* ── footer ── */
+    /* ── Footer ── */
     footer {
-      border-top: 1px solid var(--border); padding: 24px 32px;
-      font-size: 13px; color: var(--muted);
+      border-top: 1px solid var(--border); padding: 20px 40px;
+      font-size: 12px; color: var(--muted); flex-shrink: 0;
     }
     footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--fg); }
+    footer a:hover { color: var(--accent); }
 
-    /* ── Dark mode overrides ── */
-    [data-theme="dark"] .json-key  { color: #79c0ff; }
-    [data-theme="dark"] .json-str  { color: #a5d6ff; }
-    [data-theme="dark"] .json-num  { color: #ffa657; }
-    [data-theme="dark"] .json-bool { color: #d2a8ff; }
-    [data-theme="dark"] .json-null { color: #ff7b72; }
-
-    [data-theme="dark"] .parse-error {
-      color: #ff7b72; background: #2d0d0d; border-color: #5a1a1a;
+    /* ── Inline stat ── */
+    .inline-stat {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      border: none; padding: 0; background: none;
     }
-    [data-theme="dark"] .md-output pre {
-      background: #1c2128; border-color: #21262d;
-    }
-    [data-theme="dark"] .md-output code {
-      background: #21262d;
-    }
-    [data-theme="dark"] .pane-body textarea {
-      background: #161b22; color: #e6edf3;
-    }
-    [data-theme="dark"] .pane-body textarea::placeholder { color: #4b5563; }
 
     @media (max-width: 640px) {
       .view-toggle { display: none; }
       .drag-handle  { display: none; }
       .editor-split { flex-direction: column; }
       .split-pane.input-pane { flex: 0 0 50%; }
+      .page-header { padding: 0 20px; }
     }
   </style>
-  <script src="nav.js"></script>
+  <script src="/nav.js"></script>
+  <script src="/i18n.js"></script>
 </head>
 <body>
 
@@ -362,22 +408,31 @@
 
 <!-- Page header -->
 <div class="page-header">
-  <div class="page-tag">tools</div>
-  <h1>Quick Viewers</h1>
-  <p>Paste Markdown, JSON, or Mermaid diagrams and preview them instantly — nothing is uploaded.</p>
+  <div class="page-header-breadcrumb">
+    <span data-i18n="tools.header.breadcrumb_root">adiltirur.dev</span>
+    <span class="sep">/</span>
+    <span class="page-header-title" data-i18n="tools.header.breadcrumb_page">tools</span>
+  </div>
+  <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto;" data-i18n="tools.header.privacy_note">paste &amp; preview instantly — nothing is uploaded</span>
 </div>
 
 <!-- Tab bar -->
 <div class="tab-bar-row">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('md',this)">📝 Markdown</button>
-    <button class="tab-btn" onclick="switchTab('json',this)">{ } JSON</button>
-    <button class="tab-btn" onclick="switchTab('mermaid',this)">⬡ Mermaid</button>
+    <button class="tab-btn active" onclick="switchTab('md',this)">
+      <span class="tab-dot"></span><span data-i18n="tools.tabs.md">markdown.md</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('json',this)">
+      <span class="tab-dot"></span><span data-i18n="tools.tabs.json">data.json</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('mermaid',this)">
+      <span class="tab-dot"></span><span data-i18n="tools.tabs.mermaid">diagram.mmd</span>
+    </button>
   </div>
   <div class="view-toggle">
-    <button class="view-btn active" id="vbtn-split"  onclick="setView('split')">⇔ Split</button>
-    <button class="view-btn"        id="vbtn-input"  onclick="setView('input')">✎ Input</button>
-    <button class="view-btn"        id="vbtn-output" onclick="setView('output')">◻ Preview</button>
+    <button class="view-btn active" id="vbtn-split"  onclick="setView('split')" data-i18n="tools.view.split">⇔ split</button>
+    <button class="view-btn"        id="vbtn-input"  onclick="setView('input')" data-i18n="tools.view.input">✎ input</button>
+    <button class="view-btn"        id="vbtn-output" onclick="setView('output')" data-i18n="tools.view.output">◻ preview</button>
   </div>
 </div>
 
@@ -388,17 +443,18 @@
     <!-- input -->
     <div class="split-pane input-pane" id="md-left">
       <div class="pane-header">
-        <span class="pane-label">Input</span>
+        <span class="pane-label" data-i18n="tools.md.input_label">Input</span>
         <div class="btn-row">
-          <span id="md-stat" class="stat-bar" style="border:none;padding:0;background:none">0 lines · 0 words</span>
-          <span id="share-md-feedback" class="copy-feedback">Link copied!</span>
-          <button class="btn-small" onclick="copyShareLink('md')">🔗 Copy Link</button>
-          <button class="btn-small" onclick="clearInput('md-input','md')">Clear</button>
+          <span id="md-stat" class="inline-stat" data-i18n="tools.md.stat_init">0 lines · 0 words</span>
+          <span id="share-md-feedback" class="copy-feedback" data-i18n="tools.md.feedback_link">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('md')" data-i18n="tools.md.btn_copy_link">🔗 Copy Link</button>
+          <button class="btn-small" onclick="clearInput('md-input','md')" data-i18n="tools.md.btn_clear">Clear</button>
         </div>
       </div>
       <div class="pane-body">
         <textarea id="md-input"
           placeholder="# Hello World&#10;&#10;Paste your **Markdown** here...&#10;&#10;- Supports GFM tables, code blocks, blockquotes&#10;- Live preview as you type"
+          data-i18n-attr="placeholder:tools.md.placeholder"
           oninput="renderMarkdown();updateMdStat()"></textarea>
       </div>
     </div>
@@ -409,21 +465,22 @@
     <!-- output -->
     <div class="split-pane output-pane" id="md-right">
       <div class="pane-header">
-        <span class="pane-label">Preview</span>
+        <span class="pane-label" data-i18n="tools.md.preview_label">Preview</span>
         <div class="btn-row">
-          <span id="md-copy-feedback" class="copy-feedback">Copied!</span>
-          <button class="btn-small" onclick="copyInner('md-output','md-copy-feedback')">Copy HTML</button>
-          <button class="btn-small primary" onclick="openFullscreen('md')">⛶ Fullscreen</button>
+          <span id="md-copy-feedback" class="copy-feedback" data-i18n="tools.md.feedback_copy">Copied!</span>
+          <button class="btn-small" onclick="copyInner('md-output','md-copy-feedback')" data-i18n="tools.md.btn_copy_html">Copy HTML</button>
+          <button class="btn-small primary" onclick="openFullscreen('md')" data-i18n="tools.md.btn_fullscreen">⛶ Fullscreen</button>
         </div>
       </div>
       <div class="pane-body output-body">
         <div id="md-output" class="md-output">
-          <div class="empty-state"><div class="ei">📝</div><p>preview appears here</p></div>
+          <div class="empty-state"><div class="ei">📝</div><p data-i18n="tools.md.empty_state">preview appears here</p></div>
         </div>
       </div>
     </div>
 
   </div>
+  <div class="stat-bar"><span class="stat-bar-dot"></span><span id="md-status" data-i18n="tools.md.status">markdown viewer</span></div>
 </div>
 
 <!-- ════════════════════ JSON panel ════════════════════ -->
@@ -432,17 +489,18 @@
 
     <div class="split-pane input-pane" id="json-left">
       <div class="pane-header">
-        <span class="pane-label">Input</span>
+        <span class="pane-label" data-i18n="tools.json.input_label">Input</span>
         <div class="btn-row">
-          <span id="json-stat" class="stat-bar" style="border:none;padding:0;background:none"></span>
-          <span id="share-json-feedback" class="copy-feedback">Link copied!</span>
-          <button class="btn-small" onclick="copyShareLink('json')">🔗 Copy Link</button>
-          <button class="btn-small" onclick="clearInput('json-input','json')">Clear</button>
+          <span id="json-stat" class="inline-stat"></span>
+          <span id="share-json-feedback" class="copy-feedback" data-i18n="tools.json.feedback_link">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('json')" data-i18n="tools.json.btn_copy_link">🔗 Copy Link</button>
+          <button class="btn-small" onclick="clearInput('json-input','json')" data-i18n="tools.json.btn_clear">Clear</button>
         </div>
       </div>
       <div class="pane-body">
         <textarea id="json-input"
           placeholder='{&#10;  "name": "Adil",&#10;  "role": "Technical Lead",&#10;  "stack": ["Flutter","Dart","Go"],&#10;  "active": true&#10;}'
+          data-i18n-attr="placeholder:tools.json.placeholder"
           oninput="renderJSON()"></textarea>
       </div>
     </div>
@@ -451,22 +509,23 @@
 
     <div class="split-pane output-pane" id="json-right">
       <div class="pane-header">
-        <span class="pane-label">Formatted</span>
+        <span class="pane-label" data-i18n="tools.json.formatted_label">Formatted</span>
         <div class="btn-row">
-          <span id="json-copy-feedback" class="copy-feedback">Copied!</span>
-          <button class="btn-small" onclick="copyJSONFormatted()">Copy</button>
-          <button class="btn-small" onclick="minifyJSON()">Minify</button>
-          <button class="btn-small primary" onclick="openFullscreen('json')">⛶ Fullscreen</button>
+          <span id="json-copy-feedback" class="copy-feedback" data-i18n="tools.json.feedback_copy">Copied!</span>
+          <button class="btn-small" onclick="copyJSONFormatted()" data-i18n="tools.json.btn_copy">Copy</button>
+          <button class="btn-small" onclick="minifyJSON()" data-i18n="tools.json.btn_minify">Minify</button>
+          <button class="btn-small primary" onclick="openFullscreen('json')" data-i18n="tools.json.btn_fullscreen">⛶ Fullscreen</button>
         </div>
       </div>
       <div class="pane-body output-body">
         <div id="json-output">
-          <div class="empty-state"><div class="ei">{ }</div><p>formatted output appears here</p></div>
+          <div class="empty-state"><div class="ei">{ }</div><p data-i18n="tools.json.empty_state">formatted output appears here</p></div>
         </div>
       </div>
     </div>
 
   </div>
+  <div class="stat-bar"><span class="stat-bar-dot"></span><span data-i18n="tools.json.status">json formatter &amp; syntax highlighter</span></div>
 </div>
 
 <!-- ════════════════════ Mermaid panel ════════════════════ -->
@@ -475,17 +534,18 @@
 
     <div class="split-pane input-pane" id="mermaid-left">
       <div class="pane-header">
-        <span class="pane-label">Diagram Source</span>
+        <span class="pane-label" data-i18n="tools.mermaid.input_label">Diagram Source</span>
         <div class="btn-row">
-          <span id="share-mermaid-feedback" class="copy-feedback">Link copied!</span>
-          <button class="btn-small" onclick="copyShareLink('mermaid')">🔗 Copy Link</button>
-          <button class="btn-small" onclick="loadMermaidExample()">Example</button>
-          <button class="btn-small" onclick="clearInput('mermaid-input','mermaid')">Clear</button>
+          <span id="share-mermaid-feedback" class="copy-feedback" data-i18n="tools.mermaid.feedback_link">Link copied!</span>
+          <button class="btn-small" onclick="copyShareLink('mermaid')" data-i18n="tools.mermaid.btn_copy_link">🔗 Copy Link</button>
+          <button class="btn-small" onclick="loadMermaidExample()" data-i18n="tools.mermaid.btn_example">Example</button>
+          <button class="btn-small" onclick="clearInput('mermaid-input','mermaid')" data-i18n="tools.mermaid.btn_clear">Clear</button>
         </div>
       </div>
       <div class="pane-body">
         <textarea id="mermaid-input"
           placeholder="graph TD&#10;    A[Start] --> B{Decision}&#10;    B -->|Yes| C[Do it]&#10;    B -->|No|  D[Skip it]&#10;    C --> E[End]&#10;    D --> E"
+          data-i18n-attr="placeholder:tools.mermaid.placeholder"
           oninput="scheduleMermaid()"></textarea>
       </div>
     </div>
@@ -494,20 +554,20 @@
 
     <div class="split-pane output-pane" id="mermaid-right" style="display:flex;flex-direction:column">
       <div class="pane-header">
-        <span class="pane-label">Diagram</span>
+        <span class="pane-label" data-i18n="tools.mermaid.diagram_label">Diagram</span>
         <div class="btn-row">
-          <button class="btn-small primary" onclick="renderMermaid()">Render</button>
-          <button class="btn-small" onclick="openFullscreen('mermaid')">⛶ Fullscreen</button>
+          <button class="btn-small primary" onclick="renderMermaid()" data-i18n="tools.mermaid.btn_render">Render</button>
+          <button class="btn-small" onclick="openFullscreen('mermaid')" data-i18n="tools.mermaid.btn_fullscreen">⛶ Fullscreen</button>
         </div>
       </div>
       <div class="pane-body output-body">
         <div id="mermaid-output">
-          <div class="empty-state"><div class="ei">⬡</div><p>diagram appears here</p></div>
+          <div class="empty-state"><div class="ei">⬡</div><p data-i18n="tools.mermaid.empty_state">diagram appears here</p></div>
         </div>
       </div>
       <!-- cheat sheet pinned to bottom -->
       <details class="cheatsheet">
-        <summary>Quick reference — diagram types</summary>
+        <summary data-i18n="tools.mermaid.cheatsheet_summary">Quick reference — diagram types</summary>
         <div class="cheatsheet-grid">
           <div><strong style="color:var(--accent)">Flowchart</strong><br><code style="color:var(--muted)">graph TD / LR</code></div>
           <div><strong style="color:var(--accent)">Sequence</strong><br><code style="color:var(--muted)">sequenceDiagram</code></div>
@@ -522,22 +582,36 @@
     </div>
 
   </div>
+  <div class="stat-bar"><span class="stat-bar-dot"></span><span data-i18n="tools.mermaid.status">mermaid diagram renderer</span></div>
 </div>
 
 <!-- ════════════════════ Fullscreen modal ════════════════════ -->
 <div class="fs-overlay" id="fs-overlay" onclick="closeFullscreenOnBg(event)">
   <div class="fs-modal">
     <div class="fs-modal-header">
-      <span class="fs-modal-title" id="fs-title">Preview</span>
+      <span class="fs-modal-title" id="fs-title" data-i18n="tools.fullscreen.default_title">Preview</span>
       <div class="btn-row">
-        <span id="fs-copy-feedback" class="copy-feedback">Copied!</span>
-        <button class="btn-small" id="fs-copy-btn" onclick="copyFullscreen()">Copy</button>
+        <span id="fs-copy-feedback" class="copy-feedback" data-i18n="tools.fullscreen.feedback_copy">Copied!</span>
+        <button class="btn-small" id="fs-copy-btn" onclick="copyFullscreen()" data-i18n="tools.fullscreen.btn_copy">Copy</button>
         <button class="fs-close" onclick="closeFullscreen()">×</button>
       </div>
     </div>
     <div class="fs-body" id="fs-body"></div>
   </div>
 </div>
+
+<!-- Footer -->
+<footer>
+  <span style="font-family:var(--mono)" data-i18n="tools.footer.path">adiltirur.dev / tools</span>
+  &nbsp;·&nbsp;
+  <a href="/" data-i18n="tools.footer.link_home">home</a>
+  &nbsp;·&nbsp;
+  <a href="/survey.html" data-i18n="tools.footer.link_survey">survey</a>
+  &nbsp;·&nbsp;
+  <a href="/terms" data-i18n="tools.footer.link_terms">terms</a>
+  &nbsp;·&nbsp;
+  <a href="/privacy" data-i18n="tools.footer.link_privacy">privacy</a>
+</footer>
 
 <script>
 // ══════════════════════════════════════════════

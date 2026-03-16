@@ -8,52 +8,54 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #fafafa; --fg: #111111; --muted: #6b7280;
-      --accent: #2563eb; --border: #e5e7eb;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--sans); background: var(--bg); color: var(--fg);
-      line-height: 1.75; font-size: 16px; -webkit-font-smoothing: antialiased;
-    }
-    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+    /* Legal-page overrides */
+    .container { max-width: 720px; }
+
     .page-header { padding: 72px 0 48px; }
-    .page-tag { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .page-tag::before { content:''; display:inline-block; width:20px; height:1px; background:var(--accent); }
+    .page-tag {
+      font-family: var(--mono); font-size: 12px; color: var(--accent);
+      letter-spacing: 0.05em; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .page-tag::before { content:''; display:inline-block; width:18px; height:1px; background:var(--accent); flex-shrink:0; }
     .page-header h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 12px; }
     .page-header p { font-size: 14px; color: var(--muted); }
-    .toc { background: #f3f4f6; border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 56px; }
-    .toc-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+
+    .toc {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 24px; margin-bottom: 56px;
+    }
+    .toc-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 10px; }
     .toc ol { padding-left: 18px; }
     .toc li { margin-bottom: 5px; }
     .toc a { font-size: 14px; color: var(--accent); text-decoration: none; }
     .toc a:hover { text-decoration: underline; }
+
     .legal-section { padding: 48px 0; border-top: 1px solid var(--border); }
-    .section-label { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .section-label { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 16px; }
     h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 20px; }
-    h3 { font-size: 15px; font-weight: 600; margin: 24px 0 10px; }
-    p { font-size: 15px; color: #374151; margin-bottom: 14px; line-height: 1.8; }
+    h3 { font-size: 15px; font-weight: 600; margin: 24px 0 10px; color: var(--fg); }
+    p { font-size: 15px; color: var(--fg-body); margin-bottom: 14px; line-height: 1.8; }
     p strong { color: var(--fg); font-weight: 500; }
     p a { color: var(--accent); text-decoration: none; }
     p a:hover { text-decoration: underline; }
     ul { padding-left: 20px; margin-bottom: 14px; }
-    ul li { font-size: 15px; color: #374151; margin-bottom: 6px; line-height: 1.7; }
-    .callout { border-left: 3px solid var(--accent); background: #eff6ff; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 20px 0; }
-    .callout p { color: #1e40af; margin: 0; font-size: 14px; }
-    footer { padding: 32px 0; border-top: 1px solid var(--border); }
-    footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .footer-copy { font-size: 12px; color: var(--muted); font-family: var(--mono); }
-    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--fg); }
+    ul li { font-size: 15px; color: var(--fg-body); margin-bottom: 6px; line-height: 1.7; }
+
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: var(--accent-dim);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px; margin: 20px 0;
+    }
+    .callout p { color: var(--accent); margin: 0; font-size: 14px; }
+
     @media (max-width: 600px) { .page-header { padding: 48px 0 32px; } .legal-section { padding: 36px 0; } }
   </style>
   <script src="/nav.js"></script>
+  <script src="/i18n.js"></script>
 </head>
 <body>
 
@@ -61,90 +63,90 @@
 
   <div class="page-header">
     <div class="container">
-      <div class="page-tag">// privacy policy</div>
-      <h1>Privacy Policy</h1>
-      <p>Last updated: March 2026 · Applies to adiltirur.dev and all software published by Adil Chakkala Paramba.</p>
+      <div class="page-tag" data-i18n="privacy.page_tag">// privacy policy</div>
+      <h1 data-i18n="privacy.heading">Privacy Policy</h1>
+      <p data-i18n="privacy.intro">Last updated: March 2026 · Applies to adiltirur.dev and all software published by Adil Chakkala Paramba.</p>
     </div>
   </div>
 
   <div class="container">
     <div class="toc">
-      <div class="toc-title">// contents</div>
+      <div class="toc-title" data-i18n="privacy.toc_title">// contents</div>
       <ol>
-        <li><a href="#website">This Website</a></li>
-        <li><a href="#packages">Open Source Packages</a></li>
-        <li><a href="#bots">Bots &amp; Automated Tools</a></li>
-        <li><a href="#cookies">Cookies</a></li>
-        <li><a href="#children">Children's Privacy</a></li>
-        <li><a href="#changes">Changes to This Policy</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#website" data-i18n="privacy.toc.website">This Website</a></li>
+        <li><a href="#packages" data-i18n="privacy.toc.packages">Open Source Packages</a></li>
+        <li><a href="#bots" data-i18n="privacy.toc.bots">Bots &amp; Automated Tools</a></li>
+        <li><a href="#cookies" data-i18n="privacy.toc.cookies">Cookies</a></li>
+        <li><a href="#children" data-i18n="privacy.toc.children">Children's Privacy</a></li>
+        <li><a href="#changes" data-i18n="privacy.toc.changes">Changes to This Policy</a></li>
+        <li><a href="#contact" data-i18n="privacy.toc.contact">Contact</a></li>
       </ol>
     </div>
 
     <div class="legal-section" id="website">
-      <div class="section-label">01 // this website</div>
-      <h2>This Website (adiltirur.dev)</h2>
+      <div class="section-label" data-i18n="privacy.website.label">01 // this website</div>
+      <h2 data-i18n="privacy.website.heading">This Website (adiltirur.dev)</h2>
       <div class="callout">
-        <p><strong>Short version:</strong> This is a static personal website. I don't collect, store, or track any personal data.</p>
+        <p data-i18n-html="privacy.website.callout"><strong>Short version:</strong> This is a static personal website. I don't collect, store, or track any personal data.</p>
       </div>
-      <p>adiltirur.dev is a static personal portfolio site. I do not operate any servers that collect or store personal data. I do not run analytics scripts, tracking pixels, or advertising of any kind on this site.</p>
-      <p>If you contact me via email at <a href="mailto:adiltirur@gmail.com">adiltirur@gmail.com</a>, your message is handled by Google (Gmail) and is subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
-      <p>Links to third-party platforms (GitHub, LinkedIn, Medium, pub.dev) are governed by their respective privacy policies. I have no control over data those platforms collect.</p>
+      <p data-i18n="privacy.website.p1">adiltirur.dev is a static personal portfolio site. I do not operate any servers that collect or store personal data. I do not run analytics scripts, tracking pixels, or advertising of any kind on this site.</p>
+      <p data-i18n-html="privacy.website.p2">If you contact me via email at <a href="mailto:adiltirur@gmail.com">adiltirur@gmail.com</a>, your message is handled by Google (Gmail) and is subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+      <p data-i18n="privacy.website.p3">Links to third-party platforms (GitHub, LinkedIn, Medium, pub.dev) are governed by their respective privacy policies. I have no control over data those platforms collect.</p>
     </div>
 
     <div class="legal-section" id="packages">
-      <div class="section-label">02 // open source packages</div>
-      <h2>Open Source Packages</h2>
-      <p>Packages published on <a href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener">pub.dev</a> and repositories on <a href="https://github.com/adiltirur" target="_blank" rel="noopener">GitHub</a> do not, by design, collect any personal data.</p>
-      <p>If a package makes network requests or interacts with external services, this will be clearly documented in that package's README and changelog. You should audit any third-party package — including mine — before deploying it in a production environment that handles personal data.</p>
+      <div class="section-label" data-i18n="privacy.packages.label">02 // open source packages</div>
+      <h2 data-i18n="privacy.packages.heading">Open Source Packages</h2>
+      <p data-i18n-html="privacy.packages.p1">Packages published on <a href="https://pub.dev/publishers/adiltirur.dev/packages" target="_blank" rel="noopener">pub.dev</a> and repositories on <a href="https://github.com/adiltirur" target="_blank" rel="noopener">GitHub</a> do not, by design, collect any personal data.</p>
+      <p data-i18n="privacy.packages.p2">If a package makes network requests or interacts with external services, this will be clearly documented in that package's README and changelog. You should audit any third-party package — including mine — before deploying it in a production environment that handles personal data.</p>
     </div>
 
     <div class="legal-section" id="bots">
-      <div class="section-label">03 // bots &amp; automated tools</div>
-      <h2>Bots &amp; Automated Tools</h2>
-      <p>Any bot or automated tool I publish (including but not limited to Microsoft Teams bots and messaging platform integrations) does not intentionally send data to external servers unless explicitly stated in that project's documentation.</p>
-      <p><strong>You, as the operator deploying the bot, are the data controller</strong> for any data processed in your environment. I am not a data processor or sub-processor in your deployment. It is your responsibility to ensure compliance with applicable data protection laws (e.g., GDPR) for any personal data that flows through a bot you deploy.</p>
-      <p>Please review the source code of any bot before deployment to fully understand its data handling behaviour.</p>
+      <div class="section-label" data-i18n="privacy.bots.label">03 // bots &amp; automated tools</div>
+      <h2 data-i18n="privacy.bots.heading">Bots &amp; Automated Tools</h2>
+      <p data-i18n="privacy.bots.p1">Any bot or automated tool I publish (including but not limited to Microsoft Teams bots and messaging platform integrations) does not intentionally send data to external servers unless explicitly stated in that project's documentation.</p>
+      <p data-i18n-html="privacy.bots.p2"><strong>You, as the operator deploying the bot, are the data controller</strong> for any data processed in your environment. I am not a data processor or sub-processor in your deployment. It is your responsibility to ensure compliance with applicable data protection laws (e.g., GDPR) for any personal data that flows through a bot you deploy.</p>
+      <p data-i18n="privacy.bots.p3">Please review the source code of any bot before deployment to fully understand its data handling behaviour.</p>
     </div>
 
     <div class="legal-section" id="cookies">
-      <div class="section-label">04 // cookies</div>
-      <h2>Cookies</h2>
-      <p>adiltirur.dev does not use cookies, local storage, or any other form of client-side tracking technology.</p>
+      <div class="section-label" data-i18n="privacy.cookies.label">04 // cookies</div>
+      <h2 data-i18n="privacy.cookies.heading">Cookies</h2>
+      <p data-i18n="privacy.cookies.p1">adiltirur.dev does not use cookies, local storage, or any other form of client-side tracking technology.</p>
     </div>
 
     <div class="legal-section" id="children">
-      <div class="section-label">05 // children's privacy</div>
-      <h2>Children's Privacy</h2>
-      <p>This Website and associated software are not directed at children under the age of 13. I do not knowingly collect personal information from children. If you believe a child has provided personal information in connection with this site or my software, please contact me and I will take steps to delete it.</p>
+      <div class="section-label" data-i18n="privacy.children.label">05 // children's privacy</div>
+      <h2 data-i18n="privacy.children.heading">Children's Privacy</h2>
+      <p data-i18n="privacy.children.p1">This Website and associated software are not directed at children under the age of 13. I do not knowingly collect personal information from children. If you believe a child has provided personal information in connection with this site or my software, please contact me and I will take steps to delete it.</p>
     </div>
 
     <div class="legal-section" id="changes">
-      <div class="section-label">06 // changes</div>
-      <h2>Changes to This Policy</h2>
-      <p>I may update this Privacy Policy from time to time. The "last updated" date at the top of this page will reflect the most recent revision. Continued use of this Website or my software after changes are posted constitutes acknowledgement of the updated policy.</p>
+      <div class="section-label" data-i18n="privacy.changes.label">06 // changes</div>
+      <h2 data-i18n="privacy.changes.heading">Changes to This Policy</h2>
+      <p data-i18n="privacy.changes.p1">I may update this Privacy Policy from time to time. The "last updated" date at the top of this page will reflect the most recent revision. Continued use of this Website or my software after changes are posted constitutes acknowledgement of the updated policy.</p>
     </div>
 
     <div class="legal-section" id="contact">
-      <div class="section-label">07 // contact</div>
-      <h2>Questions?</h2>
-      <p>If you have any questions about this Privacy Policy, please contact me:</p>
-      <p>
+      <div class="section-label" data-i18n="privacy.contact.label">07 // contact</div>
+      <h2 data-i18n="privacy.contact.heading">Questions?</h2>
+      <p data-i18n="privacy.contact.p1">If you have any questions about this Privacy Policy, please contact me:</p>
+      <p data-i18n-html="privacy.contact.address">
         <strong>Adil Chakkala Paramba</strong><br />
         <a href="mailto:adiltirur@gmail.com">adiltirur@gmail.com</a><br />
         Munich, Germany
       </p>
-      <p>Also see: <a href="/terms">Terms of Use →</a></p>
+      <p data-i18n-html="privacy.contact.also_see">Also see: <a href="/terms">Terms of Use →</a></p>
     </div>
   </div>
 
   <footer>
     <div class="container">
-      <span class="footer-copy">© 2026 adiltirur.dev</span>
+      <span class="footer-copy" data-i18n="privacy.footer.copy">© 2026 adiltirur.dev</span>
       <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/terms">Terms</a>
-        <a href="mailto:adiltirur@gmail.com">Email</a>
+        <a href="/" data-i18n="privacy.footer.link_home">Home</a>
+        <a href="/terms" data-i18n="privacy.footer.link_terms">Terms</a>
+        <a href="mailto:adiltirur@gmail.com" data-i18n="privacy.footer.link_email">Email</a>
       </div>
     </div>
   </footer>
